@@ -1,0 +1,21 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.title {
+    font-size: 25px;
+    line-height: 30px;
+    font-weight: 700;
+    padding-bottom: 16px;
+}
+
+.desc {
+    color: var(--grey-text);
+    line-height: 150%;
+    font-size: 17px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+}

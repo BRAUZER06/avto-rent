@@ -1,0 +1,60 @@
+@import "./vars";
+
+@mixin vw-xxl {
+    @media (max-width: $xxl) {
+        @content;
+    }
+}
+
+@mixin vw-xl {
+    @media (max-width: $xl) {
+        @content;
+    }
+}
+
+@mixin vw-lg {
+    @media (max-width: $lg) {
+        @content;
+    }
+}
+@mixin vw-lgx {
+    @media (max-width: $lg-x) {
+        @content;
+    }
+}
+
+@mixin vw-md {
+    @media (max-width: $md) {
+        @content;
+    }
+}
+
+@mixin vw-mob {
+    @media (max-width: $mob) {
+        @content;
+    }
+}
+
+@mixin vw-smMax {
+    @media (max-width: $smMax) {
+        @content;
+    }
+}
+
+@mixin vw-sm {
+    @media (max-width: $sm) {
+        @content;
+    }
+}
+
+@mixin vw-xss {
+    @media (max-width: $xxs) {
+        @content;
+    }
+}
+
+@mixin vw-xs {
+    @media (max-width: $xs) {
+        @content;
+    }
+}

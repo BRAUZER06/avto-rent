@@ -1,0 +1,71 @@
+.container {
+    color: var(--grey-text);
+    padding: 50px 0px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    &:hover {
+        color: #fff;
+    }
+}
+
+.titleBankBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    > h2 {
+        font-weight: 500;
+        font-size: 25px;
+    }
+    padding-bottom: 15px;
+}
+
+.bankImg {
+    > img {
+        cursor: pointer;
+        width: 55px;
+        height: 45px;
+        object-fit: cover;
+    }
+}
+
+.descBank {
+    font-size: 16px;
+    padding-bottom: 20px;
+}
+
+.submitBlock {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    > a {
+        cursor: pointer;
+        min-width: 180px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 6px;
+        font-size: 16px;
+        background-color: var(--blue-text--brightest);
+
+        height: 40px;
+        margin-right: 20px;
+
+        &:hover {
+            background-color: var(--blue-text);
+        }
+    }
+
+    > div {
+        padding: 10px 0px;
+        min-width: 230px;
+        width: 100%;
+        flex: 1;
+        align-self: flex-start;
+        line-height: 140%;
+        font-size: 14px;
+        color: var(--grey-light);
+    }
+}

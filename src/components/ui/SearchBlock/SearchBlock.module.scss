@@ -1,0 +1,53 @@
+@import "@src/lib/assets/styles/_width.scss";
+
+.search {
+    max-width: 461px;
+    background-color: var(--grey-bg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    border-radius: 84px;
+    font-family: "X5 Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+
+    @include vw-mobile {
+        height: 52px;
+    }
+}
+
+.searchInput {
+    color: var(--grey-text);
+    background-color: var(--grey-bg);
+    min-width: 90px;
+    width: 100%;
+    padding: 10px 0px;
+    margin: 0px 5% 0px 17px;
+
+    &::placeholder {
+        opacity: 0.4;
+    }
+}
+
+.searchImg {
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+.searchInputResetButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: none;
+    margin-right: 5px;
+    padding: 5px;
+    width: 30px;
+    height: 12px;
+}
+
+.searchInputResetButtonVisible {
+    display: flex;
+}

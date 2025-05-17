@@ -1,0 +1,230 @@
+@import "../../lib/assets/styles/_media.scss";
+
+.container {
+    min-height: 300px;
+    overflow: hidden;
+    display: flex;
+    background-color: #1c1c1c;
+    border: 1px solid var(--grey-bg);
+
+    border-radius: 16px;
+
+    padding: 15px 20px;
+    margin-bottom: 20px;
+
+    @include vw-sm {
+        padding: 16px;
+    }
+
+    &:hover {
+        background-color: var(--grey-bg);
+        border: 1px solid var(--grey-bg);
+    }
+}
+
+.mySwiper {
+    user-select: none;
+    width: 580px;
+    height: 100%;
+    position: relative;
+
+    @media screen and (max-width: 1240px) {
+        width: 580px;
+    }
+    @media screen and (max-width: 1200px) {
+        width: 405px;
+    }
+
+    @media screen and (max-width: 1024px) {
+        width: 360px;
+    }
+
+    @media screen and (max-width: 800px) {
+        width: 245px;
+    }
+
+    @media screen and (max-width: 470px) {
+        // width: 470px;
+    }
+
+    .swiper-button-prev,
+    .swiper-button-next {
+        display: none;
+    }
+}
+
+.swipeBlock {
+}
+
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.customScrollbarContainer {
+    bottom: -28px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: var(--grey-bg);
+    border-radius: 27px;
+    position: absolute;
+    z-index: 10;
+
+    @include vw-md {
+        display: none;
+    }
+
+    div {
+        background: var(--green-main);
+    }
+}
+
+.textBlock {
+    display: flex;
+    flex-direction: column;
+    margin-left: 16px;
+    max-width: 490px;
+    min-height: 250px;
+    padding: 0px 10px 0px 5px;
+
+    @media screen and (max-width: 1024px) {
+        max-width: 100%;
+    }
+}
+
+.titleBlock,
+.priceBlock,
+.descBlock,
+.locationBlock {
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+.titleBlock {
+}
+
+.titleText {
+    flex-grow: 1;
+    // color: var(--blue-text);
+    color: #ffffff;
+    margin-top: 0px;
+    min-height: 40px;
+    font-size: 24px;
+    line-height: 110%;
+
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+
+    &:hover {
+        color: var(--green-main);
+    }
+}
+
+.priceBlock {
+}
+.priceText {
+    color: var(--green-main);
+    font-size: 19px;
+    font-weight: 500;
+
+    &:hover {
+        color: var(--blue-text);
+    }
+}
+
+.descBlock {
+}
+.descText {
+    color: var(--grey-text);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 21px;
+    -webkit-line-clamp: 6;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.locationBlock {
+}
+.locationText {
+    color: var(--grey-ligter);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+    margin-bottom: 15px;
+}
+
+.userInfoBlockMobil {
+    display: none;
+
+    @media screen and (max-width: 1024px) {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.userInfoBlock {
+    margin-left: auto;
+    padding: 0px 10px;
+    display: flex;
+    flex-direction: column;
+
+    @media screen and (max-width: 1024px) {
+        display: none;
+    }
+}
+
+.userNameBlock {
+    font-size: 17px;
+    -webkit-line-clamp: 1;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.numberContainer {
+    flex-grow: 1;
+}
+.numberShowBlock,
+.numberBlock {
+    margin-top: 10px;
+    width: 180px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--blue-text);
+    border-radius: 10px;
+
+    &:hover {
+        background-color: var(--green-deep);
+    }
+}
+
+.numberShowBlock {
+    cursor: pointer;
+}
+.numberBlock {
+    background-color: var(--green-deep);
+}
+
+.date {
+    user-select: none;
+    cursor: default;
+    margin-top: 10px;
+
+    &:hover {
+        color: var(--green-main);
+    }
+
+    @media screen and (max-width: 1024px) {
+        align-self: flex-end;
+    }
+}

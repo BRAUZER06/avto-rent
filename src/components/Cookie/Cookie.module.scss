@@ -1,0 +1,98 @@
+@import "@src/lib/assets/styles/_width.scss";
+
+.cookie {
+  position: fixed;
+  left: 32px;
+  right: 32px;
+  bottom: 10px;
+  z-index: 999;
+  max-width: 1376px;
+  margin: 0 auto;
+  color: var(--grey-bg);
+  display: none;
+
+  &_opened {
+    display: block;
+  }
+
+  @media screen and (max-width: 1023px) {
+    left: 16px;
+    right: 16px;
+  }
+
+  @include vw-mobile {
+    max-width: 100%;
+    left: 16px;
+    right: 16px;
+  }
+}
+
+.cookieContainer {
+  padding: 20px;
+  max-width: 513px;
+  border-radius: 24px;
+  box-shadow: 0px 0px 5px #00000040;
+  background-color: var(--green-main);
+
+  @include vw-mobile {
+    max-width: 100%;
+  }
+}
+
+.cookieWrapper {    
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+
+  @include vw-mobile {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+}
+
+.cookieDisclamerWrapper {
+  
+  @include vw-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.cookieDisclamer {
+  font-size: 8px;
+}
+
+.cookieMessage {
+  width: 259px;
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 140%; 
+
+  @include vw-mobile {
+    text-align: center;
+    font-size: 14px;
+  }
+}
+
+.cookieButton {
+  padding: 16px 40px;
+  background-color: var(--background-black);
+  border-radius: 100px;
+  color: var(--green-main);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 140%;
+
+  @include vw-mobile {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%;
+    font-size: 14px;
+  }
+}

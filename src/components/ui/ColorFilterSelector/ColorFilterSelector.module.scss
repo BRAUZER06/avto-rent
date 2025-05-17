@@ -1,0 +1,45 @@
+.container {
+}
+.ul {
+    display: flex;
+    flex-flow: row wrap;
+    font-weight: 400;
+    list-style: none;
+    margin: 0 0px 0px;
+    padding: 0;
+    width: 310px;
+}
+.li {
+    flex: 0 0 11.111%;
+    justify-content: center;
+    margin: 6px 0 4px;
+}
+.blockContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.spanColor,
+.imgColor {
+    
+    display: inline-block;
+    width: 28px;
+    height: 27px;
+    cursor: pointer;
+    outline: 0;
+    border-radius: 50%;
+}
+.spanColor {
+}
+.imgColor {
+}
+
+.checked {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

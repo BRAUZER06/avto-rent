@@ -1,0 +1,19 @@
+export const TgIcon = ({ className }: any) => {
+    return (
+        <svg
+            className={className}
+            width="25"
+            height="20"
+            viewBox="0 0 25 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M9.90213 13.1987L18.7964 19.7276C19.8114 20.284 20.5439 19.9959 20.7967 18.7913L24.4171 1.84053C24.7878 0.364012 23.8507 -0.305666 22.8797 0.132307L1.62058 8.27688C0.16945 8.85517 0.17791 9.65954 1.35607 10.018L6.81164 11.7097L19.4419 3.79286C20.0381 3.43363 20.5853 3.62676 20.1362 4.02281"
+                fill="currentColor"
+            />
+        </svg>
+    );
+};

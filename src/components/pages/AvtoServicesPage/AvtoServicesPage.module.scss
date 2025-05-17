@@ -1,0 +1,55 @@
+.container {
+  display: flex;
+
+  @media screen and (max-width: 1024px) {
+      flex-direction: column;
+  }
+}
+
+.filterDesktop {
+  display: flex;
+  max-width: 300px;
+  margin-right: 40px;
+
+  @media screen and (max-width: 1439px) {
+      margin-right: 20px;
+  }
+  @media screen and (max-width: 1024px) {
+      display: none;
+  }
+}
+
+.filterMobile {
+  display: none;
+  width: 100%;
+
+  @media screen and (max-width: 1024px) {
+      display: flex;
+  }
+}
+
+.contentDesktop {
+  display: block;
+
+  @media screen and (max-width: 1024px) {
+      display: none;
+  }
+}
+.contentMobile {
+  display: none;
+
+  @media screen and (max-width: 1024px) {
+      display: block;
+  }
+}
+
+.itemsList {
+  flex: 1;
+}
+
+  .map {
+    width: 100%;
+    height: 700px;
+    // height: 100%;
+  }
+  

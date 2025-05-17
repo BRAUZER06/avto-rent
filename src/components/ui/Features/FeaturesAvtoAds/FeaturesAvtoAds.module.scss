@@ -1,0 +1,57 @@
+.container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+    padding: 0px 20px 0px 0px;
+
+    @media screen and (max-width: 767px) {
+        grid-gap: 20px;
+        padding: 0px 0px 0px 0px;
+    }
+
+    @media screen and (max-width: 500px) {
+        grid-gap: 0px;
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .column {
+        padding-bottom: 8px;
+        font-size: 16px;
+        line-height: 20px;
+        break-inside: avoid;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        @media screen and (max-width: 500px) {
+            padding-bottom: 0px;
+        }
+    }
+
+    .feature {
+        font-size: 17px;
+        margin-bottom: 12px;
+
+        .label {
+            color: var(--grey-text);
+
+            margin-right: 5px;
+        }
+
+        .value {
+        }
+
+        .generation {
+            color: var(--blue-text--brightest);
+        }
+    }
+}
+
+.title {
+    grid-column: 1 / -1;
+    font-size: 25px;
+    font-weight: bold;
+
+    @media screen and (max-width: 500px) {
+        margin-bottom: 20px;
+    }
+}

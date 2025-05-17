@@ -1,0 +1,129 @@
+@import "../../lib/assets/styles/_media.scss";
+
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+    overflow: hidden;
+}
+
+.swiper {
+    user-select: none;
+    width: 100%;
+}
+
+.swiperSlide {
+    width: 330px !important; /* Ширина контейнера слайдов */
+    height: 300px; /* Высота контейнера слайдов */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 8px;
+
+    @media screen and (max-width: 767px){
+        width: 230px !important; 
+        height: 200px; 
+    }
+
+    > img {
+        cursor: pointer;
+        object-fit: cover; /* Изображение заполняет контейнер, обрезая края */
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.infoBlock {
+    display: flex;
+
+    .mainInfo {
+        padding-left: 3px;
+        flex: 85%;
+
+        .price {
+            margin: 5px 0;
+            padding: 2px 6px 2px 0;
+            color: #fff;
+            background-color: var(--blue-text);
+            font-size: 22px;
+            font-weight: 500;
+            display: inline-block;
+            overflow: hidden;
+
+            &:hover {
+                color: var(--green-main);
+            }
+        }
+
+        .title {
+            font-weight: 500;
+            margin-bottom: 5px;
+            font-size: 14px;
+            -webkit-line-clamp: 2;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .desc {
+            margin-bottom: 8px;
+            color: var(--grey-text);
+            font-size: 13px;
+            font-style: normal;
+            font-weight: 400;
+            -webkit-line-clamp: 2;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .title,
+        .desc,
+        .location,
+        .date {
+            word-break: break-word;
+        }
+    }
+
+    .location {
+        margin-bottom: 5px;
+        color: var(--grey-text);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        -webkit-line-clamp: 1;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .date {
+        color: var(--grey-text);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        -webkit-line-clamp: 1;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .icons {
+        flex: 15%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        i {
+            font-size: 24px;
+            padding: 5px;
+        }
+    }
+}
+
+.tags {
+    margin: 10px 0 5px;
+}

@@ -1,0 +1,170 @@
+// @import "../../../../../../lib/assets/styles/_width.scss";
+@import "@src/lib/assets/styles/_width.scss";
+
+.cardPerson {
+  margin-top: 64px;
+  max-width: 910px;
+
+  @include vw-mobile {
+    margin-top: 32px;
+  }
+}
+
+.cardPersonTitle {
+  margin-bottom: 24px;
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 120%;
+  color: var(--green-main);
+
+  @include vw-mobile {
+    font-size: 24px;
+  }
+}
+
+.cardPersonBlockContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: start;
+  gap: 20px 24px;
+
+  @include vw-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.cardPersonBlockWrapper {
+  position: relative;
+}
+
+.cardPersonBlock {
+  max-width: 329px;
+  padding: 16px 24px;
+  margin-left: 112px;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--grey-bg);
+  border-radius: 16px;
+
+  @include vw-mobile {
+    padding: 12px 16px;
+    margin-left: 85px;
+    border-radius: 8px;
+  }
+}
+
+.cardPersonBlockName {
+  font-size: 22px;
+  line-height: 120%;
+  margin-bottom: 12px;
+
+  @include vw-mobile {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+}
+
+.cardPersonBlockPost {
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 140%;
+
+  @include vw-mobile {
+    font-size: 12px;
+  }
+}
+
+.cardPersonBlockContact {
+  color: var(--green-main);
+}
+
+.plug {
+  position: absolute;
+  width: 40px;
+  height: 25px;
+  background-color: var(--grey-bg);
+  top: 50%;
+  left: 88px;
+  transform: translate(-5px, -50%);
+  
+  @include vw-mobile {    
+    width: 40px;
+    height: 25px;  
+    top: 50%;
+    left: 52px;
+  }
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    left: 15px;
+    width: 14px;
+    height: 14px;
+    border-radius: 48%;
+    background-color: var(--background-black);
+    z-index: 2;
+  
+    @include vw-mobile {    
+      left: 18px;
+      width: 20px;
+      height: 19px;
+    }
+  }
+
+  &::before {
+    top: -10px;
+  
+    @include vw-mobile {    
+      top: -12px;
+    }
+  }
+
+  &::after {
+    top: 21px;
+  
+    @include vw-mobile {  
+      top: 18px;
+    }
+  }
+}
+
+.cardPersonBlockSpeakerImageContainer {
+  position: absolute;
+  top: 50%;
+  left: -5px;
+  transform: translate(-5px, -50%);
+
+  // @include vw-mobile {
+  //   // top: 10%;
+  //   // left: -10px;
+  // }
+
+  .cardPersonBlockSpeakerImageWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100px;
+    width: 110px;
+    height: 110px;
+    background-color: var(--grey-bg);
+
+    @include vw-mobile {
+      width: 76px;
+      height: 76px;
+    }
+  }
+
+  .cardPersonBlockSpeakerImage {
+    width: 92px;
+    height: 92px;
+    border-radius: 100px;
+
+    @include vw-mobile {
+      width: 64px;
+      height: 64px;
+    }
+  }
+}

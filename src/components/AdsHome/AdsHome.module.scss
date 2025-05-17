@@ -1,0 +1,137 @@
+.container {
+    overflow: hidden;
+    position: relative;
+    width: 100%; /* Позволяет карточке занимать все доступное пространство */
+    max-width: 400px; /* Максимальная ширина карточки */
+    min-width: 200px;
+    min-height: 278px;
+    max-height: 480px;
+    margin-right: 12px;
+
+    @media (max-width: 580px) {
+        min-width: 150px;
+        min-height: 150px;
+    }
+
+    @media (max-width: 450px) {
+        min-width: 100px;
+        min-height: 100px;
+    }
+}
+.swipeBlock {
+  
+    background-color: #606060;
+    overflow: hidden;
+    width: 100%;
+    height: 270px;
+    user-select: none;
+    cursor: pointer;
+
+    @media screen and (max-width: 767px) {
+        height: 275px;
+    }
+
+    @media (max-width: 580px) {
+        height: 250px;
+    }
+
+    @media (max-width: 470px) {
+        height: 150px;
+    }
+
+    @media (max-width: 375px) {
+        height: 130px;
+    }
+
+    > img {
+        position: relative;
+
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+    }
+}
+
+.infoBlock {
+
+    position: relative;
+    padding: 8px 20px 8px 0;
+    box-sizing: border-box;
+    width: 100%; 
+
+    .title,
+    .price,
+    .location,
+    .date {
+        word-break: break-word; 
+    }
+
+    .title {
+        cursor: pointer;
+        font-weight: 400;
+        color: var(--blue-text--brightest-disabled);
+        margin-bottom: 7px;
+        line-height: 18px;
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        transition: color 0.1s ease;
+
+        &:hover{
+            color: var(--red-text--link);
+        }
+
+        @media (max-width: 580px) {
+            font-size: 16px;
+        }
+    }
+
+    .price {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 14px;
+        font-weight: 500;
+        @media (max-width: 580px) {
+            font-size: 12px;
+        }
+    }
+
+    .location {
+        display: block;
+
+        font-size: 14px;
+        color: var(--grey-ligter);
+        @media (max-width: 580px) {
+            font-size: 12px;
+        }
+    }
+}
+
+.date {
+    font-size: 14px;
+    color: var(--grey-ligter);
+    user-select: none;
+    cursor: default;
+    margin-top: 10px;
+
+    &:hover {
+        color: #fff;
+    }
+
+    @media screen and (max-width: 1024px) {
+        align-self: flex-end;
+    }
+
+    @media (max-width: 580px) {
+        font-size: 12px;
+        margin-top: 2px;
+    }
+}
+
+
+.tags{
+    position: relative;
+    z-index: 100;
+    margin: -25px 0px 5px;
+}

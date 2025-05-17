@@ -1,0 +1,186 @@
+@import "@src/lib/assets/styles/_width.scss";
+
+.customListBox {
+    background-color: var(--grey-bg);
+    margin-right: 36px;
+    position: relative;
+
+    &:last-child {
+        margin-right: 0;
+    }
+
+    @media screen and (max-width: 1280px) {
+        margin-right: 24px;
+    }
+
+    @media screen and (max-width: 1260px) {
+        margin-right: 20px;
+    }
+
+    @media screen and (max-width: 1035px) {
+        margin-right: 15px;
+    }
+
+    // @media screen and (max-width: 1024px) {
+    //     margin-right: 24px;
+    // }
+}
+
+.customButton {
+    padding: 5px 0px;
+    display: flex;
+    align-items: center;
+
+    > span,
+    > a > span {
+        white-space: nowrap;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 140%;
+
+        // &:nth-child(2) {
+        //     margin-left: 4px;
+        // }
+
+        @media screen and (max-width: 1225px) {
+            font-size: 1.1vw;
+        }
+
+        @media screen and (max-width: 1060px) {
+            font-size: 1vw;
+        }
+    }
+
+    a {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.greenSpan {
+    margin-left: 4px;
+    color: var(--green-main);
+}
+
+.customButtonImg {
+    margin-left: 6px;
+
+    @media screen and (max-width: 1260px) {
+        margin: 4px 0;
+        margin-left: 3px;
+    }
+
+    @media screen and (max-width: 1190px) {
+        width: 10px;
+        height: 10px;
+        object-fit: cover;
+    }
+}
+
+.customOptions,
+.customOptionsList {
+    z-index: 10;
+    border-radius: 12px;
+    background-color: var(--grey-bg);
+    padding: 16px 12px;
+    position: absolute;
+    left: -50px;
+    top: 45px;
+    box-shadow: 2px 2px 12px 0px rgba(0, 0, 0, 0.15);
+}
+
+.customOptions {
+    width: 262px;
+
+    @media screen and (max-width: 1380px) {
+        width: 18vw;
+    }
+}
+
+.customOptionsList {
+    // width: 262px;
+    // width: 782px;
+    width: 54.1vw;
+
+    @media screen and (min-width: 1440px) {
+        width: 782px;
+    }
+
+    @media screen and (max-width: 1380px) {
+        width: 65vw;
+    }
+}
+
+.option,
+.activeOption {
+    // margin-bottom: 8px;
+    color: var(--white-color);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+    cursor: pointer;
+
+    &:first-child {
+        margin-bottom: 16px;
+    }
+
+    a {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    @media screen and (max-width: 1225px) {
+        font-size: 1.5vw;
+    }
+
+    @media screen and (max-width: 1060px) {
+        font-size: 1.5vw;
+    }
+}
+
+.activeOption {
+    color: var(--green-main);
+}
+
+.optionList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    row-gap: 5px;
+    column-gap: 8px;
+}
+
+.optionListItem {
+    display: flex !important;
+    padding: 5px 0px;
+    align-items:center;
+    width: 24%;
+    max-width: 244px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 140%;
+    color: var(--white-color);
+    cursor: pointer;
+
+    &:hover {
+        color: var(--green-main);
+    }
+
+    @media screen and (max-width: 1430px) {
+        width: 24%;
+    }
+
+    // @media screen and (max-width: 1225px) {
+    //     font-size: 1.1vw;
+    // }
+
+    @media screen and (max-width: 1060px) {
+        font-size: 1vw;
+    }
+}
+
+.optionListItemIcon {
+    margin-right: 10px;
+}

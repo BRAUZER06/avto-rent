@@ -1,0 +1,65 @@
+// @import "../../../../../../../../lib/assets/styles/_width.scss";
+@import "@src/lib/assets/styles/_width.scss";
+
+.asideShare {
+  @include vw-laptop {
+    display: none;
+  }
+}
+
+.shareText {
+  color: var(--grey-ligter);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+  margin-bottom: 15px;
+}
+
+.shareIcons {
+  position: relative;
+}
+
+.shareBackground {
+  position: relative;
+  width: 329px;
+  height: 74px;
+  background-image: url("/images/backgroundShare.svg");
+  background-size: cover;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.shareBackground a,
+.shareBackground div {
+  position: absolute;
+  cursor: pointer;
+  top: calc((74px - height) / 2);
+
+  &:first-child {
+      width: 32px;
+      height: 32px;
+      left: calc((74px - 32px) / 2);
+  }
+
+  &:nth-child(2) {
+      width: 32px;
+      height: 32px;
+      left: calc(74px + 11px + (74px - 32px) / 2);
+  }
+
+  &:nth-child(3) {
+      width: 32px;
+      height: 32px;
+      left: calc(74px * 2 + 11px * 2 + (74px - 32px) / 2);
+  }
+
+  &:nth-child(4) {
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+      left: calc(74px * 3 + 11px * 3 + (74px - 20px) / 2);
+      top: calc((74px - 20px) / 2);
+  }
+}

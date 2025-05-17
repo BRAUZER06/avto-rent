@@ -1,0 +1,29 @@
+.tag {
+    padding: 4px 8px;
+    margin: 3px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: white;
+    cursor: default;
+    opacity: 0.4;
+    &:hover{
+      opacity: 1;
+    }
+  }
+  
+  .bargain {
+    // background-color: green;
+    background-color: var(--green-deep);
+  }
+  
+  .urgent {
+    // background-color: red;
+    background-color: var(--red-text--link);
+  }
+  
+  .exchange {
+    // background-color: blue;
+    background-color: var(--blue-text--brightest);
+  }
+  

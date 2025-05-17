@@ -1,0 +1,75 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.mobileHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.logo {
+    width: 104px;
+    height: 32px;
+    cursor: pointer;
+}
+
+.imagesContainer {
+    background-color: var(--grey-bg);
+    border-radius: 33px;
+    padding: 0px 5px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.containerBurger {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 48px;
+    border-radius: 33px;
+    width: 115px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &::before,
+    &::after {
+        content: "";
+        position: absolute;
+        left: 45px;
+        width: 25px;
+        height: 29px;
+        border-radius: 48%;
+        background-color: var(--background-black);
+        z-index: 2;
+    }
+    &::before {
+        top: -10px;
+    }
+
+    &::after {
+        top: 29px;
+    }
+}
+
+.searchIcon,
+.burgerIcon {
+    cursor: pointer;
+}
+
+.plug {
+    position: absolute;
+    width: 40px;
+    height: 25px;
+    background-color: var(--grey-bg);
+    top: 12px;
+    left: 37px;
+}

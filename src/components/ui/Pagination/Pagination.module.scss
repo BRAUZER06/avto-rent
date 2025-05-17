@@ -1,0 +1,60 @@
+@import "@src/lib/assets/styles/_width.scss";
+
+.pagination {
+  max-width: 424px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.paginationList {
+  display: flex;
+  color: #fff;
+}
+
+.paginationButton {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.paginationButtonDisabled {
+  display: none;
+}
+
+.paginationButtonNext {
+  .paginationButtonIconNext {
+    transform: rotate(180deg);
+  }
+
+}
+
+.paginationLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 130%;
+  color: var(--grey-ligter);
+  outline: none;
+}
+
+.paginationLinkActive {
+  color: var(--green-main);
+
+  &:active {
+    outline: none;
+  }
+}
+
+.paginationDots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--grey-ligter);
+}

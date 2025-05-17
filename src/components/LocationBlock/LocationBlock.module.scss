@@ -1,0 +1,59 @@
+@import "@src/lib/assets/styles/_width.scss";
+
+.cardLocation {
+  margin-top: 64px;
+  max-width: 910px;
+}
+
+.cardLocationTitle {
+  margin-bottom: 24px;
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 120%;
+  color: var(--green-main);
+
+  @include vw-mobile {
+    margin-bottom: 16px;
+    font-size: 24px;
+  }
+}
+
+.cardLocationContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardLocationCity {
+  margin-bottom: 16px;
+  font-size: 18px;
+  line-height: 140%;
+
+  @include vw-mobile {
+    margin-bottom: 11px;
+    font-size: 14px;
+  }
+}
+
+.cardLocationAddressContainer {
+  display: flex;
+  margin-bottom: 56px;
+  font-size: 18px;
+  line-height: 140%;
+
+  @include vw-mobile {
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+
+  .cardLocationAddressLink {
+    margin-left: 12px;
+    color: var(--green-main);
+  }
+}
+
+.cardLocationImage {
+  width: 100%;
+  max-height: 365px;
+  border-radius: 16px;
+  object-fit: cover;
+}

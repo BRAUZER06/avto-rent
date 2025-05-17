@@ -1,0 +1,30 @@
+$desktop: 1440px;
+// $laptopLarge: 1200px;
+$laptop: 1024px;
+// $tablet: 768px;
+$tablet: 992px;
+$mobile: 767px;
+
+@mixin vw-dekstop {
+  @media screen and (max-width: $desktop) {
+    @content;
+  }
+}
+
+@mixin vw-laptop {
+  @media screen and (max-width: $laptop) {
+    @content;
+  }
+}
+
+@mixin vw-tablet {
+  @media screen and (max-width: $tablet) {
+    @content;
+  }
+}
+
+@mixin vw-mobile {
+  @media screen and (max-width: $mobile) {
+    @content;
+  }
+}

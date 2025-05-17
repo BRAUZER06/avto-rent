@@ -1,0 +1,61 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+.infoBlock {
+}
+
+.title {
+    font-size: 25px;
+    line-height: 30px;
+    font-weight: 700;
+    padding-bottom: 16px;
+}
+.textBlock {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+.desc {
+    flex: 1;
+    font-size: 16px;
+}
+
+.mapTitle {
+    cursor: pointer;
+    flex-shrink: 0;
+    min-width: 132px;
+    color: #009cf0;
+}
+
+.mapBlock {
+    width: 100%;
+    height: 0px;
+    margin-top: 20px;
+    transition: all 0.5s ease-in-out; 
+    background-color: #fff;
+    
+}
+
+.mapBlockOpen {
+    height: 380px;
+    overflow: hidden;
+}
+
+.i {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    margin-left: 5px;
+    transition: transform 0.3s ease-out;
+}
+
+.down {
+    transform: rotate(45deg);
+}
+
+.up {
+    transform: rotate(-135deg);
+}

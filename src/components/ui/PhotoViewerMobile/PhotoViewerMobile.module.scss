@@ -1,0 +1,19 @@
+.swiperSlider {
+    max-height: 400px;
+    width: 100%;
+    overflow: hidden;
+    background: #fff;
+}
+
+.swiperSlide {
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+        max-height: 400px;
+        object-fit: contain;
+        width: auto;
+    }
+}

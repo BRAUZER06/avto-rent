@@ -1,0 +1,159 @@
+@import "../../../lib/assets/styles/_media.scss";
+
+.shareBackground {
+    position: relative;
+    height: 74px;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+}
+
+.shareBackground a {
+    position: relative;
+    z-index: 101;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 74px;
+    min-height: 74px;
+    width: 74px;
+    min-width: 74px;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: var(--background-black);
+
+    color: var(--green-main);
+    transition: var(--transition-duration);
+
+    &:hover {
+        color: var(--green-main-hover-bright);
+    }
+
+    @include vw-lg {
+        height: 60px;
+        min-height: 60px;
+        width: 60px;
+        min-width: 60px;
+    }
+
+    @include vw-md {
+        height: 52px;
+        min-height: 52px;
+        width: 52px;
+        min-width: 52px;
+    }
+
+    &:not(:last-child)::before,
+    &:not(:last-child)::after {
+        transform: translate(-50%, -50%);
+        cursor: default;
+        background-color: var(--grey-bg);
+        content: "";
+        position: absolute;
+        right: -24.5%;
+        width: 13px;
+        height: 14px;
+        border-radius: 48%;
+        z-index: 2;
+
+        @include vw-lg {
+            right: -33%;
+            width: 15px;
+        }
+
+        @include vw-md {
+            right: -32.5%;
+            width: 12px;
+            height: 14px;
+        }
+    }
+
+    &::before {
+        top: 24px;
+
+        @include vw-lg {
+            top: 17px;
+        }
+
+        @include vw-md {
+            top: 13.5px;
+        }
+    }
+
+    &::after {
+        top: 49px;
+        @include vw-lg {
+            top: 44px;
+        }
+
+        @include vw-md {
+            top: 38.5px;
+        }
+    }
+
+    &:not(:last-child) {
+        margin-right: 10px;
+
+        @include vw-md {
+            margin-right: 8px;
+        }
+    }
+}
+
+.transitionBackground {
+    cursor: default;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    z-index: 1;
+    width: 90%;
+    height: 20px;
+    background-color: var(--background-black);
+    top: 50%;
+    left: 50%;
+}
+
+.iconTg {
+    width: 24px;
+    height: 20px;
+
+    @include vw-md {
+        width: 19px;
+        height: 16px;
+    }
+}
+.iconVk {
+    width: 24px;
+    height: 14.5px;
+
+    @include vw-md {
+        width: 19px;
+        height: 11.5px;
+    }
+}
+.iconYT {
+    width: 28.5px;
+    height: 20px;
+
+    @include vw-md {
+        width: 22.7px;
+        height: 16px;
+    }
+}
+.iconHubr {
+    width: 40px;
+    height: 15px;
+
+    @include vw-md {
+        width: 32px;
+        height: 12px;
+    }
+}
+.iconCodeDurovv {
+    width: 36px;
+    height: 20px;
+
+    @include vw-md {
+        width: 32px;
+        height: 24px;
+    }
+}

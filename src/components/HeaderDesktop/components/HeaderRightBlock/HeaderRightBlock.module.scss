@@ -1,0 +1,112 @@
+.search {
+    overflow: hidden;
+    position: relative;
+    background-color: var(--grey-bg);
+    display: flex;
+    align-items: center;
+    height: 48px;
+    max-width: 270px;
+    border-radius: 33px;
+    font-family: "X5 Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+
+ 
+    // &::before,
+    // &::after {
+    //     content: "";
+    //     position: absolute;
+    //     left: -25px;
+    //     width: 30px;
+    //     height: 29px;
+    //     border-radius: 48%;
+    //     background-color: var(--background-black);
+    //     z-index: 2;
+    // }
+    // &::before {
+    //     top: -10px;
+    // }
+
+    // &::after {
+    //     top: 29px;
+    // }
+}
+
+.plug {
+    position: absolute;
+    width: 45px;
+    height: 25px;
+    background-color: var(--grey-bg);
+    top: 12px;
+    left: -30px;
+}
+
+.container {
+    color: var(--grey-text);
+    background-color: var(--grey-bg);
+    display: flex;
+    justify-content: space-between;
+    min-width: 90px;
+    // padding: 10px 0px;
+    margin: 0px 5px 0px 17px;
+
+    &::placeholder {
+        opacity: 0.4;
+    }
+
+    @media screen and (max-width: 1200px) {
+        font-size: 1.1vw;
+    }
+
+    @media screen and (max-width: 1135px) {
+        font-size: 1vw;
+    }
+}
+
+.heart,
+.message,
+.user,
+.createAds {
+    cursor: pointer;
+    display: flex;
+    margin-right: 7px;
+    img{
+        margin-right: 5px;
+        min-width: 20px;
+        width: 20px;
+        height: auto;
+    }
+}
+
+.heart {
+}
+.message {
+}
+.user {
+}
+.createAds {
+    margin-right: -15px;
+    flex: 1;
+   
+    width: 155px;
+    padding: 0px 15px;
+    cursor: pointer;
+    margin: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 26px;
+    background-color: #0079C2;
+
+    color: #fff;
+    line-height: 120%;
+    font-size: 15x;
+    height: 40px;
+
+    &:hover{
+        background-color: var(--blue-text);
+    }
+}

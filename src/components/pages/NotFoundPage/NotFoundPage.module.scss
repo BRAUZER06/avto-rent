@@ -1,0 +1,101 @@
+@import "@src/lib/assets/styles/_width.scss";
+
+.container {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 729px;
+  margin: 0 auto;
+  padding-top: 119px;
+  padding-bottom: 87px;
+  
+  @include vw-mobile {
+    padding-top: 161px;
+    padding-bottom: 0;
+  }
+}
+
+.messageContainer {
+  display: flex;
+  align-items: center;
+  max-width: 729px;
+  margin-bottom: 48px;
+
+  @include vw-mobile {
+    margin-bottom: 36px;
+  }
+
+  .figure {
+    color: var(--grey-text-dark);
+    font-size: 300px;
+    font-weight: 500;
+    line-height: 120%;
+
+    @include vw-mobile {
+      font-size: 140px;
+    }
+
+    @media screen and (max-width: 345px) {
+      font-size: 100px;
+    }
+  }
+
+  .image {
+    margin: 0 36px;
+    width: 246.713px;
+    height: 229.195px;
+
+    @include vw-mobile {
+      margin: 0 12px;
+      width: 114px;
+      height: 106px;
+    }
+
+    @media screen and (max-width: 345px) {
+      margin: 0 10px;
+      width: 83px;
+      height: 74px;
+    }
+  }
+}
+
+.description {
+  margin-bottom: 40px;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 120%;
+
+  @include vw-mobile {
+    margin-bottom: 216px;
+    max-width: 232px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 140%; 
+  }
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  width: 225px;
+  height: 56px;
+  padding: 6px 60px;
+  background-color: var(--green-main);
+  border-radius: 40px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 140%;
+  color: #000;
+
+  @include vw-mobile {
+    position: sticky;
+    inset: 0px;
+    justify-content: center;
+    width: 100%;
+    border-radius: 12px;
+    font-size: 14px;
+  }
+}

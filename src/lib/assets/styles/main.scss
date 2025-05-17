@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "./_reset.scss";
+@import "./_variables.scss";
+@import "./_vars";
+@import "./_fonts.scss";
+@import "./mixins";
+@import "./_media";

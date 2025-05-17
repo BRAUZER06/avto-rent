@@ -1,0 +1,30 @@
+.container {
+    margin: 16px 0px;
+    display: flex;
+    height: 270px;
+   
+    overflow: hidden;
+    gap: 20px;
+    @media (max-width: 650px) {
+        flex-direction: column;
+        height: calc(270px * 2) 
+    }
+
+
+
+    .block {
+        background: var(--grey-text-dark );
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 14px;
+
+        img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+    }
+}

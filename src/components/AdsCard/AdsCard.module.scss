@@ -1,0 +1,311 @@
+.container {
+    box-shadow:
+        rgba(0, 0, 0, 0.2) 0px 12px 28px 0px,
+        rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
+        rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+    min-height: 200px;
+    overflow: hidden;
+    display: flex;
+    background-color: #1c1c1c;
+    border: 1px solid var(--grey-bg);
+    position: relative;
+    border-radius: 16px;
+    padding: 10px 10px;
+    margin-bottom: 10px;
+
+    @media screen and (max-width: 767px) {
+        border-radius: 10px;
+        padding: 5px 10px 5px 5px;
+        min-height: 130px;
+    }
+
+    &:hover {
+        background-color: var(--grey-bg);
+        border: 1px solid var(--grey-bg);
+    }
+}
+
+.swipeBlock {
+    border-radius: 7px;
+    overflow: hidden;
+    width: 230px;
+    min-width: 230px;
+    height: 210px;
+    min-height: 210px;
+    user-select: none;
+    cursor: pointer;
+
+    @media screen and (max-width: 767px) {
+        width: 180px;
+        min-width: 180px;
+        height: 170px;
+        min-height: 170px;
+    }
+
+    @media screen and (max-width: 500px) {
+        width: 130px;
+        min-width: 130px;
+        height: 120px;
+        min-height: 120px;
+    }
+
+    > img {
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+    }
+}
+
+.textBlock {
+    display: flex;
+    flex-direction: column;
+    margin-left: 16px;
+    width: 100%;
+    min-height: 100px;
+    padding: 0px 10px 0px 5px;
+
+    @media screen and (max-width: 1024px) {
+        max-width: 100%;
+    }
+
+    @media screen and (max-width: 767px) {
+        margin-left: 10px;
+    }
+    @media screen and (max-width: 700px) {
+       padding-right: 0px;
+    }
+
+    @media screen and (max-width: 500px) {
+        margin-left: 5px;
+    }
+}
+
+.titleBlock,
+.priceBlock,
+.descBlock,
+.locationBlock {
+    cursor: pointer;
+    margin-bottom: 4px;
+}
+
+.titleBlock {
+    width: 80%;
+
+    @media screen and (max-width: 1100px) {
+        width: 100%;
+    }
+}
+
+.titleText {
+    flex-grow: 1;
+    color: #ffffff;
+    margin-top: 0px;
+    min-height: 40px;
+    font-size: 19px;
+    line-height: 110%;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+
+    &:hover {
+        color: var(--green-main);
+    }
+
+    @media screen and (max-width: 1439px) {
+        min-height: 30px;
+        font-size: 19px;
+        line-height: 130%;
+    }
+
+    @media screen and (max-width: 767px) {
+        line-height: 100%;
+        font-size: 16px;
+    }
+
+    @media screen and (max-width: 500px) {
+        min-height: 25px;
+        font-size: 14px;
+    }
+}
+
+.priceBlock {
+}
+
+.priceText {
+    color: var(--green-main);
+    font-size: 19px;
+    font-weight: 500;
+
+    @media screen and (max-width: 767px) {
+        font-size: 16px;
+    }
+
+    @media screen and (max-width: 500px) {
+        font-size: 14px;
+    }
+
+    &:hover {
+        color: var(--blue-text);
+    }
+}
+
+.descBlock {
+    flex: 1;
+}
+
+.descText {
+    color: var(--grey-text);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    -webkit-line-clamp: 4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+
+    @media screen and (max-width: 1439px) {
+        font-size: 14px;
+        line-height: 18px;
+    }
+
+    @media screen and (max-width: 767px) {
+        -webkit-line-clamp: 4;
+        font-size: 13px;
+        line-height: 14px;
+    }
+
+    @media screen and (max-width: 500px) {
+        -webkit-line-clamp: 2;
+        font-size: 12px;
+    }
+}
+
+.locationBlock {
+}
+
+.locationText {
+    color: var(--grey-ligter);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+
+    @media screen and (max-width: 767px) {
+        line-height: 100%;
+        font-size: 13px;
+    }
+    @media screen and (max-width: 500px) {
+        font-size: 12px;
+    }
+}
+
+.userInfoBlockMobil {
+    display: none;
+}
+
+.userInfoBlock {
+    margin-left: auto;
+    margin: 10px 10px;
+    display: flex;
+    flex-direction: column;
+
+    @media screen and (max-width: 1439px) {
+        margin: 5px 5px;
+    }
+
+    @media screen and (max-width: 700px) {
+        margin: 0px;
+    }
+}
+
+.userNameBlock {
+    font-size: 15px;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-align: center;
+
+    @media screen and (max-width: 1439px) {
+        font-size: 14px;
+    }
+
+    @media screen and (max-width: 767px) {
+        font-size: 13px;
+    }
+
+    @media screen and (max-width: 500px) {
+        font-size: 12px;
+    }
+}
+.userNameBlock,
+.numberContainer {
+    @media screen and (max-width: 700px) {
+        display: none;
+    }
+}
+
+.numberContainer {
+    flex-grow: 1;
+}
+
+.numberShowBlock,
+.numberBlock {
+    font-size: 14px;
+    margin-top: 10px;
+    width: 150px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--blue-text);
+    border-radius: 10px;
+
+    &:hover {
+        background-color: var(--green-deep);
+    }
+
+    @media screen and (max-width: 1439px) {
+        font-size: 14px;
+        width: 145px;
+        height: 30px;
+    }
+
+    @media screen and (max-width: 767px) {
+        width: 130px;
+        font-size: 13px;
+    }
+    @media screen and (max-width: 500px) {
+        width: 120px;
+        font-size: 12px;
+    }
+}
+
+.numberShowBlock {
+    cursor: pointer;
+}
+
+.numberBlock {
+    background-color: var(--green-deep);
+}
+
+.date {
+    font-size: 14px;
+    user-select: none;
+    cursor: default;
+    color: var(--grey-ligter);
+
+    &:hover {
+        color: var(--green-main);
+    }
+
+    @media screen and (max-width: 767px) {
+        font-size: 13px;
+    }
+
+    @media screen and (max-width: 500px) {
+        font-size: 12px;
+    }
+}

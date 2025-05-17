@@ -1,0 +1,23 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+}
+
+.content {
+  color: var(--green-main);
+  font-size: 24px;
+  line-height: 120%;
+  text-align: center;
+
+  @media screen and (max-width: 1400px) {
+    font-size: 22px;
+  }
+
+  @media screen and (max-width: 1200px) {
+    font-size: 20px;
+  }
+}
+
+.icon {
+  margin-left: 16px;
+}

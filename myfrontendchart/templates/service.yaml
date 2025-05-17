@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: x5frontend
+  labels:
+    app: x5frontend # Предполагая, что это должен быть метка, она должна быть в формате ключ: значение
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 3000
+      protocol: TCP
+      name: http
+  selector:
+    app: x5frontend

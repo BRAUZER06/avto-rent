@@ -1,0 +1,13 @@
+.fullScreenContainer {
+    cursor: default;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--background-black);
+    z-index: 200;
+    padding: 20px 10px 50px;
+    margin-bottom: 50px;
+    overflow-y: auto;
+}

@@ -1,0 +1,12 @@
+@import "../../lib/assets/styles/_media.scss";
+
+.wrapper {
+    max-width: 1440px;
+    width: 100%;
+    padding: 32px;
+    margin: 0 auto;
+
+    @include vw-md {
+        padding: 20px 10px;
+    }
+}

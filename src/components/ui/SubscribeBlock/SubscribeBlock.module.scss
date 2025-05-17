@@ -1,0 +1,105 @@
+@import "@src/lib/assets/styles/_width.scss";
+
+.subscribe {
+  margin-top: 56px;
+  max-width: 912px;
+
+  @include vw-mobile {
+    margin-top: 32px;
+  }
+}
+
+.subscribeTitle {
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 120%;
+  color: var(--green-main);
+
+  @include vw-mobile {
+    margin-top: 26px;
+    font-size: 24px;
+  }
+}
+
+.subscribeList {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding-top: 34px;
+  overflow-x: scroll;  
+  -ms-overflow-style: none;
+  scrollbar-width: none; 
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+}
+
+.subscribeListItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  width: 203px;
+  height: 216px;
+  margin-right: 30px;
+  background: url('/images/subscribeItemBackground.svg') no-repeat top right / auto 100%;
+  border-radius: 16px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+  
+  &:hover {
+    background-image: url('/images/subscribeItemBackgroundHover.svg');
+  }
+
+  @include vw-mobile {
+    padding: 20px 10px;
+    margin-right: 16px;
+    width: 172px;
+    height: 152px;
+    font-size: 24px;
+    background: url('/images/subscribeItemBackgroundMobile.svg') no-repeat top left / auto 100%;
+    
+    &:hover {
+      background-image: url('/images/subscribeItemBackgroundMobileHover.svg');      
+    }
+  }
+}
+
+.subscribeListItemImage {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  
+  @include vw-mobile {
+    width: 36px;
+    height: 36px;
+    top: -7px;
+    right: -7px;
+  }
+}
+
+.subscribeListItemTitle {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 120%;
+  color: var(--green-main);
+  
+  @include vw-mobile {
+    font-size: 18px;
+  }
+}
+
+.subscribeListItemDescription {
+  margin-top: 102px;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+  
+  @include vw-mobile {
+    font-size: 12px;
+    margin-top: 54px;
+  }
+}

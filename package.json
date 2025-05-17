@@ -1,0 +1,52 @@
+{
+    "name": "x5-career",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "format": "prettier --write",
+        "check-format": "prettier --check '**/*.{js,jsx,ts,tsx,json,css,md}' || (echo 'Код не отформатирован с помощью Prettier. Пожалуйста, запустите \"npm run format\" перед пушем.')",
+        "prepare": "husky install"
+    },
+    "dependencies": {
+        "@pbe/react-yandex-maps": "1.1.5",
+        "@headlessui/react": "^1.7.18",
+        "@next/font": "^14.1.0",
+        "clsx": "^2.1.0",
+        "escape-html": "^1.0.3",
+        "html-react-parser": "^5.1.10",
+        "next": "14.1.0",
+        "or": "^0.2.0",
+        "react": "^18",
+        "react-dom": "^18",
+        "sass": "^1.70.0",
+        "swiper": "^11.1.1"
+    },
+    "devDependencies": {
+        "@types/escape-html": "^1.0.4",
+        "@types/node": "^20",
+        "@types/react": "^18",
+        "@types/react-dom": "^18",
+        "autoprefixer": "^10.0.1",
+        "eslint": "^9.0.0",
+        "husky": "^8.0.0",
+        "lint-staged": "^15.2.0",
+        "postcss": "^8",
+        "prettier": "^3.2.4",
+        "tailwindcss": "^3.3.0",
+        "typescript": "^5"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged",
+            "pre-push": "npm run check-format"
+        }
+    },
+    "lint-staged": {
+        "*.{js,jsx,ts,tsx,json,css,md}": [
+            "npm run format"
+        ]
+    }
+}

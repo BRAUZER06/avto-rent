@@ -1,0 +1,20 @@
+.container {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    margin: 24px 0px 0px;
+    padding-right: 8px;
+}
+
+.img {
+    margin-right: 12px;
+}
+
+.text {
+    color: var(--grey-ligter);
+    font-family: "X5 Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+}

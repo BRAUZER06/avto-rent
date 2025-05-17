@@ -1,0 +1,22 @@
+export const ArrowLink45deg = ({ className }: any) => {
+    return (
+        <svg
+            className={className}
+            width="40"
+            height="40"
+            viewBox="0 0 40 40"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <g id="Arrow Link">
+                <circle id="Ellipse 416" cx="20" cy="20" r="20" fill="currentColor" />
+                <path
+                    id="Vector 80"
+                    d="M16 24L24 16M24 16H16M24 16V24"
+                    stroke="#95FF42"
+                    strokeWidth="1.5"
+                />
+            </g>
+        </svg>
+    );
+};

@@ -1,0 +1,49 @@
+@import "../../../lib/assets/styles/_media.scss";
+
+.container {
+    box-sizing: border-box;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 0px 6px 18px;
+    margin-right: 12px;
+    margin-bottom: 11px;
+    background-color: var(--green-main);
+    border: 1px solid var(--green-main);
+    border-radius: 64px;
+
+    @include vw-mob {
+        padding: 4px 0px 4px 18px;
+        margin-right: 8px;
+    }
+
+    &.default {
+        background-color: var(--grey-bg);
+        border: 1px solid var(--grey-light);
+    }
+}
+.title {
+    cursor: pointer;
+    margin-right: 4px;
+    color: var(--background-black);
+    font-family: "X5 Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+
+    &.defaultText {
+        margin-right: 8px;
+        color: var(--white-color);
+    }
+}
+
+.imgContainer {
+    padding: 5px 6px 5px 0px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.img {
+    width: 16px;
+    height: 16px;
+}

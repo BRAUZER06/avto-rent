@@ -1,0 +1,50 @@
+.iconsBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 15px;
+    padding: 10px 20px;
+
+    @media screen and (max-width: 767px) {
+        gap: 5px;
+            
+    }
+    @media screen and (max-width: 500px) {
+        padding: 0px;
+        gap: 0px;
+    }
+
+    .iconBlock {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--blue-text);
+        padding: 5px;
+
+        @media screen and (max-width: 500px) {
+            padding: 5px;
+        }
+
+        .iconView {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            @media screen and (max-width: 500px) {
+                width: 15px;
+                height: 15px;
+            }
+        }
+
+        span {
+            font-size: 15px;
+            color: var(--grey-text);
+        }
+
+        &:hover {
+            color: gold;
+        }
+    }
+}

@@ -1,0 +1,155 @@
+@import "@src/lib/assets/styles/_width.scss";
+
+.lectures {
+  margin-top: 80px;
+  max-width: 1270px;
+
+  @include vw-mobile {
+    margin-top: -15px;
+  }
+}
+
+.lecturesTitle {
+  margin-bottom: 24px;
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 120%;
+  color: var(--green-main);
+  
+  @include vw-mobile {
+    font-size: 24px;
+  }
+}
+
+.subscribeList {
+  display: flex;
+  justify-content: space-between;
+}
+
+.lecturesList {
+  width: 100%;
+}
+
+.lecturesListItem {
+  display: grid;
+  grid-template-columns: 58.35% 41.02%;
+  gap: 8px;
+  margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  @include vw-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .lecturesListItemVideo {
+    position: relative;
+    max-width: 741px;
+    max-height: 408px;
+    padding: 8px;
+    margin-right: 8px;
+    border-radius: 16px;
+    background-color: var(--grey-bg); 
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      z-index: 10;
+      width: 52px;
+      height: 52px;
+      background-image: url('/images/archiveEventLectures/playIcon.svg');
+      
+      @media screen and (max-width: 1023px) {
+        background-image: url('/images/archiveEventLectures/playIconMobile.svg');
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+    @include vw-mobile {
+      margin-right: 0;   
+      border-radius: 12px;   
+    }
+
+    .lecturesListItemImage {
+      max-width: 725px;
+      max-height: 392px;
+      border-radius: 12px;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 16px;
+
+      @include vw-mobile {   
+        border-radius: 12px;   
+      }  
+    }
+  }
+
+  .lecturesListItemDescription {
+    max-width: 521px;
+    // width: 41.02%;
+    padding: 23px;
+    border-radius: 16px;
+    background-color: var(--grey-bg);
+
+    @include vw-mobile {
+      max-width: 100%;
+      width: 100%;
+      padding: 16px;
+    }
+
+    .lecturesListItemTitle {
+      margin-bottom: 16px;
+      font-size: 1.67vw;
+      // font-size: 1.6vw;
+      font-weight: 400;
+      line-height: 120%;
+      color: var(--green-main);  
+
+      @media screen and (min-width: 1440px) {
+        font-size: 24px;
+      }
+
+      @include vw-mobile {
+        font-size: 18px;
+      }
+    }
+  
+    .lecturesListItemText {
+      font-size: 1.25vw;
+      font-weight: 400;
+      line-height: 140%;
+
+      @media screen and (min-width: 1440px) {
+        font-size: 18px;
+      }
+
+      @include vw-mobile {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+.iframeStyle {
+  width: 70vw;
+  height: 70vh;
+
+  @media screen and (max-width: 1023px) {
+    width: 65vw;
+    height: 25vh;
+  }
+}

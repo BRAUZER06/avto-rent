@@ -1,0 +1,16 @@
+<svg width="52" height="54" viewBox="0 0 52 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Arrow Link">
+<g id="Ellipse 416" filter="url(#filter0_b_1129_6997)">
+<circle cx="26" cy="27" r="26" fill="#272727"/>
+</g>
+<path id="Vector 80" d="M20.3431 27.0001H31.6569M31.6569 27.0001L26 21.3433M31.6569 27.0001L26 32.657" stroke="#95FF42" stroke-width="1.5"/>
+</g>
+<defs>
+<filter id="filter0_b_1129_6997" x="-20" y="-19" width="92" height="92" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feGaussianBlur in="BackgroundImageFix" stdDeviation="10"/>
+<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_1129_6997"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_1129_6997" result="shape"/>
+</filter>
+</defs>
+</svg>

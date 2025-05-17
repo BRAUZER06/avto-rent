@@ -1,0 +1,22 @@
+.notification {
+    position: fixed;
+    bottom: 2%;
+    right: 2%;
+    transform: translateX(-50%, -50%);
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    z-index: 999;
+    text-align: center;
+    min-width: 114px;
+}
+
+.success {
+    background-color: var(--green-main);
+    color: #000000;
+}
+
+.error {
+    background-color: red;
+    color: #ffffff;
+}

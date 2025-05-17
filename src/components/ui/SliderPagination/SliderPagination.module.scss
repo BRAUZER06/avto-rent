@@ -1,0 +1,30 @@
+@import "@src/lib/assets/styles/_width.scss";
+
+.SliderPagination {
+  position: relative;
+  bottom: -5px!important;
+  width: auto !important;
+  display: none;
+  height: 40px;
+
+  @media screen and (max-width: 1023px) {
+    display: block;
+  }
+
+  :global {
+    .swiper-pagination-bullet {
+      width: 5px;
+      height: 5px;
+      margin: 0!important;
+      margin-right: 6px !important;
+      background-color: var(--grey-bg-hover-dark);
+      opacity: 1;
+
+      &.swiper-pagination-bullet-active {
+        width: 20px;
+        border-radius: 12px;
+        background-color: var(--green-main);
+      }
+    }
+  }
+}

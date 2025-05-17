@@ -1,0 +1,101 @@
+.customListBox {
+    background-color: var(--grey-bg);
+    position: relative;
+    max-width: 448px;
+    min-width: 120px;
+    width: 100%;
+    border-radius: 6px;
+    // margin-bottom: 16px;
+}
+
+.customButton {
+    border-radius: 6px;
+    height: 40px;
+    width: 100%;
+    padding: 3px 15px 3px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s;
+    text-align: left;
+    overflow: hidden;
+
+    &:hover {
+        background-color: var(--grey-bg-hover-light);
+    }
+
+    .textBlock{
+        width: 95%;
+        
+    }
+
+    .title {
+        align-self: center;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 140%;
+        color: var(--grey-text);
+    }
+
+    .titleSub {
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 140%;
+        color: var(--grey-ligter);
+    }
+
+    .checkedSelectedJoin {
+        width: 100%;
+        // font-size: 16px;
+        // color: var(--green-main);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 140%;
+
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.customButtonDisable {
+
+    cursor: default;
+    &:hover {
+        background-color: transparent;
+    }
+}
+
+.customButtonImg {
+    align-self: center;
+}
+
+.customOptions {
+    width: 100%;
+    background-color: var(--grey-bg);
+    position: absolute;
+    top: 44px;
+    left: 0px;
+    z-index: 2;
+    box-shadow: 2px 2px 12px 0px rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    padding: 16px 6px 16px 12px;
+}
+
+.optionsContainer {
+    max-height: 326px;
+    overflow-y: auto;
+}
+
+.option,
+.activeOption {
+    cursor: pointer;
+}
+
+.activeOption {
+    // border: 1px solid gray;
+}

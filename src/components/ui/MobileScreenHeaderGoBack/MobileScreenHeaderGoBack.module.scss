@@ -1,0 +1,30 @@
+.filterHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+}
+
+.filterTitle {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+
+    > span {
+        margin-left: 12px;
+        color: var(--white-color);
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 120%;
+    }
+}
+.resetButton {
+    cursor: pointer;
+    color: var(--grey-text);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+}

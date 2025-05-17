@@ -1,0 +1,18 @@
+@import "../../lib/assets/styles/_media.scss";
+
+.container {
+    flex: 1 1 auto;
+    min-width: 250px;
+  
+}
+
+.desktopContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  
+
+    @include vw-smMax {
+        display: none;
+    }
+}

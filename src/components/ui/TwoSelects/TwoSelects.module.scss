@@ -1,0 +1,29 @@
+
+
+.container{
+    display: flex;
+    width: 100%;
+
+
+   
+}
+
+.input{
+    display: block;
+    flex: 1;
+    color: var(--grey-text);
+    background-color: var(--grey-bg);
+    min-width: 90px;
+    padding: 8px 16px;
+    font-size: 14px;
+    // border: 1px solid var(--green-main);
+    border: 1px solid var(--grey-light);
+    
+    
+&:nth-child(1){border-radius: 6px 0px 0px 6px ;}
+&:nth-child(2){border-radius: 0px 6px 6px 0px ;}
+}
+
+.margin{
+    margin-right: 10px;
+}

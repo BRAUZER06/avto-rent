@@ -1,0 +1,24 @@
+.container {
+    display: flex;
+
+    @media screen and (max-width: 1024px) {
+        flex-direction: column;
+    }
+}
+.filterDesktop {
+    max-width: 300px;
+    margin-right: 40px;
+
+    @media screen and (max-width: 1439px) {
+        margin-right: 20px;
+    }
+}
+
+.filterMobile {
+    width: 100%;
+}
+
+.itemsList {
+    overflow: hidden;
+    flex: 1;
+}

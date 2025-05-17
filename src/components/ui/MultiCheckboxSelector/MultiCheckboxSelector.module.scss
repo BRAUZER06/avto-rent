@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.blockCheckboxes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .checkbox {
+        width: 49%;
+    }
+}
+
+.more {
+    font-size: 15px;
+    width: 50px;
+    text-align: left;
+    margin: 5px 0px 2px;
+    color: var(--blue-text);
+}
