@@ -9,8 +9,13 @@ const ProfileDetails = () => {
     const [activeTab, setActiveTab] = useState("main");
 
     const [type, setType] = useState([
-        { id: "1", title: "Обычный пользователь", checked: true },
-        { id: "2", title: " Магазин / Компания", checked: false },
+        {
+            id: "1",
+            title: "Частное лицо",
+            description: "До 3 автомобилей",
+            checked: true,
+        },
+        { id: "2", title: "Компания", description: "От 3 автомобилей", checked: false },
     ]);
 
     const [profileData, setProfileData] = useState({
@@ -85,7 +90,7 @@ const ProfileDetails = () => {
     };
 
     const addPhoneNumber = () => {
-        if (phoneNumbers.length < 3) {
+        if (phoneNumbers.length < 2) {
             setPhoneNumbers(prevNumbers => [
                 ...prevNumbers,
                 {
@@ -118,6 +123,7 @@ const ProfileDetails = () => {
                 <label className={styles.formLabel}>Описание компании:</label>
                 <textarea
                     className={styles.textarea}
+                    placeholder="Наша компания — «АвтоПрокат+», 12 машин (Camry, BMW X5, Kia Rio). Работаем 5 лет, заботимся о клиентах: все авто в отличном состоянии, своевременное обслуживание и гарантия качества."
                     value={companyProfileData.companyDescription}
                     onChange={e =>
                         handleCompanyProfileDataChange(
@@ -127,21 +133,25 @@ const ProfileDetails = () => {
                     }
                 />
             </div>
+
             <div className={styles.formGroup}>
                 <label className={styles.formLabel}>Краткое описание:</label>
                 <textarea
                     className={styles.textarea}
+                    placeholder="Например: автопарк из 12 машин, работаем с 2018 года"
                     value={companyProfileData.shortDescription}
                     onChange={e =>
                         handleCompanyProfileDataChange("shortDescription", e.target.value)
                     }
                 />
             </div>
+
             <div className={styles.formGroup}>
                 <label className={styles.formLabel}>Адрес:</label>
                 <input
                     type="text"
                     className={styles.formControl}
+                    placeholder="Например: Назрань, ул. Чабиева, 2"
                     value={companyProfileData.address}
                     onChange={e =>
                         handleCompanyProfileDataChange("address", e.target.value)
@@ -182,6 +192,7 @@ const ProfileDetails = () => {
                                                 checked={profile.checked}
                                                 title={profile.title}
                                                 id={profile.id}
+                                                tooltip={profile.description}
                                                 handleCheckboxChange={
                                                     toggleTypeProfileCheckbox
                                                 }
@@ -290,7 +301,7 @@ const ProfileDetails = () => {
                             ))}
 
                             <div className={styles.btnContainer}>
-                                {phoneNumbers.length < 3 && (
+                                {phoneNumbers.length < 2 && (
                                     <button
                                         type="button"
                                         className={styles.addButton}
@@ -317,7 +328,11 @@ const ProfileDetails = () => {
                         <form>
                             {renderCompanyProfileFields()}
 
-                            <h3 className={styles.sectionMessenger}>Социальные сети:</h3>
+                            <h3 className={styles.sectionMessenger}>
+                                Социальные сети{" "}
+                                <span style={{ color: "gray" }}>(при необходимости)</span>
+                                :
+                            </h3>
                             {socialLinks.map(link => (
                                 <div key={link.id} className={styles.formGroup}>
                                     <label className={styles.formLabel}>
@@ -351,7 +366,7 @@ const ProfileDetails = () => {
                             ))}
 
                             <div className={styles.btnContainer}>
-                                {socialLinks.length < 7 &&
+                                {socialLinks.length < 4 &&
                                     ["WhatsApp", "Telegram", "Instagram", "Website"].map(
                                         type => (
                                             <button

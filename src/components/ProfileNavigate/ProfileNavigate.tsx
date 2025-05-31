@@ -18,12 +18,13 @@ export const ProfileNavigate = ({ rating = 3.5, reviews = 0, ads = 0 }) => {
                     <div className={style.rating}>
                         <span>{rating.toFixed(1)}</span>
                         <div className={style.starsContainer}>
-                            <div className={style.starsFilled} style={{ width: `${ratingPercentage}%` }}>
+                            <div
+                                className={style.starsFilled}
+                                style={{ width: `${ratingPercentage}%` }}
+                            >
                                 ★★★★★
                             </div>
-                            <div className={style.starsEmpty}>
-                                ★★★★★
-                            </div>
+                            <div className={style.starsEmpty}>★★★★★</div>
                         </div>
                         <Link href="/reviews">
                             <p className={style.reviewsLink}>Нет отзывов</p>
@@ -55,24 +56,30 @@ export const ProfileNavigate = ({ rating = 3.5, reviews = 0, ads = 0 }) => {
             <div className={style.section}>
                 <ul>
                     <li>
-                        <Link href="/profile/ads">Мои объявления</Link>
+                        <Link href="/profile/new_auto">Добавить Автомобиль</Link>
                     </li>
                     <li>
-                        <Link href="/profile/reviews">Мои отзывы</Link>
+                        <Link href="/profile/my_cars">Мои Автомобили</Link>
+                    </li>{" "}
+                    <hr className={style.hr} />
+                    <li>
+                        <Link href="/profile/details">
+                            Управление <br /> профилем
+                        </Link>
                     </li>
                     {/* <li>
                         <Link href="/profile/favorites">Избранное</Link>
                     </li> */}
-                    <hr className={style.hr} />
+                    {/* <hr className={style.hr} />
                     <li>
                         <Link href="/profile/messages">Сообщения</Link>
                     </li>
                     <li>
                         <Link href="/profile/notifications">Уведомления</Link>
-                    </li>
-                    <hr className={style.hr} />
+                    </li> */}
+                    <hr className={style.hr} />{" "}
                     <li>
-                        <Link href="/profile/details">Управление <br/> профилем</Link>
+                        <Link href="/profile/reviews">Мои отзывы</Link>
                     </li>
                     {/* <li>
                         <Link href="/profile/settings">Настройки</Link>
@@ -82,4 +89,3 @@ export const ProfileNavigate = ({ rating = 3.5, reviews = 0, ads = 0 }) => {
         </div>
     );
 };
-

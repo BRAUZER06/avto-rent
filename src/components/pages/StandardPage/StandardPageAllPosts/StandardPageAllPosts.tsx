@@ -15,10 +15,8 @@ import {
     driveTypeTypes,
     engineTypeTypes,
     colorDataTypes,
-
     engineVolumesCheckboxTypes,
     autoBodyCheckboxTypes,
-  
     transactionType,
     buildingTypeTypes,
     wallMaterialTypes,
@@ -115,7 +113,7 @@ export default function StandardPageAllPosts({ subCategory }: any) {
     );
     const [autoBodyCheckboxArray, setAutoBodyCheckboxArray] =
         useState(autoBodyCheckboxTypes);
-        
+
     // Мощность, л.с.
     const [enginePower, setEnginePower] = useState({ from: "", to: "" });
     // Привод
@@ -471,11 +469,9 @@ export default function StandardPageAllPosts({ subCategory }: any) {
     }, []);
 
     const resetAllFilters = useCallback(() => {
-
-
         setLocationCheckboxArray(locationTypes);
-        setAutoBodyCheckboxArray(autoBodyCheckboxTypes)
-     
+        setAutoBodyCheckboxArray(autoBodyCheckboxTypes);
+
         setCarType(carTypeTypes);
         setAvailability(availabilityTypes);
         setSteering(steeringTypes);
@@ -597,7 +593,7 @@ export default function StandardPageAllPosts({ subCategory }: any) {
             availability,
             steering,
             autoBodyCheckboxArray,
-         
+
             manufacturerCheckboxArray,
             brandCheckboxArray,
             modelCheckboxArray,
@@ -643,13 +639,15 @@ export default function StandardPageAllPosts({ subCategory }: any) {
 
             <div className={style.container}>
                 <>
-                    <div className={style.filterDesktop}>
+                    {/* убрал фильтры */}
+                    {/* <div className={style.filterDesktop}>
                         <FilterDesktop {...filterProps} />
-                    </div>
+                    </div> */}
 
-                    <div className={style.filterMobile}>
+                    {/* убрал фильтры */}
+                    {/* <div className={style.filterMobile}>
                         <FilterMobile {...filterProps} />
-                    </div>
+                    </div> */}
                 </>
                 <div className={style.itemsList}>
                     {!!data?.length &&
@@ -673,4 +671,3 @@ export default function StandardPageAllPosts({ subCategory }: any) {
         </>
     );
 }
-

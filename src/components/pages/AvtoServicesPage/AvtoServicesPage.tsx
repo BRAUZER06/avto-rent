@@ -195,7 +195,8 @@ export const AvtoServicesPage = ({ subCategory = "avto-services" }) => {
                 inputSearch={inputSearch}
             />
             <div className={style.container}>
-                <>
+                {/* убрал фильтры */}
+                {/* <>
                     <div className={style.filterDesktop}>
                         <FilterDesktop {...filterProps} />
                     </div>
@@ -203,7 +204,7 @@ export const AvtoServicesPage = ({ subCategory = "avto-services" }) => {
                     <div className={style.filterMobile}>
                         <FilterMobile {...filterProps} />
                     </div>
-                </>
+                </> */}
                 <div id="map" className={style.map}></div>
             </div>
         </>

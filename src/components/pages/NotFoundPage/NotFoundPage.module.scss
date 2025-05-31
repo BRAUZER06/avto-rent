@@ -1,8 +1,9 @@
 @import "@src/lib/assets/styles/_width.scss";
 
 .container {
+  min-width: 100%;
   position: relative;
-
+width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;

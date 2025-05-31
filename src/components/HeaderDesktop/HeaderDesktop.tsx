@@ -17,7 +17,6 @@ import { HeaderSearch } from "./components/HeaderSearch/HeaderSearch";
 
 import Link from "next/link";
 
-
 import { memo, useEffect, useState } from "react";
 
 import style from "./HeaderDesktop.module.scss";
@@ -47,26 +46,23 @@ export const HeaderDesktop = memo(() => {
             </Link>
             <nav className={style.menu}>
                 <div className={style.menuItem}>
-                    <HeaderMultiSelect.SelectList
+                    {/* <HeaderMultiSelect.SelectList
                         name={"Объявлении"}
                         data={HEADER_POPULAR_ADS}
-                    />
-                    {/* <HeaderMultiSelect.TextAndNumber
-                        number={countVacancies}
-                        text={HEADER_VACANCY.name}
-                        path={HEADER_VACANCY.path}
                     /> */}
+                    <HeaderMultiSelect.SelectListCar name={"Автомобили"} />
 
                     <HeaderMultiSelect.TextAndNumber
                         number={367}
-                        text={HEADER_AUTO.name}
-                        path={HEADER_AUTO.path}
+                        text={"Все Авто"}
+                        path={"/avto"}
                     />
-                    <HeaderMultiSelect.TextAndNumber
+
+                    {/* <HeaderMultiSelect.TextAndNumber
                         number={125}
                         text={HEADER_SERVICES.name}
                         path={HEADER_SERVICES.path}
-                    />
+                    /> */}
                     <HeaderMultiSelect.Text
                         text={HEADER_ABOUT.name}
                         path={HEADER_ABOUT.path}

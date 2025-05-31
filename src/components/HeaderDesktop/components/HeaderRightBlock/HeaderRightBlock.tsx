@@ -36,7 +36,7 @@ export const HeaderRightBlock = () => {
             {/* <div className={style.plug}></div> */}
 
             <div className={style.container}>
-                {true && (
+                {false && (
                     <div onClick={handleClick} className={style.heart}>
                         <Image
                             width={20}
@@ -47,7 +47,7 @@ export const HeaderRightBlock = () => {
                     </div>
                 )}
 
-                {true && (
+                {false && (
                     <div className={style.message}>
                         <Image
                             width={20}
@@ -74,7 +74,7 @@ export const HeaderRightBlock = () => {
                         src="/images/headerImg/plus.svg"
                         alt="heart"
                     />
-                    <div>Создать объявление</div>
+                    <Link href="/profile/new_auto">Добавить Атомобиль</Link>
                 </div>
             </div>
         </div>

@@ -2,10 +2,12 @@
 
 import { memo } from "react";
 import style from "./OptionCheckbox.module.scss";
+import { Tooltip } from "../Tooltip/Tooltip";
 
 type Props = {
     checked: boolean;
     title: string;
+    tooltip?: string;
     id: string;
     handleCheckboxChange: (id: string) => void;
     subCategory?: any[] | undefined;
@@ -24,8 +26,6 @@ OptionCheckbox.Desktop = memo(
         isCheckboxHide,
     }: Props) => {
         const toggleCheckbox = (event: React.MouseEvent, id: string) => {
-      
-
             handleCheckboxChange(id);
             event.stopPropagation();
         };
@@ -76,7 +76,7 @@ OptionCheckbox.Desktop = memo(
 );
 
 OptionCheckbox.MobileVersionOne = memo(
-    ({ checked, title, id, isCheckboxHide, handleCheckboxChange }: Props) => {
+    ({ checked, title, id, isCheckboxHide, handleCheckboxChange, tooltip }: Props) => {
         const toggleCheckbox = (event: React.MouseEvent) => {
             event.stopPropagation();
             handleCheckboxChange(id);
@@ -94,6 +94,12 @@ OptionCheckbox.MobileVersionOne = memo(
                         checked={checked}
                         readOnly
                     />
+                )}
+
+                {tooltip && (
+                    <div className={style.tooltipIcon}>
+                        <Tooltip text={tooltip}>?</Tooltip>
+                    </div>
                 )}
             </div>
         );

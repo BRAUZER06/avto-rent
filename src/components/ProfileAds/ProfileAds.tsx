@@ -1,9 +1,8 @@
-'use client'
+"use client";
 
 import React, { useState, useCallback } from "react";
 import styles from "./ProfileAds.module.scss";
 import { AdsCard } from "../AdsCard/AdsCard";
-
 
 const tabs = [
     { id: "all", title: "Все объявления" },
@@ -23,15 +22,17 @@ const adsData = [
 const ProfileAds = () => {
     const [activeTab, setActiveTab] = useState("all");
 
-    const filteredAds = adsData.filter(ad => activeTab === "all" || ad.status === activeTab);
+    const filteredAds = adsData.filter(
+        ad => activeTab === "all" || ad.status === activeTab
+    );
 
-    const handleTabChange = useCallback((tabId) => {
+    const handleTabChange = useCallback(tabId => {
         setActiveTab(tabId);
     }, []);
 
     return (
         <div className={styles.container}>
-            <h2 className={styles.title}>Мои объявления</h2>
+            <h2 className={styles.title}>Мои Авто</h2>
             <div className={styles.tabs}>
                 {tabs.map(tab => (
                     <button
@@ -45,7 +46,7 @@ const ProfileAds = () => {
             </div>
             <div className={styles.adsContainer}>
                 {filteredAds.map(ad => (
-                    <AdsCard key={ad.id}  />
+                    <AdsCard key={ad.id} />
                 ))}
             </div>
         </div>

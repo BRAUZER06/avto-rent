@@ -26,12 +26,11 @@ const data = [
     25, 26, 27, 28, 29,
 ];
 
-export default function BanquetHallsPageAllPosts({ subCategory='banquet-halls' }: any) {
+export default function BanquetHallsPageAllPosts({ subCategory = "banquet-halls" }: any) {
     const currentConfig = useMemo(() => {
         return filterConfigurations[subCategory]?.filters || [];
     }, [subCategory]);
     console.log(currentConfig);
-    
 
     const [inputSearch, setInputSearch] = useState<string>("");
 
@@ -260,7 +259,6 @@ export default function BanquetHallsPageAllPosts({ subCategory='banquet-halls' }
             buildingLevels,
             handleHouseAreaChange,
             houseArea,
-           
         }),
         [
             locationCheckboxArray,
@@ -294,7 +292,8 @@ export default function BanquetHallsPageAllPosts({ subCategory='banquet-halls' }
             />
 
             <div className={style.container}>
-                <>
+                {/* убрал фильтры */}
+                {/* <>
                     {screenWidth > 1024 ? (
                         <div className={style.filterDesktop}>
                             <FilterDesktopBanquetHalls {...filterProps} />
@@ -304,7 +303,7 @@ export default function BanquetHallsPageAllPosts({ subCategory='banquet-halls' }
                             <FilterMobileBanquetHalls {...filterProps} />
                         </div>
                     )}
-                </>
+                </> */}
                 <div className={style.itemsList}>
                     {!!data?.length &&
                         data.map((item, index) => (

@@ -1,5 +1,5 @@
 const FOOTER_ITEMS = [
-    { name: "О нас", path: "/about-us", class: "about" },
+    { name: "О нас", path: "/about", class: "about" },
     { name: "Направления", path: "/directions", class: "directions" },
     { name: "Мероприятия", path: "/meropriyatiya", class: "meropriyatiya" },
     { name: "Публикации", path: "/publication", class: "publication" },

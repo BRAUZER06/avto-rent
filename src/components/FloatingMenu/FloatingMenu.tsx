@@ -27,12 +27,12 @@ const FloatingMenu = () => {
                 </div>
                 <span>Разместить</span>
             </div>
-            <div className={styles.menuIcon}>
+            {/* <div className={styles.menuIcon}>
                 <div className={clsx(styles.iconContainer, styles.iconMessage)}>
                     <Message className={styles.icon} />
                 </div>
                 <span>Чат</span>
-            </div>
+            </div> */}
             <div className={styles.menuIcon}>
                 <div className={clsx(styles.iconContainer, styles.iconUser)}>
                     <User className={styles.icon} />

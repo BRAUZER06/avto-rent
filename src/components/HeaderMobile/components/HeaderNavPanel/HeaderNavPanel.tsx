@@ -19,6 +19,8 @@ import { useEffect, useState } from "react";
 import style from "./HeaderNavPanel.module.scss";
 import { useRouter } from "next/navigation";
 import { fetchCountAllHomePage } from "@src/lib/api/homePage";
+import CarCategories from "@src/components/CarCategories/CarCategories";
+import HeaderNavPanelItemCar from "../HeaderNavPanelItemCar/HeaderNavPanelItemCar";
 
 interface HeaderNavPanel {
     isOpen: boolean;
@@ -97,56 +99,51 @@ export const HeaderNavPanel = ({ isOpen, toggleNavPanel }: HeaderNavPanel) => {
             </div> */}
 
             <div className={style.navContainer}>
-                <HeaderNavPanelItem.DropMenu
+                <HeaderNavPanelItemCar
                     toggleNavPanel={toggleNavPanel}
-                    name="Объявления"
-                    data={POPULAR_ADS}
+                    name="Автомобили"
                     // styleProps={{ background: "var(--green-deep)" }}
-                    
                 />
 
                 <HeaderNavPanelItem.TextAndNumber
                     toggleNavPanel={toggleNavPanel}
                     number={367}
-                    text={HEADER_AUTO.name}
-                    path={HEADER_AUTO.path}
+                    text={"Все Авто"}
+                    path={"/avto"}
                 />
-                <HeaderNavPanelItem.TextAndNumber
+                {/* <HeaderNavPanelItem.TextAndNumber
                     toggleNavPanel={toggleNavPanel}
                     number={125}
                     text={HEADER_SERVICES.name}
                     path={HEADER_SERVICES.path}
                     // styleProps={{ background: "var(--green-deep)" }}
-                />
+                /> */}
                 <HeaderNavPanelItem.Text
                     toggleNavPanel={toggleNavPanel}
                     text={HEADER_ABOUT.name}
                     path={HEADER_ABOUT.path}
                 />
-                <HeaderNavPanelItem.Text
+                {/* <HeaderNavPanelItem.Text
                     toggleNavPanel={toggleNavPanel}
                     text="Избранное"
                     path="/favorites"
                     icon="/images/headerImg/heart.svg"
-                    
-                />
-                <HeaderNavPanelItem.Text
+                /> */}
+                {/* <HeaderNavPanelItem.Text
                     toggleNavPanel={toggleNavPanel}
                     text="Сообщения"
                     path="/profile/message"
                     icon="/images/headerImg/message.svg"
-                    
-                />
+                /> */}
                 <HeaderNavPanelItem.Text
                     toggleNavPanel={toggleNavPanel}
                     text="Личный Кабинет"
                     path="/profile/details"
                     icon="/images/headerImg/user.svg"
-                    
                 />
                 <HeaderNavPanelItem.Text
                     toggleNavPanel={toggleNavPanel}
-                    text="Создать Объявление"
+                    text="Добавить Атомобиль"
                     path="/profile"
                     icon="/images/headerImg/plus.svg"
                     styleProps={{ background: "var(--blue-text)" }}

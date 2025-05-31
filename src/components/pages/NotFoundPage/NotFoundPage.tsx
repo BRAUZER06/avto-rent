@@ -10,18 +10,18 @@ import { Footer } from "@src/components/Footer/Footer";
 const NotFoundPage = () => {
     return (
         <section className={styles.container}>
-            <Header/>
+            <Header />
 
-          
             <div className={styles.messageContainer}>
                 <p className={styles.figure}>4</p>
-                <Image
+                <p className={styles.figure}>0</p>
+                {/* <Image
                     className={styles.image}
                     src={"/images/notFoundBackground.svg"}
                     width={246}
                     height={229}
                     alt="Страница 404"
-                />
+                /> */}
                 <p className={styles.figure}>4</p>
             </div>
             <p className={styles.description}>
@@ -30,7 +30,7 @@ const NotFoundPage = () => {
             <Link href={"/home"} className={styles.button}>
                 На главную
             </Link>
-            <Footer/>   
+            <Footer />
         </section>
     );
 };
