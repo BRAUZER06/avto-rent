@@ -6,6 +6,6 @@ module.exports = {
         missingSuspenseWithCSRBailout: false,
     },
     images: {
-        domains: ["localhost", process.env.IMAGES_HOSTNAME, process.env.NEXT_API_URL],
+        domains: [],
     },
 };
