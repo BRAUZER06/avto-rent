@@ -54,3 +54,45 @@ a:focus {
     align-items: center !important;
     justify-content: center !important;
 }
+
+
+
+
+
+// :global {
+//     .rdrCalendarWrapper {
+//       background-color: #1e1e1e;
+//       color: white;
+//       border-radius: 12px;
+//       padding: 10px;
+//     }
+  
+//     .rdrMonthAndYearPickers select {
+//       background-color: #333;
+//       color: white;
+//       border: 1px solid #555;
+//     }
+  
+//     .rdrDayNumber span {
+//       color: white;
+//     }
+  
+//     .rdrDayPassive span {
+//       color: #777;
+//     }
+  
+//     .rdrDayDisabled {
+//       background-color: #2a2a2a;
+//       cursor: not-allowed;
+//     }
+  
+//     .rdrSelected,
+//     .rdrInRange {
+//       background: #fcb902;
+//     }
+  
+//     .rdrDayToday span {
+//       border-bottom: 2px solid #fcb902;
+//     }
+//   }
+  

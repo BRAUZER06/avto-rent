@@ -11,10 +11,11 @@ import { TitleAds } from "@src/components/ui/TitleAds/TitleAds";
 import { BankAds } from "@src/components/ui/BankAds/BankAds";
 import { PhotoViewerMobile } from "@src/components/ui/PhotoViewerMobile/PhotoViewerMobile";
 import useWindowWidth from "@src/utils/api/hooks/useWindowWidth";
+import { AdsTable } from "@src/components/ui/AdsTable/AdsTable";
 
 export default function StandardPageID({ idAds }: any) {
-    console.log('idAds',idAds);
-    
+    console.log("idAds", idAds);
+
     const screenWidth = useWindowWidth();
 
     return (
@@ -33,11 +34,17 @@ export default function StandardPageID({ idAds }: any) {
                     <FeaturesAvtoAds />
                 </div>
                 <div className={style.margin}>
-                    <DescriptionAds />
+                    <AdsTable />
                 </div>
                 <div className={style.margin}>
-                    <BankAds />
+                    <DescriptionAds />
                 </div>
+
+                {/* реклама */}
+
+                {/* <div className={style.margin}>
+                    <BankAds />
+                </div> */}
             </div>
             <div className={style.rightBlock}>
                 <RightPriceBlock />

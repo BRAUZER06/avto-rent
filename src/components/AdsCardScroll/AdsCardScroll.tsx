@@ -7,32 +7,32 @@ import { formatDateForAds } from "@src/lib/helpers/formatters/formatDateForAds";
 import Ribbon from "../ui/Ribbon/Ribbon";
 
 const images = [
-    " /images/testPhoto/15.jpg",
-    " /images/testPhoto/16.jpg",
-    " /images/testPhoto/17.jpg",
-    " /images/testPhoto/18.jpg",
-    " /images/testPhoto/19.jpg",
-    " /images/testPhoto/20.jpg",
-    " /images/testPhoto/21.jpg",
+    // " /images/testPhoto/15.jpg",
+    // " /images/testPhoto/16.jpg",
+    // " /images/testPhoto/17.jpg",
+    // " /images/testPhoto/18.jpg",
+    // " /images/testPhoto/19.jpg",
+    // " /images/testPhoto/20.jpg",
+    // " /images/testPhoto/21.jpg",
     // " /images/testPhoto/berkat_1.jpg",
     // " /images/testPhoto/berkat_2.jpg",
     // " /images/testPhoto/berkat_3.jpg",
-    // " /images/testPhoto/1.webp",
-    // " /images/testPhoto/2.webp",
-    // " /images/testPhoto/3.webp",
-    // " /images/testPhoto/4.webp",
-    // " /images/testPhoto/5.webp",
-    // " /images/testPhoto/6.webp",
+
+    " /images/testPhoto/2.webp",
+    " /images/testPhoto/3.webp",
+    " /images/testPhoto/4.webp",
+    " /images/testPhoto/5.webp",
+    " /images/testPhoto/6.webp",
     // " /images/testPhoto/6.png",
-    // " /images/testPhoto/7.webp",
+    " /images/testPhoto/7.webp",
     // " /images/testPhoto/7.png",
-    // " /images/testPhoto/8.webp",
-    // " /images/testPhoto/9.webp",
-    // " /images/testPhoto/10.webp",
-    // " /images/testPhoto/11.webp",
-    // " /images/testPhoto/12.webp",
-    // " /images/testPhoto/13.webp",
-    // " /images/testPhoto/14.webp",
+    " /images/testPhoto/8.webp",
+    " /images/testPhoto/9.webp",
+    " /images/testPhoto/10.webp",
+    " /images/testPhoto/11.webp",
+    " /images/testPhoto/12.webp",
+    " /images/testPhoto/13.webp",
+    " /images/testPhoto/14.webp",
 ];
 
 export const AdsCardScroll = memo(() => {
@@ -47,7 +47,6 @@ export const AdsCardScroll = memo(() => {
                 watchSlidesProgress={true}
                 modules={[Navigation, Scrollbar, Mousewheel]}
                 mousewheel={{ forceToAxis: true }}
-                
                 className={style.swiper}
             >
                 {images.map((image, index) => (

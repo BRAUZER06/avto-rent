@@ -5,7 +5,7 @@ export const FeaturesAvtoAds = () => {
         <div className={style.container}>
             <p className={style.title}>Характеристики</p>
 
-            <div className={style.column}>
+            {/* <div className={style.column}>
                 <p className={style.feature}>
                     <span className={style.label}>Год выпуска:</span>
                     <span className={style.value}>2018</span>
@@ -53,6 +53,28 @@ export const FeaturesAvtoAds = () => {
                 <p className={style.feature}>
                     <span className={style.label}>Обмен:</span>
                     <span className={style.value}>Не интересует</span>
+                </p>
+            </div> */}
+
+            <div className={style.column}>
+                <p className={style.feature}>
+                    <span className={style.label}>Тип двигателя:</span>
+                    <span className={style.value}>Дизель</span>
+                </p>
+                <p className={style.feature}>
+                    <span className={style.label}>Объём двигателя:</span>
+                    <span className={style.value}>3 л</span>
+                </p>
+            </div>
+            <div className={style.column}>
+                {" "}
+                <p className={style.feature}>
+                    <span className={style.label}>Коробка передач:</span>
+                    <span className={style.value}>Автомат</span>
+                </p>{" "}
+                <p className={style.feature}>
+                    <span className={style.label}>Привод:</span>
+                    <span className={style.value}>Полный</span>
                 </p>
             </div>
         </div>

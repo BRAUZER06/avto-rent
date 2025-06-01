@@ -10,7 +10,7 @@
 }
 
 .leftBlock {
-    width: 636px;
+    // width: 636px;
     display: flex;
     flex-direction: column;
 
@@ -22,8 +22,9 @@
 .rightBlock {
     top: 0px;
     position: sticky;
-    max-width: 341px;
-    flex-basis: 341px;
+    max-width: 360px;
+    min-width: 360px;
+    flex-basis: 360px;
     padding-left: 26px;
 
     @media screen and (max-width: 767px) {

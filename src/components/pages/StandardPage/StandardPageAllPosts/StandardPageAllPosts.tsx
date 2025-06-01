@@ -35,6 +35,7 @@ import { FilterMobile } from "@src/components/FilterMobile/FilterMobile";
 import style from "./StandardPageAllPosts.module.scss";
 import { locationTypes } from "@src/data/StandardFiltersData";
 import filterConfigurations from "@src/data/FilterConfigurations";
+import Link from "next/link";
 
 const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -656,12 +657,16 @@ export default function StandardPageAllPosts({ subCategory }: any) {
                                 key={`${item}-${index}-${screenWidth > 1024 ? "desktop" : "mobile"}`}
                             >
                                 <div className={style.contentDesktop}>
-                                    <AdsCard />
+                                    <Link href="/avto/car/1">
+                                        <AdsCard />{" "}
+                                    </Link>
                                     {(index + 1) % 5 === 0 && <AdsBannerAdvertising />}
                                 </div>
 
                                 <div className={style.contentMobile}>
-                                    <AdsCardScroll />
+                                    <Link href="/avto/car/1">
+                                        <AdsCardScroll />
+                                    </Link>
                                     {(index + 1) % 5 === 0 && <AdsBannerAdvertising />}
                                 </div>
                             </div>

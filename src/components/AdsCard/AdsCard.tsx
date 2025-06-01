@@ -3,22 +3,23 @@ import style from "./AdsCard.module.scss";
 import { formatDateForAds } from "@src/lib/helpers/formatters/formatDateForAds";
 import Ribbon from "../ui/Ribbon/Ribbon";
 import { IconsBlock } from "./IconsBlock/IconsBlock";
+import Link from "next/link";
 
 const images = [
-    " /images/testPhoto/15.jpg",
-    " /images/testPhoto/16.jpg",
-    " /images/testPhoto/17.jpg",
-    " /images/testPhoto/18.jpg",
-    " /images/testPhoto/19.jpg",
-    " /images/testPhoto/20.jpg",
-    " /images/testPhoto/21.jpg",
-    // " /images/testPhoto/1.webp",
-    // " /images/testPhoto/2.webp",
-    // " /images/testPhoto/3.webp",
-    // " /images/testPhoto/4.webp",
-    // " /images/testPhoto/5.webp",
-    // " /images/testPhoto/6.webp",
-    // " /images/testPhoto/7.webp",
+    // " /images/testPhoto/15.jpg",
+    // " /images/testPhoto/16.jpg",
+    // " /images/testPhoto/17.jpg",
+    // " /images/testPhoto/18.jpg",
+    // " /images/testPhoto/19.jpg",
+    // " /images/testPhoto/20.jpg",
+    // " /images/testPhoto/21.jpg",
+    " /images/testPhoto/1.webp",
+    " /images/testPhoto/2.webp",
+    " /images/testPhoto/3.webp",
+    " /images/testPhoto/4.webp",
+    " /images/testPhoto/5.webp",
+    " /images/testPhoto/6.webp",
+    " /images/testPhoto/7.webp",
 ];
 
 interface AdsCardProps {
@@ -30,7 +31,7 @@ interface AdsCardProps {
 }
 
 export const AdsCard: React.FC<AdsCardProps> = memo(
-    ({ useIconsBlock=false, views = 0, favorites = 0, contacts = 0, shows = 0 }) => {
+    ({ useIconsBlock = false, views = 0, favorites = 0, contacts = 0, shows = 0 }) => {
         const [showPhone, setShowPhone] = useState(false);
         const [currentIndex, setCurrentIndex] = useState(0);
         const containerRef = useRef<HTMLDivElement>(null);
