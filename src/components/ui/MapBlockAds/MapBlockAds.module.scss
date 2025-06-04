@@ -30,18 +30,18 @@
 }
 
 .mapBlock {
-    width: 100%;
-    height: 0px;
-    margin-top: 20px;
-    transition: all 0.5s ease-in-out; 
-    background-color: #fff;
-    
-}
+    margin-top: 16px;
+    overflow: hidden;
+    border-radius: 10px;
+  }
+  
 
 .mapBlockOpen {
     height: 380px;
     overflow: hidden;
 }
+
+
 
 .i {
     border: solid black;
@@ -59,3 +59,5 @@
 .up {
     transform: rotate(-135deg);
 }
+
+

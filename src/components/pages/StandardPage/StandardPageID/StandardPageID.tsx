@@ -6,12 +6,14 @@ import { PhotoViewer } from "@src/components/ui/PhotoViewer/PhotoViewer";
 
 import { DescriptionAds } from "@src/components/ui/DescriptionAds/DescriptionAds";
 import { FeaturesAvtoAds } from "@src/components/ui/Features/FeaturesAvtoAds/FeaturesAvtoAds";
-import { MapBlockAds } from "@src/components/ui/MapBlockAds/MapBlockAds";
 import { TitleAds } from "@src/components/ui/TitleAds/TitleAds";
 import { BankAds } from "@src/components/ui/BankAds/BankAds";
 import { PhotoViewerMobile } from "@src/components/ui/PhotoViewerMobile/PhotoViewerMobile";
 import useWindowWidth from "@src/utils/api/hooks/useWindowWidth";
 import { AdsTable } from "@src/components/ui/AdsTable/AdsTable";
+import { MobileContactPanel } from "@src/components/ui/MobileContactPanel/MobileContactPanel";
+import dynamic from "next/dynamic";
+import { MapBlockAds } from "@src/components/ui/MapBlockAds/MapBlockAds";
 
 export default function StandardPageID({ idAds }: any) {
     console.log("idAds", idAds);
@@ -27,6 +29,11 @@ export default function StandardPageID({ idAds }: any) {
                 <div className={style.margin}>
                     {screenWidth > 767 ? <PhotoViewer /> : <PhotoViewerMobile />}
                 </div>
+
+                <div className={`${style.margin} ${style.mobileOnly}`}>
+                    <MobileContactPanel />
+                </div>
+
                 <div className={style.margin}>
                     <MapBlockAds />
                 </div>

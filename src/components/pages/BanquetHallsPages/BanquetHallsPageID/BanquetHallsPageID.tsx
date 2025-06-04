@@ -6,15 +6,16 @@ import { PhotoViewer } from "@src/components/ui/PhotoViewer/PhotoViewer";
 
 import { DescriptionAds } from "@src/components/ui/DescriptionAds/DescriptionAds";
 import { FeaturesAvtoAds } from "@src/components/ui/Features/FeaturesAvtoAds/FeaturesAvtoAds";
-import { MapBlockAds } from "@src/components/ui/MapBlockAds/MapBlockAds";
 import { TitleAds } from "@src/components/ui/TitleAds/TitleAds";
 import { BankAds } from "@src/components/ui/BankAds/BankAds";
 import { PhotoViewerMobile } from "@src/components/ui/PhotoViewerMobile/PhotoViewerMobile";
 import useWindowWidth from "@src/utils/api/hooks/useWindowWidth";
+import dynamic from "next/dynamic";
+import { MapBlockAds } from "@src/components/ui/MapBlockAds/MapBlockAds";
 
 export default function BanquetHallsPageID({ idAds }: any) {
-    console.log('idAds',idAds);
-    
+    console.log("idAds", idAds);
+
     const screenWidth = useWindowWidth();
 
     return (

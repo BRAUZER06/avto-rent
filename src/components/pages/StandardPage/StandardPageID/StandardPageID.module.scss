@@ -27,11 +27,20 @@
     flex-basis: 360px;
     padding-left: 26px;
 
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: 1024px) {
         display: none;
     }
 }
 
 .margin {
     margin-bottom: 30px;
+}
+
+
+
+.mobileOnly{
+  display: none;
+    @media screen and (max-width: 1024px) {
+        display: block;
+    }
 }

@@ -1,0 +1,85 @@
+.calendarBlock {
+
+  margin-top: 40px;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ max-width: 500px;
+ margin: 0 auto;
+
+  .calendarTitle {
+    font-size: 22px;
+    font-weight: bold;
+    color: #3d91ff;
+    margin-bottom: 10px;
+    text-align: center;
+ 
+  }
+
+  :global(.rdrCalendarWrapper) {
+    background-color: #1e1e1e;
+    color: white;
+    border-radius: 12px;
+  }
+
+  :global(.rdrMonthAndYearPickers select) {
+    background-color: #333;
+    color: white;
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 17px;
+  }
+
+  :global(.rdrMonthAndYearWrapper) {
+    justify-content: space-between;
+  }
+
+  :global(.rdrNextButton),
+  :global(.rdrPprevButton),
+  :global(.rdrNextPrevButton) {
+    background: #3d91ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  :global(.rdrDayNumber span) {
+    color: white;
+  }
+
+  :global(.rdrDayPassive span) {
+    color: #777;
+  }
+
+  :global(.rdrDayDisabled) {
+    background-color: #ff00001f;
+    cursor: not-allowed;
+  }
+
+  :global(.rdrSelected),
+  :global(.rdrInRange) {
+    background: #3d91ff;
+  }
+
+  :global(.rdrDateDisplayWrapper) {
+    background-color: #2c2c2c;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    color: white;
+    border: 1px solid #444;
+    cursor: not-allowed;
+  }
+
+  :global(.rdrDateDisplayWrapper input) {
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+}

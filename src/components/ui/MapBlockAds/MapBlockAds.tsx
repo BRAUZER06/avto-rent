@@ -1,12 +1,11 @@
 "use client";
+
 import { useState } from "react";
 import style from "./MapBlockAds.module.scss";
 
-import clsx from "clsx";
-import { Map, Placemark, YMaps } from "@pbe/react-yandex-maps";
-
 export const MapBlockAds = () => {
     const [showMap, setShowMap] = useState(false);
+
     const toggleMap = () => setShowMap(!showMap);
 
     return (
@@ -22,22 +21,18 @@ export const MapBlockAds = () => {
                 </div>
             </div>
 
-            <div className={clsx(style.mapBlock, { [style.mapBlockOpen]: showMap })}>
-                {showMap && (
-                    <YMaps>
-                        <Map
-                            defaultState={{
-                                center: [44.064382, 43.063187],
-                                zoom: 16,
-                            }}
-                            width="100%"
-                            height="380px"
-                        >
-                            <Placemark geometry={[44.064382, 43.063187]} />
-                        </Map>
-                    </YMaps>
-                )}
-            </div>
+            {showMap && (
+                <div className={style.mapBlock}>
+                    <iframe
+                        src="https://yandex.ru/map-widget/v1/?um=constructor%3Aec15a3f7f0c785baef5e4dbd29952fd5d68b2b1319c0a78be00b53d73e94db70&amp;source=constructor"
+                        width="100%"
+                        height="400"
+                        frameBorder="0"
+                        style={{ borderRadius: "10px", border: "none" }}
+                        allowFullScreen
+                    ></iframe>
+                </div>
+            )}
         </div>
     );
 };

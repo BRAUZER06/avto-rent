@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { DateRange } from "react-date-range";
+
 import { addDays } from "date-fns";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
-import { ru } from "date-fns/locale";
+
+import { FaWhatsapp, FaTelegramPlane, FaInstagram, FaGlobe } from "react-icons/fa";
 
 import style from "./RightPriceBlock.module.scss";
 import Link from "next/link";
+import { CalendarRental } from "../ui/CalendarRental/CalendarRental";
 
 export const RightPriceBlock = () => {
     const [dateRange, setDateRange] = useState([
@@ -44,10 +46,10 @@ export const RightPriceBlock = () => {
                 </div>
             </div> */}
 
-            <div className={style.number}>
+            {/* <div className={style.number}>
                 <p>Показать телефон </p>
                 <span>8 909 740-45-46</span>
-            </div>
+            </div> */}
             <Link href="/brands/1">
                 <div className={style.userInfo}>
                     <div className={style.userName}>
@@ -64,17 +66,68 @@ export const RightPriceBlock = () => {
                 </div>
             </Link>
 
+            <div className={style.contactBlock}>
+                <div className={style.phoneBlock}>
+                    <p className={style.phone}>8 999 111-22-33</p>
+                    <p className={style.label}>Основной номер</p>
+                    <button className={style.callButton}>Позвонить</button>
+                </div>
+
+                <div className={style.phoneBlock}>
+                    <p className={style.phone}>8 928 555-44-33</p>
+                    <p className={style.label}>Доп. номер</p>
+                    <button className={style.callButton}>Позвонить</button>
+                </div>
+
+                <div className={style.links}>
+                    <div className={style.linkRow}>
+                        <FaWhatsapp className={style.icon} />
+                        <a
+                            href="https://wa.me/79991112233"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            WhatsApp: 79991112233
+                        </a>
+                    </div>
+
+                    <div className={style.linkRow}>
+                        <FaTelegramPlane className={style.icon} />
+                        <a
+                            href="https://t.me/bashir_auto"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Telegram: @bashir_auto
+                        </a>
+                    </div>
+
+                    <div className={style.linkRow}>
+                        <FaInstagram className={style.icon} />
+                        <a
+                            href="https://instagram.com/bashir_rent"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Instagram: @bashir_rent
+                        </a>
+                    </div>
+
+                    <div className={style.linkRow}>
+                        <FaGlobe className={style.icon} />
+                        <a
+                            href="https://bashir-rent-auto.ru"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Сайт: bashir-rent-auto.ru
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <div className={style.calendarBlock}>
-                <h3 className={style.calendarTitle}>Выберите даты аренды</h3>
-                <DateRange
-                    editableDateInputs={false}
-                    onChange={item => setDateRange([item.selection])}
-                    moveRangeOnFirstSelection={false}
-                    ranges={dateRange}
-                    minDate={new Date()}
-                    disabledDates={disabledDates}
-                    locale={ru} // ✅ русский язык
-                />
+                <CalendarRental />
             </div>
         </div>
     );

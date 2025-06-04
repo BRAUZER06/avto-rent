@@ -1,0 +1,133 @@
+@import "../../lib/assets/styles/_media.scss";
+
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    background-color: var(--background-black);
+    font-family: "X5 Sans", sans-serif;
+    gap: 16px;
+    color: #fff;
+}
+
+.headerNav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nickname {
+    font-size: 14px;
+    color: #bbb;
+    margin-bottom: 5px;
+}
+
+.fullname {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 12px;
+    border: 2px solid #444;
+}
+
+.phoneBlock {
+    padding: 12px;
+    background-color: #2a2a2a;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.phone {
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+}
+
+.label {
+    font-size: 13px;
+    color: #aaa;
+}
+
+.callButton {
+    margin-top: 4px;
+    padding: 10px;
+    background-color: #007aff;
+    color: white;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover {
+        background-color: #005bb5;
+    }
+}
+
+.links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .linkRow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background-color: #2a2a2a;
+        border-radius: 10px;
+        padding: 10px 12px;
+        transition: background 0.2s;
+
+        &:hover {
+            background-color: #333;
+        }
+
+        a {
+            color: #4da8ff;
+            font-size: 14px;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        color: #4da8ff;
+    }
+}
+
+.calendarBlock {
+ 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+   
+}
+
+.calendarTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+}
