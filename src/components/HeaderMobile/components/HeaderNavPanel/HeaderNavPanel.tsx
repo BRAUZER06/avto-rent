@@ -109,7 +109,7 @@ export const HeaderNavPanel = ({ isOpen, toggleNavPanel }: HeaderNavPanel) => {
                     toggleNavPanel={toggleNavPanel}
                     number={367}
                     text={"Все Авто"}
-                    path={"/avto"}
+                    path={"/avto/all"}
                 />
                 {/* <HeaderNavPanelItem.TextAndNumber
                     toggleNavPanel={toggleNavPanel}

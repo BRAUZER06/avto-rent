@@ -4,6 +4,7 @@ import styles from "./ProfileDetails.module.scss";
 import OptionCheckbox from "../ui/OptionCheckbox/OptionCheckbox";
 import { DeletedIcon } from "@public/images/icons/DeletedIcon";
 import clsx from "clsx";
+import { fetchCompanyProfile, updateCompanyProfile } from "@src/lib/api/profileService";
 
 const ProfileDetails = () => {
     const [activeTab, setActiveTab] = useState("main");
@@ -19,14 +20,12 @@ const ProfileDetails = () => {
     ]);
 
     const [profileData, setProfileData] = useState({
-        name: "Муртаз Озиев",
-        email: "murtaz.oziev@mail.ru",
-        password: "",
+        email: "",
+        name: "",
     });
 
     const [companyProfileData, setCompanyProfileData] = useState({
         companyDescription: "",
-        shortDescription: "",
         address: "",
     });
 
@@ -35,8 +34,51 @@ const ProfileDetails = () => {
     ]);
 
     const [socialLinks, setSocialLinks] = useState([]);
-
     const [isChanged, setIsChanged] = useState(false);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await fetchCompanyProfile();
+                if (data) {
+                    setProfileData({
+                        email: data.email || "",
+                        name: data.company_name || "",
+                    });
+
+                    const phones = [];
+                    if (data.phone_1)
+                        phones.push({
+                            id: 1,
+                            number: data.phone_1.number,
+                            description: data.phone_1.label,
+                            isConfirmationProcess: false,
+                        });
+                    if (data.phone_2)
+                        phones.push({
+                            id: 2,
+                            number: data.phone_2.number,
+                            description: data.phone_2.label,
+                            isConfirmationProcess: false,
+                        });
+                    setPhoneNumbers(phones);
+
+                    const socials = [];
+                    if (data.whatsapp)
+                        socials.push({ id: 1, type: "WhatsApp", url: data.whatsapp });
+                    if (data.telegram)
+                        socials.push({ id: 2, type: "Telegram", url: data.telegram });
+                    if (data.instagram)
+                        socials.push({ id: 3, type: "Instagram", url: data.instagram });
+                    setSocialLinks(socials);
+                }
+            } catch (error) {
+                console.error("Ошибка загрузки профиля", error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     useEffect(() => {
         setIsChanged(
@@ -49,50 +91,44 @@ const ProfileDetails = () => {
     }, [type, profileData, companyProfileData, phoneNumbers, socialLinks]);
 
     const toggleTypeProfileCheckbox = useCallback(id => {
-        setType(prevState =>
-            prevState.map(item => ({
+        setType(prev =>
+            prev.map(item => ({
                 ...item,
                 checked: item.id === id,
             }))
         );
     }, []);
 
-    const handleSave = () => {
-        console.log("Changes saved!");
-    };
-
     const handleProfileDataChange = (field, value) => {
-        setProfileData(prevData => ({
-            ...prevData,
-            [field]: value,
-        }));
-    };
-
-    const handleCompanyProfileDataChange = (field, value) => {
-        setCompanyProfileData(prevData => ({
-            ...prevData,
+        setProfileData(prev => ({
+            ...prev,
             [field]: value,
         }));
     };
 
     const handlePhoneNumberChange = (id, number) => {
-        setPhoneNumbers(prevNumbers =>
-            prevNumbers.map(phone => (phone.id === id ? { ...phone, number } : phone))
+        setPhoneNumbers(prev =>
+            prev.map(phone => (phone.id === id ? { ...phone, number } : phone))
         );
     };
 
     const handlePhoneDescriptionChange = (id, description) => {
-        setPhoneNumbers(prevNumbers =>
-            prevNumbers.map(phone =>
-                phone.id === id ? { ...phone, description } : phone
-            )
+        setPhoneNumbers(prev =>
+            prev.map(phone => (phone.id === id ? { ...phone, description } : phone))
         );
+    };
+
+    const handleCompanyProfileDataChange = (field, value) => {
+        setCompanyProfileData(prev => ({
+            ...prev,
+            [field]: value,
+        }));
     };
 
     const addPhoneNumber = () => {
         if (phoneNumbers.length < 2) {
-            setPhoneNumbers(prevNumbers => [
-                ...prevNumbers,
+            setPhoneNumbers(prev => [
+                ...prev,
                 {
                     id: Date.now(),
                     number: "",
@@ -104,48 +140,51 @@ const ProfileDetails = () => {
     };
 
     const handleSocialLinkChange = (id, url) => {
-        setSocialLinks(prevLinks =>
-            prevLinks.map(link => (link.id === id ? { ...link, url } : link))
+        setSocialLinks(prev =>
+            prev.map(link => (link.id === id ? { ...link, url } : link))
         );
     };
 
     const addSocialLink = type => {
-        setSocialLinks(prevLinks => [...prevLinks, { id: Date.now(), type, url: "" }]);
+        setSocialLinks(prev => [...prev, { id: Date.now(), type, url: "" }]);
     };
 
     const deleteItem = (setState, id) => {
-        setState(prevItems => prevItems.filter(item => item.id !== id));
+        setState(prev => prev.filter(item => item.id !== id));
+    };
+
+    const handleSave = async () => {
+        try {
+            const payload = {
+                email: profileData.email,
+                company_name: profileData.name,
+                phone_1: phoneNumbers[0]
+                    ? {
+                          number: phoneNumbers[0].number,
+                          label: phoneNumbers[0].description,
+                      }
+                    : null,
+                phone_2: phoneNumbers[1]
+                    ? {
+                          number: phoneNumbers[1].number,
+                          label: phoneNumbers[1].description,
+                      }
+                    : null,
+                whatsapp: socialLinks.find(l => l.type === "WhatsApp")?.url || null,
+                telegram: socialLinks.find(l => l.type === "Telegram")?.url || null,
+                instagram: socialLinks.find(l => l.type === "Instagram")?.url || null,
+            };
+            await updateCompanyProfile(payload);
+            alert("Изменения сохранены");
+            setIsChanged(false);
+        } catch (error) {
+            console.error("Ошибка сохранения:", error);
+            alert("Ошибка при сохранении изменений");
+        }
     };
 
     const renderCompanyProfileFields = () => (
         <>
-            <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Описание компании:</label>
-                <textarea
-                    className={styles.textarea}
-                    placeholder="Наша компания — «АвтоПрокат+», 12 машин (Camry, BMW X5, Kia Rio). Работаем 5 лет, заботимся о клиентах: все авто в отличном состоянии, своевременное обслуживание и гарантия качества."
-                    value={companyProfileData.companyDescription}
-                    onChange={e =>
-                        handleCompanyProfileDataChange(
-                            "companyDescription",
-                            e.target.value
-                        )
-                    }
-                />
-            </div>
-
-            <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Краткое описание:</label>
-                <textarea
-                    className={styles.textarea}
-                    placeholder="Например: автопарк из 12 машин, работаем с 2018 года"
-                    value={companyProfileData.shortDescription}
-                    onChange={e =>
-                        handleCompanyProfileDataChange("shortDescription", e.target.value)
-                    }
-                />
-            </div>
-
             <div className={styles.formGroup}>
                 <label className={styles.formLabel}>Адрес:</label>
                 <input
@@ -266,7 +305,7 @@ const ProfileDetails = () => {
                                                 )
                                             }
                                         />
-                                        <button
+                                        {/* <button
                                             type="button"
                                             className={clsx(styles.btnVerifyNumber, {
                                                 [styles.btnVerifyNumberActive]:
@@ -274,7 +313,7 @@ const ProfileDetails = () => {
                                             })}
                                         >
                                             Подтвердить
-                                        </button>
+                                        </button> */}
                                     </div>
                                     <div
                                         className={`${styles.formGroup} ${styles.formGroupNumber}`}
@@ -368,16 +407,24 @@ const ProfileDetails = () => {
                             <div className={styles.btnContainer}>
                                 {socialLinks.length < 4 &&
                                     ["WhatsApp", "Telegram", "Instagram", "Website"].map(
-                                        type => (
-                                            <button
-                                                key={type}
-                                                type="button"
-                                                className={styles.addButton}
-                                                onClick={() => addSocialLink(type)}
-                                            >
-                                                Добавить {type}
-                                            </button>
-                                        )
+                                        type => {
+                                            const alreadyExists = socialLinks.some(
+                                                link => link.type === type
+                                            );
+
+                                            if (alreadyExists) return null;
+
+                                            return (
+                                                <button
+                                                    key={type}
+                                                    type="button"
+                                                    className={styles.addButton}
+                                                    onClick={() => addSocialLink(type)}
+                                                >
+                                                    Добавить {type}
+                                                </button>
+                                            );
+                                        }
                                     )}
                                 <button
                                     type="button"

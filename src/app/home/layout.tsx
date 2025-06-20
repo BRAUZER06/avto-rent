@@ -19,7 +19,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
             {/* <WidgetAdvertisement /> */}
             <main className="w-full">{children}</main>
             <Footer />
-            <Cookie />
+            {/*<Cookie /> */}
         </MaxWidthWrapper>
     );
 }

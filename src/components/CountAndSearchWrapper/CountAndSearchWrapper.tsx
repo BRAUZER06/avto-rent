@@ -16,13 +16,12 @@ export const CountAndSearchWrapper: React.FC<CountAndSearchWrapperProps> = memo(
         return (
             <div className={style.containerSearch}>
                 <NamePagesAndCountItems
-                    text="Объявления"
-                    count={paginationData?.totalDocs}
+                    text="Автомобили"
+                    count={paginationData?.totalDocs || 52}
                 />
 
                 <div className={style.searchAndBtnContainer}>
                     <SearchBig value={inputSearch} handleOnChange={handleInputChange} />
-
                 </div>
             </div>
         );

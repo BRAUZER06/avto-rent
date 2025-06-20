@@ -27,7 +27,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
             </main>
             <Footer />
             <FloatingMenu />
-            <Cookie />
+            {/*<Cookie /> */}
         </MaxWidthWrapper>
     );
 }

@@ -100,7 +100,7 @@ export const ListAds = memo(() => {
                             <div key={item.id} className={style.cardСontainer}>
                                 <AdsHome ads={item} />
                             </div>
-                            {(index + 2) % 15 === 0 && <AdsHomeAdvertising />}
+                            {(index + 2) % 5 === 0 && <AdsHomeAdvertising />}
                         </>
                     ))}
             </div>

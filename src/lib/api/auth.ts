@@ -1,45 +1,72 @@
+import { useAuthStore } from "@src/store/useAuthStore";
 import { apiUrlHelper } from "../helpers/getApiUrl";
+import { fetchCompanyProfile } from "./profileService";
+import { setTokens } from "./tokenService";
 
 const baseUrl = apiUrlHelper();
 
-// Функция для отправки номера телефона
-export const sendPhoneNumber = async (phoneNumber: string): Promise<any> => {
-    const response = await fetch(`${baseUrl}/api/login`, {
+type AuthPayload = {
+    email: string;
+    password: string;
+    password_confirmation?: string;
+    company_name?: string;
+    role?: number;
+};
+
+type AuthResponse = {
+    status: { code: number; message: string };
+    data: {
+        id: number;
+        email: string;
+        role: string;
+        created_at: string;
+        created_date: string;
+    };
+};
+
+export const signup = async (payload: AuthPayload): Promise<AuthResponse> => {
+    const response = await fetch(`${baseUrl}/signup`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ phone_number: phoneNumber }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user: payload }),
     });
 
     if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Ошибка сервера");
+        throw new Error("Ошибка регистрации");
     }
+
+    const authHeader = response.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+        throw new Error("Access token отсутствует в заголовках");
+    }
+
+    const accessToken = authHeader.replace("Bearer ", "");
+    setTokens(accessToken, ""); // сохраняем accessToken, refreshToken пока пустой
+
+    const profile = await fetchCompanyProfile();
+    useAuthStore.getState().setProfile(profile);
 
     return response.json();
 };
 
-// Функция для подтверждения номера телефона (проверка OTP)
-export const confirmPhoneNumber = async (
-    phoneNumber: string,
-    confirmationCode: string
-): Promise<any> => {
-    const response = await fetch(`${baseUrl}/api/confirm`, {
+export const login = async (payload: AuthPayload): Promise<AuthResponse> => {
+    const response = await fetch(`${baseUrl}/login`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            phone_number: phoneNumber,
-            confirmation_code: confirmationCode,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user: payload }),
     });
 
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Ошибка сервера");
-    }
+    if (!response.ok) throw new Error("Ошибка авторизации");
 
-    return response.json(); 
+    const authHeader = response.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) throw new Error("Нет токена");
+
+    const accessToken = authHeader.replace("Bearer ", "");
+    setTokens(accessToken, ""); // временно без refresh
+
+    // ✅ Загрузить профиль и записать в zustand
+    const profile = await fetchCompanyProfile();
+    useAuthStore.getState().setProfile(profile);
+
+    return response.json();
 };

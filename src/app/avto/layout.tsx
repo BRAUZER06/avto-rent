@@ -22,7 +22,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
                 <main className="w-full flex-[1]">{children}</main>
                 <Footer />
                 <FloatingMenu />
-                <Cookie />
+                {/*<Cookie /> */}
             </div>
         </MaxWidthWrapper>
     );

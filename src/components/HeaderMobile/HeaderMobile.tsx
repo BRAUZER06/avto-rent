@@ -25,7 +25,7 @@ export const HeaderMobile = () => {
             />
 
             <nav className={style.containerBurger}>
-                <Link href="/search" className={style.imagesContainer}>
+                {/* <Link href="/search" className={style.imagesContainer}>
                     <Image
                         className={style.searchIcon}
                         width={40}
@@ -35,7 +35,7 @@ export const HeaderMobile = () => {
                     />
                 </Link>
 
-                <div className={style.plug}></div>
+                <div className={style.plug}></div> */}
                 <div onClick={toggleNavPanel} className={style.imagesContainer}>
                     <Image
                         className={style.burgerIcon}

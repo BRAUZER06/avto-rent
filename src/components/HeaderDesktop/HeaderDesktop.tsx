@@ -55,7 +55,7 @@ export const HeaderDesktop = memo(() => {
                     <HeaderMultiSelect.TextAndNumber
                         number={367}
                         text={"Все Авто"}
-                        path={"/avto"}
+                        path={"/avto/all"}
                     />
 
                     {/* <HeaderMultiSelect.TextAndNumber

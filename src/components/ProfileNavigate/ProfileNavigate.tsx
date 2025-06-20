@@ -63,6 +63,9 @@ export const ProfileNavigate = ({ rating = 3.5, reviews = 0, ads = 0 }) => {
                     </li>{" "}
                     <hr className={style.hr} />
                     <li>
+                        <Link href="/profile/analytics">Графики</Link>
+                    </li>
+                    <li>
                         <Link href="/profile/details">
                             Управление <br /> профилем
                         </Link>
