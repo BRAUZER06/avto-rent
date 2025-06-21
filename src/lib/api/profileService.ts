@@ -40,16 +40,16 @@ export const fetchCompanyProfile = async (): Promise<CompanyProfile> => {
     return response.json();
 };
 
-// Обновление профиля компании (PATCH /company_profile)
-export const updateCompanyProfile = async (data: Partial<CompanyProfile>) => {
+// Обновление профиля компании с файлами (PATCH /company_profile)
+export const updateCompanyProfile = async (formData: FormData) => {
     const token = getAccessToken();
+
     const response = await fetch(`${baseUrl}/company_profile`, {
         method: "PATCH",
         headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ user: data }),
+        body: formData,
     });
 
     if (!response.ok) {

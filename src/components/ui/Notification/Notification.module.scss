@@ -1,22 +1,35 @@
 .notification {
     position: fixed;
-    bottom: 2%;
-    right: 2%;
-    transform: translateX(-50%, -50%);
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-weight: bold;
+    right: 16px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
     z-index: 999;
     text-align: center;
-    min-width: 114px;
+    min-width: 140px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0.95;
+    font-size: 14px;
+
+    bottom: 16px; // по умолчанию снизу
+}
+
+@media (max-width: 768px) {
+    .notification {
+        bottom: auto;
+        top: 16px; // на мобилках сверху
+    }
 }
 
 .success {
-    background-color: var(--green-main);
-    color: #000000;
+    background-color: #d1f4d1;
+    color: #1e4620;
+    border: 1px solid #a3e3a3;
 }
 
 .error {
-    background-color: red;
-    color: #ffffff;
+    background-color: #fde2e2;
+    color: #611a15;
+    border: 1px solid #f5b7b7;
 }

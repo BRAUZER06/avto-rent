@@ -128,6 +128,7 @@
 .formControl {
     width: 100%;
     padding: 8px;
+    
     border: 1px solid #8F8F8F;
     border-radius: 5px;
     font-size: 16px;
@@ -135,6 +136,17 @@
     background-color: var(--grey-bg);
     margin-bottom: 5px;
     box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+    
+    &::placeholder {
+        color: #999; // цвет плейсхолдера
+      }
+    
+      &:disabled {
+        background-color: #161616;
+        color: #aaa;
+        cursor: not-allowed;
+        border: 1px solid #ccc;
+      }
 }
 
 .textarea {
