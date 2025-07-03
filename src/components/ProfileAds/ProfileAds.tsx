@@ -1,13 +1,16 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import styles from "./ProfileAds.module.scss";
 import { AdsCard } from "../AdsCard/AdsCard";
+import { Ad } from "../Ad/Ad";
+import { testAdss } from "@src/data/testAdsDeleted";
+import { getCarById, getMyCars } from "@src/lib/api/carService";
 
 const tabs = [
     { id: "all", title: "Все объявления" },
-    { id: "active", title: "Активные" },
-    { id: "archived", title: "В архиве" },
+    // { id: "active", title: "Активные" },
+    // { id: "archived", title: "В архиве" },
 ];
 
 const adsData = [
@@ -20,15 +23,43 @@ const adsData = [
 ];
 
 const ProfileAds = () => {
+    const [ads, setAds] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
     const [activeTab, setActiveTab] = useState("all");
 
-    const filteredAds = adsData.filter(
-        ad => activeTab === "all" || ad.status === activeTab
-    );
+    const filteredAds = ads
+        .filter(ad => activeTab === "all" || ad.status === activeTab)
+        .slice(ads.length - 4, ads.length);
 
     const handleTabChange = useCallback(tabId => {
         setActiveTab(tabId);
     }, []);
+
+    useEffect(() => {
+        const loadCars = async () => {
+            try {
+                const data = await getMyCars();
+                // const data = await getCarById(60);
+                setAds(data);
+            } catch (e: any) {
+                setError(e.message || "Ошибка при загрузке объявлений");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadCars();
+    }, []);
+
+    {
+        isLoading && <p>Загрузка объявлений...</p>;
+    }
+    {
+        error && <p style={{ color: "red" }}>{error}</p>;
+    }
+    console.log("filteredAds", filteredAds[0]);
 
     return (
         <div className={styles.container}>
@@ -45,9 +76,18 @@ const ProfileAds = () => {
                 ))}
             </div>
             <div className={styles.adsContainer}>
-                {filteredAds.map(ad => (
-                    <AdsCard key={ad.id} />
-                ))}
+                <div
+                    className={`${styles.itemsList} ${
+                        filteredAds.length === 1 ? styles.single : ""
+                    }`}
+                >
+                    {!!filteredAds?.length &&
+                        filteredAds.map((item, index) => (
+                            <div key={item.id || index} className={styles.contentDesktop}>
+                                <Ad ads={item} />
+                            </div>
+                        ))}
+                </div>
             </div>
         </div>
     );

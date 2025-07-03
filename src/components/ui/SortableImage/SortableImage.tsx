@@ -18,19 +18,23 @@ export const SortableImage = ({ id, url, onRemove }) => {
         <div
             ref={setNodeRef}
             style={style}
-            {...attributes}
-            {...listeners}
             className="relative group touch-none"
+            {...attributes}
         >
-            <Image
-                src={url}
-                alt="preview"
-                width={200}
-                height={150}
-                className="rounded object-cover aspect-[4/3]"
-            />
+            <div {...listeners} className="cursor-move">
+                <img
+                    src={url}
+                    alt="preview"
+                    className="rounded object-cover aspect-[4/3] w-full h-auto"
+                />
+            </div>
             <button
-                onClick={onRemove}
+                onClick={e => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    onRemove(id);
+                }}
+                type="button"
                 className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 text-xs hidden group-hover:flex items-center justify-center"
             >
                 ✕

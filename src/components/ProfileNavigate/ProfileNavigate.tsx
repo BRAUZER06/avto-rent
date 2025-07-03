@@ -1,20 +1,30 @@
+"use client";
 import React from "react";
 import Link from "next/link";
 import style from "./ProfileNavigate.module.scss";
+import { useAuthStore } from "@src/store/useAuthStore";
+import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
 
-export const ProfileNavigate = ({ rating = 3.5, reviews = 0, ads = 0 }) => {
-    const ratingPercentage = (rating / 5) * 100; // Переводим рейтинг в проценты
+export const ProfileNavigate = ({ rating = 4.3, reviews = 0, ads = 0 }) => {
+    const ratingPercentage = (rating / 5) * 100;
+
+    const { profile, setProfile } = useAuthStore();
+    const baseUrl = mediaUrlHelper();
 
     return (
         <div className={style.container}>
             <div className={style.profileBlock}>
                 <img
-                    src="https://kuban24.tv/wp-content/uploads/2022/12/O1WwKcADigZx6q5VTFY4JQVYY6A7HFGm-800x480.jpg"
+                    src={
+                        profile?.company_avatar_url
+                            ? baseUrl + profile.company_avatar_url
+                            : "/placeholder-avatar.jpg"
+                    }
                     alt="Profile"
                     className={style.avatar}
                 />
                 <div className={style.profileInfo}>
-                    <h2>Ашат</h2>
+                    <h2>{profile?.company_name || "Название компании"}</h2>
                     <div className={style.rating}>
                         <span>{rating.toFixed(1)}</span>
                         <div className={style.starsContainer}>

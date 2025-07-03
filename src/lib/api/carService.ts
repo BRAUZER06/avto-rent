@@ -12,22 +12,32 @@ export const getAllCars = async () => {
 
 // 🔹 GET /cars/my — мои машины
 export const getMyCars = async () => {
-    const response = await fetchWithAuth(`${baseUrl}/cars/my`);
+    const response = await fetchWithAuth(`${baseUrl}/my_cars`);
     if (!response.ok) throw new Error("Не удалось загрузить мои машины");
     return response.json();
 };
 
+// 🔹 GET /cars/:id — получить конкретную машину
+export const getCarById = async (id: string | number) => {
+    const response = await fetchWithAuth(`${baseUrl}/cars/${id}`);
+    if (!response.ok) throw new Error(`Не удалось загрузить машину с id=${id}`);
+
+    const car = await response.json();
+    return [car]; // ← оборачиваем в массив
+};
+
 // 🔹 POST /cars — создать новую машину
-export const createCar = async (carData: any) => {
+export const createCar = async (formData: FormData) => {
     const response = await fetchWithAuth(`${baseUrl}/cars`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(carData),
+        body: formData,
     });
 
-    if (!response.ok) throw new Error("Не удалось создать машину");
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Ошибка при создании авто: ${errorText}`);
+    }
+
     return response.json();
 };
 

@@ -1,4 +1,4 @@
-// @src/api/profileService.ts
+import { useAuthStore } from "@src/store/useAuthStore";
 import { apiUrlHelper } from "../helpers/getApiUrl";
 import { getAccessToken } from "./tokenService";
 
@@ -17,9 +17,15 @@ export interface CompanyProfile {
     website: string | null;
     about: string | null;
     address: string | null;
-    logo_url: string | null;
+    company_avatar_url: string | null;
+
     created_at: string;
     created_date: string;
+    logo_urls: {
+        id: number;
+        url: string;
+        position: number;
+    }[];
 }
 
 // Получение профиля компании (GET /company_profile)
@@ -36,8 +42,9 @@ export const fetchCompanyProfile = async (): Promise<CompanyProfile> => {
     if (!response.ok) {
         throw new Error("Не удалось загрузить профиль");
     }
-
-    return response.json();
+    const data = await response.json();
+    useAuthStore.getState().setProfile(data);
+    return data;
 };
 
 // Обновление профиля компании с файлами (PATCH /company_profile)
@@ -57,4 +64,20 @@ export const updateCompanyProfile = async (formData: FormData) => {
     }
 
     return response.json();
+};
+
+// Удаление логотипа компании (DELETE /company_logos/:id)
+export const deleteCompanyLogo = async (logoId: number): Promise<void> => {
+    const token = getAccessToken();
+    const response = await fetch(`${baseUrl}/company_logos/${logoId}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error("Не удалось удалить логотип");
+    }
 };

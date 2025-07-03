@@ -1,21 +1,29 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 
 import { Heart, Home, Plus, Message, User } from "@public/images/floatingMenu";
 import styles from "./FloatingMenu.module.scss";
 import { useAuthStore } from "@src/store/useAuthStore";
+import { FullMobileScreenOverlay } from "../ui/FullMobileScreenOverlay/FullMobileScreenOverlay";
+import { HeaderNavSubPanelCar } from "../HeaderMobile/components/HeaderNavSubPanelCar/HeaderNavSubPanelCar";
+import CarCategories from "../CarCategories/CarCategories";
 
 const FloatingMenu = () => {
     const { profile } = useAuthStore();
     const isAuthenticated = !!profile;
     const router = useRouter();
+    const [isOpen, setIsOpen] = useState(false);
+
+    const toggleMenuSelect = () => {
+        setIsOpen(!isOpen);
+    };
 
     return (
         <div className={styles.floatingMenu}>
             {/* Категории — пока без маршрута */}
-            <div className={styles.menuIcon}>
+            <div onClick={toggleMenuSelect} className={styles.menuIcon}>
                 <div className={clsx(styles.iconContainer, styles.iconHome)}>
                     <Home className={styles.icon} />
                 </div>
@@ -53,6 +61,16 @@ const FloatingMenu = () => {
                 </div>
                 <span>Профиль</span>
             </div>
+
+            <FullMobileScreenOverlay isOpen={isOpen}>
+                <HeaderNavSubPanelCar
+                    toggleMenuSelect={toggleMenuSelect}
+                    toggleNavPanel={toggleMenuSelect}
+                    isOpen={isOpen}
+                >
+                    <CarCategories />
+                </HeaderNavSubPanelCar>
+            </FullMobileScreenOverlay>
         </div>
     );
 };

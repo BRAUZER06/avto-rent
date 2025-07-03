@@ -6,6 +6,6 @@ module.exports = {
         missingSuspenseWithCSRBailout: false,
     },
     images: {
-        domains: [],
+        domains: ["ingrentcar.ru"],
     },
 };

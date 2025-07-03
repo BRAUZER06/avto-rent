@@ -4,7 +4,11 @@ import styles from "./ProfileDetails.module.scss";
 import OptionCheckbox from "../ui/OptionCheckbox/OptionCheckbox";
 import { DeletedIcon } from "@public/images/icons/DeletedIcon";
 import clsx from "clsx";
-import { fetchCompanyProfile, updateCompanyProfile } from "@src/lib/api/profileService";
+import {
+    deleteCompanyLogo,
+    fetchCompanyProfile,
+    updateCompanyProfile,
+} from "@src/lib/api/profileService";
 import { useDropzone } from "react-dropzone";
 import {
     closestCenter,
@@ -24,6 +28,7 @@ import {
 import { SortableImage } from "../ui/SortableImage/SortableImage";
 import { v4 as uuidv4 } from "uuid";
 import { Notification, useNotification } from "../ui/Notification/Notification";
+import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
 
 const ProfileDetails = () => {
     const [activeTab, setActiveTab] = useState("main");
@@ -47,12 +52,24 @@ const ProfileDetails = () => {
         address: "",
         about: "",
         website: "",
+        company_avatar_url: "",
+        logo_urls: [],
     });
 
     const [phoneNumbers, setPhoneNumbers] = useState([
         { id: 1, number: "", description: "", isConfirmationProcess: false },
     ]);
-    const [logoImages, setLogoImages] = useState([]);
+    const [removedLogoUrls, setRemovedLogoUrls] = useState([]);
+    const [logoImages, setLogoImages] = useState<
+        Array<{
+            id: number | string;
+            file: File | null;
+            preview: string;
+            isNew: boolean;
+        }>
+    >([]);
+
+    const [removedLogoIds, setRemovedLogoIds] = useState([]);
     const [avatarImage, setAvatarImage] = useState(null);
     const [socialLinks, setSocialLinks] = useState([]);
     const [isChanged, setIsChanged] = useState(false);
@@ -63,100 +80,114 @@ const ProfileDetails = () => {
         useDropzone({
             accept: { "image/*": [] },
             onDrop: acceptedFiles => {
-                const newFiles = acceptedFiles
-                    .filter(
-                        file =>
-                            !logoImages.some(
-                                img =>
-                                    img.file.name === file.name &&
-                                    img.file.size === file.size
-                            )
-                    )
-                    .slice(0, MAX_LOGOS - logoImages.length)
-                    .map(file => ({
-                        id: uuidv4(),
-                        file,
-                        preview: URL.createObjectURL(file),
-                    }));
-
+                const newFiles = acceptedFiles.map(file => ({
+                    id: uuidv4(), // строка
+                    file,
+                    preview: URL.createObjectURL(file),
+                    isNew: true, // явно помечаем как новые
+                }));
                 setLogoImages(prev => [...prev, ...newFiles]);
             },
 
             maxFiles: MAX_LOGOS,
         });
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await fetchCompanyProfile();
-                if (data) {
-                    setProfileData({
-                        email: data.email || "",
-                        name: data.company_name || "",
-                    });
-                    setCompanyProfileData({
-                        address: data.address || "",
-                        about: data.about || "",
-                        website: data.website || "",
-                    });
+    const fetchData = useCallback(async () => {
+        try {
+            const data = await fetchCompanyProfile();
+            const baseUrl = mediaUrlHelper();
 
-                    const phones = [];
-                    if (data.phone_1)
-                        phones.push({
-                            id: 1,
-                            number: data.phone_1.number,
-                            description: data.phone_1.label,
-                            isConfirmationProcess: false,
-                        });
-                    if (data.phone_2)
-                        phones.push({
-                            id: 2,
-                            number: data.phone_2.number,
-                            description: data.phone_2.label,
-                            isConfirmationProcess: false,
-                        });
-                    setPhoneNumbers(phones);
+            if (data) {
+                setProfileData({
+                    email: data.email || "",
+                    name: data.company_name || "",
+                });
 
-                    const socials = [];
-                    let idCounter = 1;
-                    if (data.whatsapp)
-                        socials.push({
-                            id: idCounter++,
-                            type: "WhatsApp",
-                            url: data.whatsapp,
-                            placeholder: "Введите номер +78005553535",
-                        });
-                    if (data.telegram)
-                        socials.push({
-                            id: idCounter++,
-                            type: "Telegram",
-                            url: data.telegram,
-                            placeholder: "Введите номер свой Никнейм",
-                        });
-                    if (data.instagram)
-                        socials.push({
-                            id: idCounter++,
-                            type: "Instagram",
-                            url: data.instagram,
-                            placeholder: "Введите номер свой Никнейм",
-                        });
-                    if (data.website)
-                        socials.push({
-                            id: idCounter++,
-                            type: "WebSite",
-                            url: data.website,
-                            placeholder: "Введите ссылку на Сайт ",
-                        });
+                setCompanyProfileData({
+                    address: data.address || "",
+                    about: data.about || "",
+                    website: data.website || "",
+                    company_avatar_url: data.company_avatar_url
+                        ? baseUrl + data.company_avatar_url
+                        : "",
+                    logo_urls: data.logo_urls?.map(url => baseUrl + url) || [],
+                });
 
-                    setSocialLinks(socials);
+                if (data.logo_urls?.length) {
+                    const loadedImages = data.logo_urls.map(logo => ({
+                        id: logo.id,
+                        file: null,
+                        preview: baseUrl + logo.url,
+                        isNew: false,
+                    }));
+                    setLogoImages(loadedImages);
                 }
-            } catch (error) {
-                console.error("Ошибка загрузки профиля", error);
-            }
-        };
 
-        fetchData();
+                if (data.company_avatar_url) {
+                    setAvatarImage({
+                        file: null,
+                        preview: baseUrl + data.company_avatar_url,
+                    });
+                }
+
+                const phones = [];
+                if (data.phone_1)
+                    phones.push({
+                        id: 1,
+                        number: data.phone_1.number,
+                        description: data.phone_1.label,
+                        isConfirmationProcess: false,
+                    });
+                if (data.phone_2)
+                    phones.push({
+                        id: 2,
+                        number: data.phone_2.number,
+                        description: data.phone_2.label,
+                        isConfirmationProcess: false,
+                    });
+                setPhoneNumbers(phones);
+
+                const socials = [];
+                let idCounter = 1;
+                if (data.whatsapp)
+                    socials.push({
+                        id: idCounter++,
+                        type: "WhatsApp",
+                        url: data.whatsapp,
+                        placeholder: "Введите номер +78005553535",
+                    });
+                if (data.telegram)
+                    socials.push({
+                        id: idCounter++,
+                        type: "Telegram",
+                        url: data.telegram,
+                        placeholder: "Введите номер свой Никнейм",
+                    });
+                if (data.instagram)
+                    socials.push({
+                        id: idCounter++,
+                        type: "Instagram",
+                        url: data.instagram,
+                        placeholder: "Введите номер свой Никнейм",
+                    });
+                if (data.website)
+                    socials.push({
+                        id: idCounter++,
+                        type: "WebSite",
+                        url: data.website,
+                        placeholder: "Введите ссылку на Сайт ",
+                    });
+
+                setSocialLinks(socials);
+            }
+        } catch (error) {
+            console.error("Ошибка загрузки профиля", error);
+        }
     }, []);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
     useEffect(() => {
         setIsChanged(
@@ -251,6 +282,8 @@ const ProfileDetails = () => {
     };
 
     const handleSave = async () => {
+        const sortedLogos = [...logoImages].sort((a, b) => a.position - b.position);
+
         try {
             const formData = new FormData();
 
@@ -278,13 +311,13 @@ const ProfileDetails = () => {
             );
 
             if (phoneNumbers[0]) {
-                formData.append("phone_1_number", phoneNumbers[0].number);
-                formData.append("phone_1_label", phoneNumbers[0].description);
+                formData.append("phone_1[number]", phoneNumbers[0]?.number || "");
+                formData.append("phone_1[label]", phoneNumbers[0]?.description || "");
             }
 
             if (phoneNumbers[1]) {
-                formData.append("phone_2_number", phoneNumbers[1].number);
-                formData.append("phone_2_label", phoneNumbers[1].description);
+                formData.append("phone_2[number]", phoneNumbers[1]?.number || "");
+                formData.append("phone_2[label]", phoneNumbers[1]?.description || "");
             }
 
             // Аватар (1 файл)
@@ -293,15 +326,30 @@ const ProfileDetails = () => {
             }
 
             // Логотипы (несколько файлов)
-            logoImages.forEach((img, index) => {
-                formData.append(`logo_images[]`, img.file); // можно без индекса, если сервер ожидает массив
+            sortedLogos.forEach(img => {
+                if (img.file) {
+                    formData.append("company_logos[]", img.file);
+                }
             });
+            if (removedLogoUrls.length > 0) {
+                formData.append("removed_logo_ids", JSON.stringify(removedLogoUrls));
+            }
+
+            formData.append(
+                "logo_positions",
+                JSON.stringify(
+                    sortedLogos.map((img, index) => ({
+                        id: img.isNew ? null : img.id,
+                        position: index + 1,
+                    }))
+                )
+            );
 
             // Отправка
             await updateCompanyProfile(formData);
-
+            await fetchData(); // ⬅️ обновит профиль после сохранения
+            setRemovedLogoIds([]);
             showNotification("Изменения успешно сохранены", "success");
-
             setIsChanged(false);
         } catch (error) {
             console.error("Ошибка сохранения:", error);
@@ -350,8 +398,26 @@ const ProfileDetails = () => {
             maxFiles: 1,
         });
 
-    const removeLogo = id => {
-        setLogoImages(prev => prev.filter(img => img.id !== id));
+    const removeLogo = async (id: number | string) => {
+        try {
+            const logoToRemove = logoImages.find(img => img.id === id);
+
+            if (!logoToRemove) return;
+
+            // Если это логотип с сервера (не новый) - удаляем на сервере
+            if (!logoToRemove.isNew && typeof logoToRemove.id === "number") {
+                await deleteCompanyLogo(logoToRemove.id);
+                setRemovedLogoIds(prev => [...prev, logoToRemove.id]);
+            }
+
+            // Удаляем из локального состояния
+            setLogoImages(prev => prev.filter(img => img.id !== id));
+
+            showNotification("Логотип успешно удален", "success");
+        } catch (error) {
+            console.error("Ошибка при удалении логотипа:", error);
+            showNotification("Ошибка при удалении логотипа", "error");
+        }
     };
 
     const sensors = useSensors(
@@ -365,9 +431,18 @@ const ProfileDetails = () => {
         if (active.id !== over.id) {
             const oldIndex = logoImages.findIndex(img => img.id === active.id);
             const newIndex = logoImages.findIndex(img => img.id === over.id);
-            setLogoImages(prev => arrayMove(prev, oldIndex, newIndex));
+            const newImages = arrayMove(logoImages, oldIndex, newIndex);
+
+            // Обновляем позиции
+            const positionedImages = newImages.map((img, index) => ({
+                ...img,
+                position: index,
+            }));
+
+            setLogoImages(positionedImages);
         }
     };
+    console.log("logoImages", logoImages);
 
     return (
         <div className={styles.container}>
@@ -538,7 +613,7 @@ const ProfileDetails = () => {
                     <div className={styles.profileView}>
                         <form>
                             <h3 className="text-base font-semibold mb-2">
-                                Фотографии компании (от 3 до 6)
+                                Фотографии компании (от 3 до 12)
                             </h3>
 
                             <div
@@ -564,7 +639,7 @@ const ProfileDetails = () => {
                                                 key={img.id}
                                                 id={img.id}
                                                 url={img.preview}
-                                                onRemove={() => removeLogo(img.id)}
+                                                onRemove={removeLogo}
                                             />
                                         ))}
                                     </div>

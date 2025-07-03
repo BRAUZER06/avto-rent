@@ -5,6 +5,7 @@ export type NotificationProps = {
     notification: {
         message: string;
         type: string;
+        isLoading?: boolean;
     } | null;
 };
 
@@ -15,17 +16,21 @@ export const useNotification = () => {
 
     useEffect(() => {
         let timer: ReturnType<typeof setTimeout>;
-        if (notification) {
+
+        // Таймер только если не загрузка
+        if (notification && !notification.isLoading) {
             timer = setTimeout(() => {
                 setNotification(null);
             }, 3000);
         }
 
-        return () => clearTimeout(timer);
+        return () => {
+            if (timer) clearTimeout(timer);
+        };
     }, [notification]);
 
-    const showNotification = (message: string, type: string) => {
-        setNotification({ message: message, type });
+    const showNotification = (message: string, type: string, isLoading = false) => {
+        setNotification({ message, type, isLoading });
     };
 
     return {
@@ -39,7 +44,14 @@ export const Notification: React.FC<NotificationProps> = ({ notification }) => {
 
     return (
         <div className={`${styles.notification} ${styles[notification.type]}`}>
-            <p>{notification.message}</p>
+            {notification.isLoading ? (
+                <div className={styles.loadingContainer}>
+                    <div className={styles.spinner}></div>
+                    <p>{notification.message}</p>
+                </div>
+            ) : (
+                <p>{notification.message}</p>
+            )}
         </div>
     );
 };

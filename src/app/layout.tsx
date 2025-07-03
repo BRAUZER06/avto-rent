@@ -4,6 +4,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import MaxWidthWrapper from "@src/components/MaxWidthWrapper/MaxWidthWrapper";
 import { InitAuth } from "@src/lib/hooks/InitAuth";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 interface RootLayoutProps {
     children: React.ReactNode;
 }
@@ -22,7 +23,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
                 className="bg-backgroundBlack relative h-full w-full"
                 suppressHydrationWarning={true}
             >
-                <InitAuth /> <MaxWidthWrapper>{children}</MaxWidthWrapper>
+                <InitAuth /> {children}
             </body>
         </html>
     );

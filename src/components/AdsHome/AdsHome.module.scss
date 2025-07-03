@@ -2,10 +2,10 @@
     overflow: hidden;
     position: relative;
     width: 100%; /* Позволяет карточке занимать все доступное пространство */
-    max-width: 400px; /* Максимальная ширина карточки */
+    max-width: 440px; /* Максимальная ширина карточки */
     min-width: 200px;
     min-height: 278px;
-    max-height: 480px;
+    max-height: 500px;
     margin-right: 12px;
 
     @media (max-width: 580px) {
@@ -67,6 +67,7 @@
     }
 
     .title {
+        
         cursor: pointer;
         font-weight: 400;
         color: var(--blue-text--brightest-disabled);
