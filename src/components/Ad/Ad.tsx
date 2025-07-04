@@ -21,9 +21,9 @@ export const Ad = memo(({ ads, rating = 3.5, isReact = false }) => {
 
     const handleImageClick = event => {
         event.stopPropagation();
-        if (screenWidth > 767) {
-            setModalOpen(true);
-        }
+        // if (screenWidth > 767) {
+        //     setModalOpen(true);
+        // }
     };
 
     const handleMouseMove = event => {
@@ -142,7 +142,7 @@ export const Ad = memo(({ ads, rating = 3.5, isReact = false }) => {
                 <HeartIcon className={style.heartIcon} />
             </div>
 
-            {screenWidth > 767 && (
+            {/* {screenWidth > 767 && (
                 <ModalImage isVisible={isModalOpen} onClose={() => setModalOpen(false)}>
                     <DetailedPhotoViewer
                         images={images}
@@ -151,7 +151,7 @@ export const Ad = memo(({ ads, rating = 3.5, isReact = false }) => {
                         initialIndex={currentIndex}
                     />
                 </ModalImage>
-            )}
+            )} */}
         </div>
     );
 });
