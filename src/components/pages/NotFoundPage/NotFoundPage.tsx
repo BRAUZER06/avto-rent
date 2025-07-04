@@ -27,7 +27,7 @@ const NotFoundPage = () => {
             <p className={styles.description}>
                 Похоже, такая страницу перестала существовать :&#40;
             </p>
-            <Link href={"/home"} className={styles.button}>
+            <Link href={"/avot/all"} className={styles.button}>
                 На главную
             </Link>
             <Footer />

@@ -10,6 +10,7 @@ import {
     HEADER_AUTO,
     HEADER_SERVICES,
     POPULAR_ADS,
+    HEADER_RENT,
 } from "@src/data/header-nav";
 
 import HeaderNavPanelItem from "../HeaderNavPanelItem/HeaderNavPanelItem";
@@ -104,7 +105,6 @@ export const HeaderNavPanel = ({ isOpen, toggleNavPanel }: HeaderNavPanel) => {
                     name="Автомобили"
                     // styleProps={{ background: "var(--green-deep)" }}
                 />
-
                 <HeaderNavPanelItem.TextAndNumber
                     toggleNavPanel={toggleNavPanel}
                     number={367}
@@ -117,7 +117,12 @@ export const HeaderNavPanel = ({ isOpen, toggleNavPanel }: HeaderNavPanel) => {
                     text={HEADER_SERVICES.name}
                     path={HEADER_SERVICES.path}
                     // styleProps={{ background: "var(--green-deep)" }}
-                /> */}
+                /> */}{" "}
+                <HeaderNavPanelItem.Text
+                    toggleNavPanel={toggleNavPanel}
+                    text={HEADER_RENT.name}
+                    path={HEADER_RENT.path}
+                />
                 <HeaderNavPanelItem.Text
                     toggleNavPanel={toggleNavPanel}
                     text={HEADER_ABOUT.name}

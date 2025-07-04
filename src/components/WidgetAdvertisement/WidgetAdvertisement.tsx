@@ -10,20 +10,26 @@ import { memo, useMemo } from "react";
 export const WidgetAdvertisement = memo(() => {
     const pathname = usePathname();
 
-    const isInCategory = (path: string) => pathname === path || pathname.startsWith(path + "/");
+    const isInCategory = (path: string) =>
+        pathname === path || pathname.startsWith(path + "/");
 
-    const activeCategory = useMemo(() => 
-        POPULAR_ADS.find(category => isInCategory(category.path)), [pathname]);
+    const activeCategory = useMemo(
+        () => POPULAR_ADS.find(category => isInCategory(category.path)),
+        [pathname]
+    );
 
     const breadcrumbs = useMemo(() => {
-        const crumbs = [{ name: "Главная", path: "/home" }];
+        const crumbs = [{ name: "Главная", path: "/avto/all" }];
         if (activeCategory) {
             crumbs.push({ name: activeCategory.name, path: activeCategory.path });
             const subCategory = activeCategory.subCategories?.find(sub =>
                 isInCategory(`${activeCategory.path}${sub.path}`)
             );
             if (subCategory) {
-                crumbs.push({ name: subCategory.name, path: `${activeCategory.path}${subCategory.path}` });
+                crumbs.push({
+                    name: subCategory.name,
+                    path: `${activeCategory.path}${subCategory.path}`,
+                });
             }
         }
         return crumbs;
@@ -47,7 +53,8 @@ export const WidgetAdvertisement = memo(() => {
                             <Link href={crumb.path}>
                                 <div
                                     className={clsx({
-                                        [style.lastCrumb]: index === breadcrumbs.length - 1,
+                                        [style.lastCrumb]:
+                                            index === breadcrumbs.length - 1,
                                     })}
                                 >
                                     {crumb.name}
@@ -68,7 +75,9 @@ export const WidgetAdvertisement = memo(() => {
                             >
                                 <div
                                     className={clsx(style.subItems, {
-                                        [style.isActive]: pathname === `${activeCategory.path}${sub.path}`,
+                                        [style.isActive]:
+                                            pathname ===
+                                            `${activeCategory.path}${sub.path}`,
                                     })}
                                 >
                                     {sub.name}
@@ -109,14 +118,16 @@ export const WidgetAdvertisement = memo(() => {
                                                     key={sub.id}
                                                 >
                                                     <span
-                                                        className={clsx(
-                                                            style.subItems,
-                                                            { [style.isActive]: isInCategory(sub.path) }
-                                                        )}
+                                                        className={clsx(style.subItems, {
+                                                            [style.isActive]:
+                                                                isInCategory(sub.path),
+                                                        })}
                                                     >
                                                         {sub.name}
                                                     </span>
-                                                    <span className={style.subCount}>({sub.count})</span>
+                                                    <span className={style.subCount}>
+                                                        ({sub.count})
+                                                    </span>
                                                 </Link>
                                             ))}
                                         </div>

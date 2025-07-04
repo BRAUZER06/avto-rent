@@ -10,6 +10,7 @@ import {
     HEADER_AUTO,
     HEADER_SERVICES,
     HEADER_POPULAR_ADS,
+    HEADER_RENT,
 } from "@src/data/header-nav";
 
 import HeaderMultiSelect from "./components/HeaderMultiSelect/HeaderMultiSelect";
@@ -35,7 +36,8 @@ export const HeaderDesktop = memo(() => {
 
     return (
         <div className={style.container}>
-            <Link href="/home">
+            {/* <Link href="/home"> */}
+            <Link href="/avto/all">
                 <Image
                     className={style.logo}
                     src="/images/logo.svg"
@@ -51,18 +53,20 @@ export const HeaderDesktop = memo(() => {
                         data={HEADER_POPULAR_ADS}
                     /> */}
                     <HeaderMultiSelect.SelectListCar name={"Автомобили"} />
-
                     <HeaderMultiSelect.TextAndNumber
                         number={367}
                         text={"Все Авто"}
                         path={"/avto/all"}
                     />
-
                     {/* <HeaderMultiSelect.TextAndNumber
                         number={125}
                         text={HEADER_SERVICES.name}
                         path={HEADER_SERVICES.path}
-                    /> */}
+                    /> */}{" "}
+                    <HeaderMultiSelect.Text
+                        text={HEADER_RENT.name}
+                        path={HEADER_RENT.path}
+                    />
                     <HeaderMultiSelect.Text
                         text={HEADER_ABOUT.name}
                         path={HEADER_ABOUT.path}

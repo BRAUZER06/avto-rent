@@ -35,6 +35,7 @@ const HEADER_MEROPTIYATIYA = { name: "Мероприятия", path: "/meropriya
 const HEADER_TECHNOLOGY = { name: "Технологии и решения", path: "/" };
 
 const HEADER_ABOUT = { name: "О нас", path: "/about" };
+const HEADER_RENT = { name: "Сдать авто", path: "/sdat" };
 const HEADER_AUTO = { name: "Автомобили", path: "/cars" };
 const HEADER_SERVICES = { name: "Авто Услуги", path: "/avto-services" };
 
@@ -670,6 +671,7 @@ const HEADER_POPULAR_ADS = [
 export {
     HEADER_ABOUT,
     HEADER_AUTO,
+    HEADER_RENT,
     HEADER_SERVICES,
     POPULAR_ADS,
     HEADER_POPULAR_ADS,
