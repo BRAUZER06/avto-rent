@@ -1,8 +1,16 @@
-FROM node:18-alpine
-RUN mkdir -p /app
+FROM node:20
+
 WORKDIR /app
-COPY . .
+
+COPY package*.json ./
+
 RUN npm install
-RUN npm run build
-EXPOSE 3000
-CMD ["npm", "start"]
+
+COPY . .
+
+EXPOSE 5175
+
+ENV HOSTNAME=0.0.0.0
+ENV PORT=5175
+
+CMD ["npm", "run", "dev"]

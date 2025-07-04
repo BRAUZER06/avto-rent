@@ -3,9 +3,9 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "next dev",
+        "dev": "next dev -p 5175 -H 0.0.0.0",
         "build": "next build",
-        "start": "next start",
+        "start": "next start -p 5175 -H 0.0.0.0",
         "format": "prettier --write",
         "check-format": "prettier --check '**/*.{js,jsx,ts,tsx,json,css,md}' || (echo 'Код не отформатирован с помощью Prettier. Пожалуйста, запустите \"npm run format\" перед пушем.')",
         "prepare": "husky install"

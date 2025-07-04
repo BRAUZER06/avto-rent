@@ -1,0 +1,19 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - '5175:5175'
+    environment:
+      - HOSTNAME=0.0.0.0
+      - PORT=5175
+    networks:
+      - avto_rent_default
+
+networks:
+  avto_rent_default:
+    driver: bridge
