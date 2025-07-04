@@ -1,7 +1,5 @@
 "use client";
-import { useRouter } from "next/router";
-import stye from "./ProfilePage.module.scss";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAuthStore } from "@src/store/useAuthStore";
 import { useEffect } from "react";
 
@@ -12,12 +10,10 @@ export const ProfilePage = () => {
     useEffect(() => {
         if (!profile) {
             router.replace("/auth");
+        } else {
+            router.replace("/profile/details");
         }
     }, [profile]);
 
-    if (!profile) return null;
-
-    redirect("/profile/details");
-
-    return <></>;
+    return null;
 };

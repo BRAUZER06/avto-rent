@@ -38,11 +38,6 @@ export const Ad = memo(({ ads, rating = 3.5, isReact = false }) => {
         }
     };
 
-    console.log("🔍 car_images:", images);
-    console.log("📸 current image:", images[currentIndex]?.url);
-
-    console.log(`${baseUrl}${images[currentIndex]?.url}`);
-
     return (
         <div className={style.container}>
             <div
