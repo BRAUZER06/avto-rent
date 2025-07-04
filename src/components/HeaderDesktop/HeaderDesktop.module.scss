@@ -15,10 +15,12 @@
 }
 
 .logo {
-    min-width: 128px;
-    cursor: pointer;
-    padding-bottom: 7px;
-}
+    width: 128px;
+    height: 60px;
+    min-width: unset;
+    display: block;
+  }
+  
 
 .menu {
     color: var(--white-color);

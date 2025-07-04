@@ -18,7 +18,7 @@ export const HeaderMobile = () => {
         <div className={style.container}>
             <Image
                 className={style.logo}
-                src="/images/logo.svg"
+                src="/assets/header/logoCarText.png"
                 width={104}
                 height={32}
                 alt="Logo"
@@ -39,7 +39,7 @@ export const HeaderMobile = () => {
                 <div onClick={toggleNavPanel} className={style.imagesContainer}>
                     <Image
                         className={style.burgerIcon}
-                        src="/images/burgerMobileIcon.svg"
+                        src="/images/burgerMobileIconBlue.svg"
                         width={40}
                         height={40}
                         alt="Menu Icon"

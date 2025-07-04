@@ -1,15 +1,12 @@
 const FOOTER_ITEMS = [
     { name: "О нас", path: "/about", class: "about" },
-    { name: "Направления", path: "/directions", class: "directions" },
-    { name: "Мероприятия", path: "/meropriyatiya", class: "meropriyatiya" },
-    { name: "Публикации", path: "/publication", class: "publication" },
-    {
-        name: "Технологии и решения",
-        path: "/technologiesAndSolutions",
-        class: "technologiesAndSolutions",
-    },
-    { name: "Вакансии", path: "/vacancy", class: "vacancy" },
-    { name: "Стажировка", path: "https://techcrew.start.x5.ru/", class: "internship" },
+    { name: "Все Авто", path: "/avto/all", class: "allCars" },
+    { name: "Взять авто", path: "/rent", class: "rentCar" },
+    { name: "Сдать авто", path: "/sdat", class: "giveCar" },
+    { name: "Регистрация", path: "/register", class: "register" },
+    { name: "Платежи", path: "/payments", class: "payments" },
+    { name: "Новости", path: "/news", class: "news" },
+    { name: "Блог", path: "/blog", class: "blog" },
 ];
 
 export default FOOTER_ITEMS;

@@ -7,7 +7,7 @@ export const FooterSearch = () => {
             <input className={style.searchInput} placeholder="Поиск " type="text" />
             <Image
                 className={style.searchImg}
-                src="/images/searchIconGreen.svg"
+                src="/images/searchIconGreenBlue.svg"
                 width={41}
                 height={40}
                 alt="Logo"

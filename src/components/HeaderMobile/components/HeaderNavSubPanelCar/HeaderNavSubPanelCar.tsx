@@ -26,9 +26,9 @@ export const HeaderNavSubPanelCar = ({
             <div className={style.headerNav}>
                 <Image
                     className={style.logo}
-                    src="/images/logo.svg"
-                    width={104}
-                    height={32}
+                    src="/assets/header/logoCarText.png"
+                    width={128}
+                    height={60}
                     alt="Logo"
                 />
 

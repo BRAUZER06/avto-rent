@@ -88,7 +88,7 @@ HeaderMultiSelect.Select = memo(({ data, name }: { data: any[]; name: string }) 
                     <span>{name}</span>
                     <Image
                         className={clsx(style.customButtonImg, { "rotate-180": isOpen })}
-                        src="/images/arrowSelectDownGreen.svg"
+                        src="/images/arrowSelectDownBlue.svg"
                         width={12}
                         height={12}
                         alt="arrow"
@@ -145,7 +145,7 @@ HeaderMultiSelect.SelectList = memo(({ data, name }: { data: any[]; name: string
                     <span>{name}</span>
                     <Image
                         className={clsx(style.customButtonImg, { "rotate-180": isOpen })}
-                        src="/images/arrowSelectDownGreen.svg"
+                        src="/images/arrowSelectDownBlue.svg"
                         width={12}
                         height={12}
                         alt="arrow"
@@ -227,7 +227,7 @@ HeaderMultiSelect.SelectListCar = memo(({ name }: { name: string }) => {
                     <span>{name}</span>
                     <Image
                         className={clsx(style.customButtonImg, { "rotate-180": isOpen })}
-                        src="/images/arrowSelectDownGreen.svg"
+                        src="/images/arrowSelectDownBlue.svg"
                         width={12}
                         height={12}
                         alt="arrow"

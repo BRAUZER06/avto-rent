@@ -11,7 +11,7 @@ export const FooterSearch = () => {
             />
             <Image
                 className={style.searchImg}
-                src="/images/searchIconGreen.svg"
+                src="/images/searchIconGreenBlue.svg"
                 width={41}
                 height={40}
                 alt="Logo"

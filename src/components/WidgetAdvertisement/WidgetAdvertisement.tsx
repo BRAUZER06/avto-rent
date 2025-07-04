@@ -43,7 +43,7 @@ export const WidgetAdvertisement = memo(() => {
                         <div className={style.breadcrumbsContainer} key={index}>
                             {index > 0 && (
                                 <Image
-                                    src="/images/arrowSelectDownGreen.svg"
+                                    src="/images/arrowSelectDownBlue.svg"
                                     width={13}
                                     height={13}
                                     alt="arrow"

@@ -1,4 +1,4 @@
-<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
 <rect width="48" height="48" rx="24" transform="matrix(-1 0 0 1 48 0)" fill="#272727"/>
-<path d="M18 18L30 30M18 30L30 18" stroke="#95FF42" stroke-width="1.5"/>
+<path d="M18 18L30 30M18 30L30 18" stroke="#00aaff" stroke-width="1.5" fill="#000000"/>
 </svg>

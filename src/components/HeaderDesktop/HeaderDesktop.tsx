@@ -40,9 +40,9 @@ export const HeaderDesktop = memo(() => {
             <Link href="/avto/all">
                 <Image
                     className={style.logo}
-                    src="/images/logo.svg"
+                    src="/assets/header/logoCarText.png"
                     width={128}
-                    height={40}
+                    height={60}
                     alt="Logo"
                 />
             </Link>

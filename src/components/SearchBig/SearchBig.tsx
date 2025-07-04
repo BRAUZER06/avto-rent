@@ -23,7 +23,7 @@ export const SearchBig = memo(({ value, handleOnChange }: Props) => {
 
                 <Image
                     className={style.searchImg}
-                    src="/images/searchIconGreen.svg"
+                    src="/images/searchIconGreenBlue.svg"
                     width={44}
                     height={44}
                     alt="Logo"
@@ -41,7 +41,7 @@ export const SearchBig = memo(({ value, handleOnChange }: Props) => {
 
                 <Image
                     className={style.searchImg}
-                    src="/images/searchIconGreen.svg"
+                    src="/images/searchIconGreenBlue.svg"
                     width={44}
                     height={44}
                     alt="Logo"

@@ -66,9 +66,9 @@ export const HeaderNavPanel = ({ isOpen, toggleNavPanel }: HeaderNavPanel) => {
             <div className={style.headerNav}>
                 <Image
                     className={style.logo}
-                    src="/images/logo.svg"
-                    width={104}
-                    height={32}
+                    src="/assets/header/logoCarText.png"
+                    width={128}
+                    height={60}
                     alt="Logo"
                 />
 
@@ -91,7 +91,7 @@ export const HeaderNavPanel = ({ isOpen, toggleNavPanel }: HeaderNavPanel) => {
                 />
                 <Image
                     className={style.searchImg}
-                    src="/images/searchIconGreen.svg"
+                    src="/images/searchIconGreenBlue.svg"
                     width={41}
                     height={40}
                     alt="Logo"

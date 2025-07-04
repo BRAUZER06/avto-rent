@@ -1,6 +1,6 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
 <g id="Arrow Link">
 <circle id="Ellipse 416" cx="16" cy="16" r="16" transform="matrix(-1 0 0 1 32 0)" fill="#272727"/>
-<path id="Vector 80" d="M20.5254 16.0001H11.4745M11.4745 16.0001L15.9999 11.4746M11.4745 16.0001L15.9999 20.5256" stroke="#95FF42"/>
+<path id="Vector 80" d="M20.5254 16.0001H11.4745M11.4745 16.0001L15.9999 11.4746M11.4745 16.0001L15.9999 20.5256" stroke="#00aaff" fill="#000000"/>
 </g>
 </svg>

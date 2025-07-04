@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const metadata = {
     title: "Сдать машину в аренду — Условия, Доход и Преимущества",
     description:
@@ -208,9 +210,11 @@ export default function CarRentalPage() {
                         </div>
                     ))}
                 </div>
-                <button className="mt-10 px-6 py-3 bg-blue-600 text-white rounded-full text-lg font-semibold">
-                    Заполнить заявку
-                </button>
+                <Link href="/auth">
+                    <button className="mt-10 px-6 py-3 bg-blue-600 text-white rounded-full text-lg font-semibold">
+                        Зарегистрироватья
+                    </button>
+                </Link>
             </section>
             {/* Advantages Section */}
             <section className="bg-[#1a1a1a] text-white py-16 px-4">
@@ -288,17 +292,17 @@ export default function CarRentalPage() {
                         {
                             title: "Семьи или друзья",
                             desc: "Берут авто, чтобы съездить на дачу или в дом отдыха.",
-                            img: "/renters/family.jpg",
+                            img: "/sdam_page/famaly.png",
                         },
                         {
                             title: "Деловые люди",
                             desc: "Часто командировки и рабочие поездки.",
-                            img: "/renters/business.jpg",
+                            img: "/sdam_page/buss.png",
                         },
                         {
                             title: "Путешественники",
                             desc: "Аренда для поездок в другие города.",
-                            img: "/renters/travel.jpg",
+                            img: "/sdam_page/travel.png",
                         },
                     ].map((item, i) => (
                         <div
@@ -308,7 +312,7 @@ export default function CarRentalPage() {
                             <img
                                 src={item.img}
                                 alt={item.title}
-                                className="w-full h-48 object-cover"
+                                className="w-full h-48 object-scale-down"
                             />
                             <div className="p-4">
                                 <h3 className="text-lg font-semibold mb-1">
