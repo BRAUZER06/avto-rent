@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
+const API_BASE = process.env.NODE_ENV === 'development'
+  ? 'http://localhost:3001'
+  : process.env.NEXT_PUBLIC_API_URL;
+
 const nextConfig = {
   images: {
     domains: ['rentavtokavkaz.ru', 'www.rentavtokavkaz.ru', 'localhost'],
@@ -42,7 +46,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_API_URL}/api/:path*`,
+        destination: `${API_BASE}/api/:path*`,
       },
     ];
   },
