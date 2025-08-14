@@ -14,11 +14,24 @@ import { AdsTable } from "@src/components/ui/AdsTable/AdsTable";
 import { MobileContactPanel } from "@src/components/ui/MobileContactPanel/MobileContactPanel";
 import dynamic from "next/dynamic";
 import { MapBlockAds } from "@src/components/ui/MapBlockAds/MapBlockAds";
+import { useEffect } from "react";
+import { getCarById } from "@src/lib/api/carService";
 
-export default function StandardPageID({ idAds }: any) {
-    console.log("idAds", idAds);
-
+export default function StandardPageID({ carId }: { carId: string }) {
     const screenWidth = useWindowWidth();
+    console.log(carId);
+
+    const fetchCarById = async () => {
+        try {
+            const res = await getCarById(carId);
+            console.log("res", res);
+        } catch (error) {
+            console.log("ошибка", error);
+        }
+    };
+    useEffect(() => {
+        fetchCarById();
+    }, []);
 
     return (
         <div className={style.container}>

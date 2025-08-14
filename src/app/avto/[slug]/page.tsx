@@ -11,5 +11,5 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
         return notFound();
     }
 
-    return <StandardPageAllPosts />;
+    return <StandardPageAllPosts category={category.slug} />;
 }

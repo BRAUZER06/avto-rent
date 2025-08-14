@@ -6,6 +6,6 @@ module.exports = {
         missingSuspenseWithCSRBailout: false,
     },
     images: {
-        domains: ["rentavtokavkaz.ru"],
+        domains: ["rentavtokavkaz.ru", "static-maps.yandex.ru"],
     },
 };
