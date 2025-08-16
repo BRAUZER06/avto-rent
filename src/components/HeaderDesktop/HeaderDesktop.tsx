@@ -23,9 +23,64 @@ import { memo, useEffect, useState } from "react";
 import style from "./HeaderDesktop.module.scss";
 import { fetchCountAllHomePage } from "@src/lib/api/homePage";
 import { HeaderRightBlock } from "./components/HeaderRightBlock/HeaderRightBlock";
+import { SelectCheckboxGroup } from "../ui/SelectWithOverlayAndCheckbox/components/SelectCheckboxGroup/SelectCheckboxGroup";
+import { MobileSelectCheckboxGroup } from "../ui/MobileSelectCheckboxGroup/MobileSelectCheckboxGroup";
+
+const regionsSKFO = [
+    {
+        path: "/",
+        unavailable: false,
+        id: 1,
+        name: "chechnya",
+        label: "Чеченская Республика",
+    },
+    {
+        path: "/",
+        unavailable: false,
+        id: 2,
+        name: "dagestan",
+        label: "Республика Дагестан",
+    },
+    {
+        path: "/",
+        unavailable: false,
+        id: 3,
+        name: "ingushetia",
+        label: "Республика Ингушетия",
+    },
+    {
+        path: "/",
+        unavailable: false,
+        id: 4,
+        name: "kabardino-balkaria",
+        label: "Кабардино-Балкарская Республика",
+    },
+    {
+        path: "/",
+        unavailable: false,
+        id: 5,
+        name: "karachay-cherkessia",
+        label: "Карачаево-Черкесская Республика",
+    },
+    {
+        path: "/",
+        unavailable: false,
+        id: 6,
+        name: "north-ossetia",
+        label: "Республика Северная Осетия-Алания",
+    },
+    {
+        path: "/",
+        unavailable: false,
+        id: 7,
+        name: "stavropol",
+        label: "Ставропольский край",
+    },
+];
 
 export const HeaderDesktop = memo(() => {
     const [countVacancies, setCountVacancies] = useState<number>(0);
+    const [selectedRegion, setSelectedRegion] = useState("");
 
     useEffect(() => {
         (async function fetchData() {
@@ -46,6 +101,23 @@ export const HeaderDesktop = memo(() => {
                     alt="Logo"
                 />
             </Link>
+
+            {/* <HeaderMultiSelect.Select name="Выберите регион" data={regionsSKFO} />
+            <SelectCheckboxGroup name="Выберите регион" data={regionsSKFO} />
+            <MobileSelectCheckboxGroup name="Выберите регион" data={regionsSKFO} /> */}
+
+            {/* <select
+                className="border rounded px-4 py-2 bg-zinc-800 text-white border-zinc-600"
+                value={selectedRegion}
+                onChange={e => setSelectedRegion(e.target.value)}
+            >
+                <option value="">Выберите регион</option>
+                {regionsSKFO.map(region => (
+                    <option key={region.value} value={region.value}>
+                        {region.label}
+                    </option>
+                ))}
+            </select> */}
             <nav className={style.menu}>
                 <div className={style.menuItem}>
                     {/* <HeaderMultiSelect.SelectList

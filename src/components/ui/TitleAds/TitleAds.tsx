@@ -1,9 +1,17 @@
 import style from "./TitleAds.module.scss";
 
-export const TitleAds = () => {
+interface TitleAdsProps {
+    title?: string;
+}
+
+export const TitleAds = ({ title }: TitleAdsProps) => {
+    if (!title) {
+        return null;
+    }
+
     return (
         <div className={style.container}>
-            <h1 className={style.title}>BMW X6 3.0 AT, 2018, 87 000 км</h1>
+            <h1 className={style.title}>{title}</h1>
         </div>
     );
 };

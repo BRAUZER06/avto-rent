@@ -3,9 +3,15 @@
 import { useState } from "react";
 import style from "./MapBlockAds.module.scss";
 
-export const MapBlockAds = () => {
-    const [showMap, setShowMap] = useState(false);
+interface MapBlockAdsProps {
+    location?: string;
+}
 
+export const MapBlockAds = ({ location }: MapBlockAdsProps) => {
+    const [showMap, setShowMap] = useState(false);
+    if (!location) {
+        return null;
+    }
     const toggleMap = () => setShowMap(!showMap);
 
     return (
@@ -13,7 +19,7 @@ export const MapBlockAds = () => {
             <div className={style.infoBlock}>
                 <p className={style.title}>Адрес</p>
                 <div className={style.textBlock}>
-                    <p className={style.desc}>Республика Ингушетия, Назрань</p>
+                    <p className={style.desc}>{location}</p>
                     <p className={style.mapTitle} onClick={toggleMap}>
                         {showMap ? "Скрыть карту" : "Показать карту"}
                         <i className={showMap ? style.up : style.down}></i>

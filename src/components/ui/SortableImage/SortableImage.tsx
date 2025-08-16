@@ -36,7 +36,6 @@ export const SortableImage = ({ id, url, onRemove, isDeleting }) => {
 
                     e.preventDefault();
                     if (!isDeleting) onRemove();
-                    onRemove(id);
                 }}
                 disabled={isDeleting}
                 type="button"

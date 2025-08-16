@@ -9,7 +9,17 @@ import { addDays } from "date-fns";
 import { CalendarRental } from "../CalendarRental/CalendarRental";
 import { MobileContanctPanelContent } from "@src/components/MobileContanctPanelContent/MobileContanctPanelContent";
 
-export const MobileContactPanel = () => {
+interface MobileContactPanelProps {
+    phone?: string;
+    whatsapp?: string;
+    telegram?: string;
+}
+
+export const MobileContactPanel = ({
+    phone,
+    whatsapp,
+    telegram,
+}: MobileContactPanelProps) => {
     const [dateRange, setDateRange] = useState([
         {
             startDate: new Date(),
@@ -33,8 +43,8 @@ export const MobileContactPanel = () => {
         <div className={style.container}>
             <div className={style.header}>
                 <div>
-                    <p className={style.nickname}>@bashir</p>
-                    <p className={style.fullname}>Мохьмад-Башир Ппукин</p>
+                    <p className={style.nickname}>Частное лицо</p>
+                    <p className={style.fullname}>На Avito с 2025</p>
                 </div>
                 <img
                     src="https://static.avito.ru/stub_avatars/Т/0_256x256.png"
@@ -44,15 +54,19 @@ export const MobileContactPanel = () => {
             </div>
 
             <div className={style.buttonsRow}>
-                <button className={style.call} onClick={() => setOverlayType("call")}>
-                    Позвонить
-                </button>
-                <button
-                    className={style.message}
-                    onClick={() => setOverlayType("message")}
-                >
-                    Написать
-                </button>
+                {phone && (
+                    <button className={style.call} onClick={() => setOverlayType("call")}>
+                        Позвонить
+                    </button>
+                )}
+                {(whatsapp || telegram) && (
+                    <button
+                        className={style.message}
+                        onClick={() => setOverlayType("message")}
+                    >
+                        Написать
+                    </button>
+                )}
             </div>
             <button className={style.calendar} onClick={() => setOverlayType("calendar")}>
                 Выбрать слоты аренды
@@ -62,6 +76,9 @@ export const MobileContactPanel = () => {
                 <MobileContanctPanelContent
                     isOpen={!!overlayType}
                     toggleNavPanel={closeOverlay}
+                    phone={phone}
+                    whatsapp={whatsapp}
+                    telegram={telegram}
                 />
                 {overlayType === "calendar" && (
                     <div className={style.calendarBlock}>

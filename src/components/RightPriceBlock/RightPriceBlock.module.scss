@@ -101,6 +101,7 @@
 }
 
 .userInfo {
+  align-items: center;
     display: flex;
     justify-content: space-between;
     margin-right: 10px;
@@ -132,7 +133,7 @@
             position: relative;
             display: block;
             height: 60px;
-            width: 70px;
+            width: 60px;
             border-radius: 50%;
             overflow: hidden;
             background-size: cover;

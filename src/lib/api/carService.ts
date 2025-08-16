@@ -1,5 +1,6 @@
 import { fetchWithAuth } from "@src/utils/fetchWithAuth";
 import { apiUrlHelper } from "../helpers/getApiUrl";
+import { getAccessToken } from "./tokenService";
 
 const baseUrl = apiUrlHelper();
 
@@ -64,10 +65,12 @@ export const updateCar = async (id: string | number, formData: FormData) => {
 
 // Удаление картинки авто (DELETE /company_logos/:id)
 export const deletePhotoCar = async (logoId: number): Promise<void> => {
-    const response = await fetch(`${baseUrl}/company_logos/${logoId}`, {
+    const token = getAccessToken();
+    const response = await fetch(`${baseUrl}/car_images/${logoId}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
         },
     });
 

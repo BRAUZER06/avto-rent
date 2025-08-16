@@ -1,6 +1,22 @@
 import style from "./FeaturesAvtoAds.module.scss";
 
-export const FeaturesAvtoAds = () => {
+interface FeaturesAvtoAdsProps {
+    fuelType?: string;
+    transmission?: string;
+    engineCapacity?: string;
+    drive?: string;
+    year?: number;
+    horsepower?: number;
+}
+
+export const FeaturesAvtoAds = ({
+    fuelType,
+    transmission,
+    engineCapacity,
+    drive,
+    year,
+    horsepower,
+}: FeaturesAvtoAdsProps) => {
     return (
         <div className={style.container}>
             <p className={style.title}>Характеристики</p>
@@ -57,25 +73,44 @@ export const FeaturesAvtoAds = () => {
             </div> */}
 
             <div className={style.column}>
-                <p className={style.feature}>
-                    <span className={style.label}>Тип двигателя:</span>
-                    <span className={style.value}>Дизель</span>
-                </p>
-                <p className={style.feature}>
-                    <span className={style.label}>Объём двигателя:</span>
-                    <span className={style.value}>3 л</span>
-                </p>
+                {year && (
+                    <p className={style.feature}>
+                        <span className={style.label}>Год выпуска:</span>
+                        <span className={style.value}>{year}</span>
+                    </p>
+                )}
+                {engineCapacity && (
+                    <p className={style.feature}>
+                        <span className={style.label}>Объём двигателя:</span>
+                        <span className={style.value}>{engineCapacity} л</span>
+                    </p>
+                )}
+                {fuelType && (
+                    <p className={style.feature}>
+                        <span className={style.label}>Тип двигателя:</span>
+                        <span className={style.value}>{fuelType}</span>
+                    </p>
+                )}
             </div>
             <div className={style.column}>
-                {" "}
-                <p className={style.feature}>
-                    <span className={style.label}>Коробка передач:</span>
-                    <span className={style.value}>Автомат</span>
-                </p>{" "}
-                <p className={style.feature}>
-                    <span className={style.label}>Привод:</span>
-                    <span className={style.value}>Полный</span>
-                </p>
+                {transmission && (
+                    <p className={style.feature}>
+                        <span className={style.label}>Коробка передач:</span>
+                        <span className={style.value}>{transmission}</span>
+                    </p>
+                )}
+                {drive && (
+                    <p className={style.feature}>
+                        <span className={style.label}>Привод:</span>
+                        <span className={style.value}>{drive}</span>
+                    </p>
+                )}
+                {horsepower && (
+                    <p className={style.feature}>
+                        <span className={style.label}>Лошадиные силы:</span>
+                        <span className={style.value}>{horsepower}</span>
+                    </p>
+                )}
             </div>
         </div>
     );

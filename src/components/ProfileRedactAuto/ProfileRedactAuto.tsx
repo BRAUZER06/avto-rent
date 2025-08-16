@@ -158,6 +158,8 @@ export const ProfileRedactAuto = ({ carId }: { carId: string }) => {
     // Удаление изображения
     // Изменяем функцию removeImage
     const removeImage = async (id: string) => {
+        console.log("1");
+
         try {
             const imageToRemove = images.find(img => img.id === id);
 
@@ -351,6 +353,8 @@ export const ProfileRedactAuto = ({ carId }: { carId: string }) => {
 
             // Обновляем данные после сохранения
             await fetchCarData();
+
+            //avto/car/1
         } catch (err) {
             console.error("Ошибка при обновлении:", err);
             showNotification(err.message || "Ошибка при обновлении автомобиля", "error");
