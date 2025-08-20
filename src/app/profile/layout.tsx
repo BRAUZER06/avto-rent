@@ -17,17 +17,22 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
     return (
-        <MaxWidthWrapper>
+        <div className="flex flex-col min-h-screen">
+            {/* Хедер на всю ширину */}
             <Header />
-            {/* <GoBackButton /> */}
-            {/* <WidgetAdvertisement /> */}
-            <main className={styles.container}>
-                <ProfileNavigate />
-                {children}
-            </main>
+
+            {/* Ограниченный по ширине контент */}
+            <MaxWidthWrapper>
+                <main className={styles.container}>
+                    <ProfileNavigate />
+                    {children}
+                </main>
+            </MaxWidthWrapper>
+
+            {/* Футер на всю ширину */}
             <Footer />
             <FloatingMenu />
-            {/*<Cookie /> */}
-        </MaxWidthWrapper>
+            {/* <Cookie /> */}
+        </div>
     );
 }

@@ -1,39 +1,31 @@
+"use client";
+
 import Image from "next/image";
-import {
-    HEADER_ABOUT,
-    HEADER_DIRECTIONS,
-    HEADER_VACANCY,
-    HEADER_MEROPTIYATIYA,
-    HEADER_BLOG,
-    HEADER_TECHNOLOGY,
-    HEADER_INTERNSHIP,
-    HEADER_AUTO,
-    HEADER_SERVICES,
-    POPULAR_ADS,
-    HEADER_RENT,
-} from "@src/data/header-nav";
-
-import HeaderNavPanelItem from "../HeaderNavPanelItem/HeaderNavPanelItem";
-
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import style from "./HeaderNavPanel.module.scss";
-import { useRouter } from "next/navigation";
-import { fetchCountAllHomePage } from "@src/lib/api/homePage";
-import CarCategories from "@src/components/CarCategories/CarCategories";
-import HeaderNavPanelItemCar from "../HeaderNavPanelItemCar/HeaderNavPanelItemCar";
 
-interface HeaderNavPanel {
+import HeaderNavPanelItem from "../HeaderNavPanelItem/HeaderNavPanelItem";
+import HeaderNavPanelItemCar from "../HeaderNavPanelItemCar/HeaderNavPanelItemCar";
+import { HEADER_ABOUT, HEADER_RENT } from "@src/data/header-nav";
+import { fetchCountAllHomePage } from "@src/lib/api/homePage";
+import { useAuthStore } from "@src/store/useAuthStore";
+
+interface HeaderNavPanelProps {
     isOpen: boolean;
     toggleNavPanel: () => void;
 }
 
-export const HeaderNavPanel = ({ isOpen, toggleNavPanel }: HeaderNavPanel) => {
+export const HeaderNavPanel = ({ isOpen, toggleNavPanel }: HeaderNavPanelProps) => {
     const [countVacancies, setCountVacancies] = useState<number>(0);
-    if (!isOpen) return null;
-
     const [searchText, setSearchText] = useState("");
     const { replace, push } = useRouter();
+
+    const { profile } = useAuthStore();
+    const isAuthenticated = !!profile;
+
+    if (!isOpen) return null;
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchText(event.target.value);
@@ -81,79 +73,81 @@ export const HeaderNavPanel = ({ isOpen, toggleNavPanel }: HeaderNavPanel) => {
                     onClick={toggleNavPanel}
                 />
             </div>
+
+            {/* поиск, если понадобится — раскомментируй */}
             {/* <div className={style.searchContainer}>
-                <input
-                    className={style.searchInput}
-                    placeholder="Поиск"
-                    type="text"
-                    onChange={handleInputChange}
-                    onKeyPress={handleEnterKeyPress}
-                />
-                <Image
-                    className={style.searchImg}
-                    src="/images/searchIconGreenBlue.svg"
-                    width={41}
-                    height={40}
-                    alt="Logo"
-                    onClick={handleImageClick}
-                />
-            </div> */}
+        <input
+          className={style.searchInput}
+          placeholder="Поиск"
+          type="text"
+          onChange={handleInputChange}
+          onKeyPress={handleEnterKeyPress}
+          value={searchText}
+        />
+        <Image
+          className={style.searchImg}
+          src="/images/searchIconGreenBlue.svg"
+          width={41}
+          height={40}
+          alt="Search"
+          onClick={handleImageClick}
+        />
+      </div> */}
 
             <div className={style.navContainer}>
                 <HeaderNavPanelItemCar
                     toggleNavPanel={toggleNavPanel}
                     name="Автомобили"
-                    // styleProps={{ background: "var(--green-deep)" }}
                 />
+
                 <HeaderNavPanelItem.TextAndNumber
                     toggleNavPanel={toggleNavPanel}
                     number={367}
                     text={"Все Авто"}
                     path={"/avto/all"}
                 />
-                {/* <HeaderNavPanelItem.TextAndNumber
-                    toggleNavPanel={toggleNavPanel}
-                    number={125}
-                    text={HEADER_SERVICES.name}
-                    path={HEADER_SERVICES.path}
-                    // styleProps={{ background: "var(--green-deep)" }}
-                /> */}{" "}
+
                 <HeaderNavPanelItem.Text
                     toggleNavPanel={toggleNavPanel}
                     text={HEADER_RENT.name}
                     path={HEADER_RENT.path}
                 />
+
                 <HeaderNavPanelItem.Text
                     toggleNavPanel={toggleNavPanel}
                     text={HEADER_ABOUT.name}
                     path={HEADER_ABOUT.path}
                 />
-                {/* <HeaderNavPanelItem.Text
-                    toggleNavPanel={toggleNavPanel}
-                    text="Избранное"
-                    path="/favorites"
-                    icon="/images/headerImg/heart.svg"
-                /> */}
-                {/* <HeaderNavPanelItem.Text
-                    toggleNavPanel={toggleNavPanel}
-                    text="Сообщения"
-                    path="/profile/message"
-                    icon="/images/headerImg/message.svg"
-                /> */}
-                <HeaderNavPanelItem.Text
-                    toggleNavPanel={toggleNavPanel}
-                    text="Личный Кабинет"
-                    path="/profile/details"
-                    icon="/images/headerImg/user.svg"
-                />
-                <HeaderNavPanelItem.Text
-                    toggleNavPanel={toggleNavPanel}
-                    text="Добавить Атомобиль"
-                    path="/profile"
-                    icon="/images/headerImg/plus.svg"
-                    styleProps={{ background: "var(--blue-text)" }}
-                />
+
+                {/* --- Блок авторизации --- */}
+                {isAuthenticated ? (
+                    <>
+                        <HeaderNavPanelItem.Text
+                            toggleNavPanel={toggleNavPanel}
+                            text="Личный кабинет"
+                            path="/profile/details"
+                            icon="/images/headerImg/user.svg"
+                        />
+                        <HeaderNavPanelItem.Text
+                            toggleNavPanel={toggleNavPanel}
+                            text="Добавить автомобиль"
+                            path="/profile/new_auto"
+                            icon="/images/headerImg/plus.svg"
+                            styleProps={{ background: "var(--blue-text)" }}
+                        />
+                    </>
+                ) : (
+                    <HeaderNavPanelItem.Text
+                        toggleNavPanel={toggleNavPanel}
+                        text="Войти"
+                        path="/login"
+                        styleProps={{ background: "var(--blue-text)" }}
+                    />
+                )}
+                {/* --- /Блок авторизации --- */}
             </div>
         </div>
     );
 };
+
+export default HeaderNavPanel;

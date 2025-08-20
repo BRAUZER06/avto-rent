@@ -1,80 +1,54 @@
 .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px; /* зазор между логотипом, селектом и бургером */
 }
 
-.mobileHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
-
+/* Лого */
 .logo {
-    width: 104px;
-    height: 48px;
-    cursor: pointer;
+  width: 104px;
+  height: 48px;
+  cursor: pointer;
+  flex: 0 0 auto;
 }
 
-.imagesContainer {
-
-
-    margin-left: auto;
-
-
-    background-color: var(--grey-bg);
-    border-radius: 33px;
-    padding: 0px 5px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
+/* Селект по центру */
+.regionSelectWrap {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  z-index: 5;
+  overflow: visible;
 }
 
+/* Контейнер под бургер справа */
 .containerBurger {
-    position: relative;
-    display: flex;
-    align-items: center;
-    height: 48px;
-    border-radius: 33px;
-    width: 115px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    &::before,
-    &::after {
-        content: "";
-        position: absolute;
-        left: 45px;
-        width: 25px;
-        height: 29px;
-        border-radius: 48%;
-        background-color: var(--background-black);
-        z-index: 2;
-    }
-    &::before {
-        top: -10px;
-    }
-
-    &::after {
-        top: 29px;
-    }
+  flex: 0 0 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  width: 48px;
+  border-radius: 33px;
 }
 
-.searchIcon,
-.burgerIcon {
-    cursor: pointer;
+/* Кнопка-иконка бургера */
+.imagesContainer {
+  background-color: var(--grey-bg);
+  border-radius: 33px;
+  height: 48px;
+  width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 6;
 }
 
-.plug {
-    position: absolute;
-    width: 40px;
-    height: 25px;
-    background-color: var(--grey-bg);
-    top: 12px;
-    left: 37px;
+.burgerIcon,
+.searchIcon {
+  cursor: pointer;
 }
+

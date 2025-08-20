@@ -55,6 +55,16 @@ a:focus {
     justify-content: center !important;
 }
 
+.wrapper {
+  max-width: 1280px;   // или 1200px, или что тебе ближе к макету
+  width: 100%;
+  padding: 20px;
+  margin: 0 auto;
+
+  @include vw-md {
+    padding: 20px 10px;
+  }
+}
 
 
 

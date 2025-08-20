@@ -1,4 +1,4 @@
-import "../globals.scss";
+import "../../globals.scss";
 
 import { Header } from "@src/components/Header/Header";
 import { GoBackButton } from "@src/components/GoBackButton/GoBackButton";
@@ -14,18 +14,16 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
     return (
-        <div className="flex flex-col min-h-screen">
-            <Header />
-
-            <MaxWidthWrapper>
+        <MaxWidthWrapper>
+            <div className=" flex flex-col" style={{ minHeight: "calc(100vh - 64px)" }}>
+                <Header />
                 {/* <GoBackButton /> */}
                 {/* <WidgetAdvertisement /> */}
                 <main className="w-full flex-[1]">{children}</main>
-            </MaxWidthWrapper>
-
-            <Footer />
-            <FloatingMenu />
-            {/* <Cookie /> */}
-        </div>
+                <Footer />
+                <FloatingMenu />
+                {/*<Cookie /> */}
+            </div>
+        </MaxWidthWrapper>
     );
 }

@@ -1,80 +1,123 @@
+"use client";
+
+import { memo, useMemo } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Scrollbar, Mousewheel } from "swiper/modules";
 import "swiper/swiper-bundle.css";
+
 import style from "./AdsCardScroll.module.scss";
-import { memo, useState } from "react";
 import { formatDateForAds } from "@src/lib/helpers/formatters/formatDateForAds";
-import Ribbon from "../ui/Ribbon/Ribbon";
+import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
 
-const images = [
-    // " /images/testPhoto/15.jpg",
-    // " /images/testPhoto/16.jpg",
-    // " /images/testPhoto/17.jpg",
-    // " /images/testPhoto/18.jpg",
-    // " /images/testPhoto/19.jpg",
-    // " /images/testPhoto/20.jpg",
-    // " /images/testPhoto/21.jpg",
-    // " /images/testPhoto/berkat_1.jpg",
-    // " /images/testPhoto/berkat_2.jpg",
-    // " /images/testPhoto/berkat_3.jpg",
+// Если есть тип — подставь вместо any
+type CarImage = { id: number; url: string; position?: number };
+type Owner = {
+    company_avatar_url?: string | null;
+    company_name?: string | null;
+    address?: string | null;
+};
+type Car = {
+    id: number;
+    title?: string | null;
+    location?: string | null;
+    price?: string | number | null;
+    year?: number | null;
+    created_at?: string;
+    car_images?: CarImage[];
+    owner?: Owner;
+};
 
-    " /images/testPhoto/2.webp",
-    " /images/testPhoto/3.webp",
-    " /images/testPhoto/4.webp",
-    " /images/testPhoto/5.webp",
-    " /images/testPhoto/6.webp",
-    // " /images/testPhoto/6.png",
-    " /images/testPhoto/7.webp",
-    // " /images/testPhoto/7.png",
-    " /images/testPhoto/8.webp",
-    " /images/testPhoto/9.webp",
-    " /images/testPhoto/10.webp",
-    " /images/testPhoto/11.webp",
-    " /images/testPhoto/12.webp",
-    " /images/testPhoto/13.webp",
-    " /images/testPhoto/14.webp",
-];
+type Props = { ads: Car };
 
-export const AdsCardScroll = memo(() => {
-    const formattedDate = formatDateForAds(new Date());
+export const AdsCardScroll = memo(({ ads }: Props) => {
+    const baseUrl = mediaUrlHelper();
+
+    const images = useMemo(() => {
+        const arr = (ads?.car_images ?? [])
+            .filter(Boolean)
+            .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+            .map(img => (img.url?.startsWith("/") ? `${baseUrl}${img.url}` : img.url));
+
+        // Фолбэк — одна картинка-заглушка
+        return arr.length > 0 ? arr : ["/images/default-car.jpg"];
+    }, [ads?.car_images, baseUrl]);
+
+    const priceText = useMemo(() => {
+        if (ads?.price == null || ads?.price === "") return "";
+        const n = Number(ads.price);
+        if (Number.isFinite(n)) return `${n.toLocaleString("ru-RU")} ₽`;
+        // если пришла строка типа "3500.0" — тоже отформатируем
+        const parsed = Number(
+            String(ads.price)
+                .replace(/[^\d.,]/g, "")
+                .replace(",", ".")
+        );
+        return Number.isFinite(parsed)
+            ? `${parsed.toLocaleString("ru-RU")} ₽`
+            : String(ads.price);
+    }, [ads?.price]);
+
+    const title = useMemo(() => {
+        if (ads?.title && ads.title.trim().length > 0) return ads.title;
+        // Простейший автотайтл при отсутствии названия
+        const parts = [
+            ads?.year ? `${ads.year}` : null,
+            ads?.location ? `• ${ads.location}` : null,
+        ].filter(Boolean);
+        return ["Автомобиль", ...parts].join(" ");
+    }, [ads?.title, ads?.year, ads?.location]);
+
+    const locationText = ads?.location || ads?.owner?.address || "Локация не указана";
+    const dateText = formatDateForAds(
+        ads?.created_at ? new Date(ads.created_at) : new Date()
+    );
 
     return (
         <div className={style.container}>
             <Swiper
                 spaceBetween={10}
                 slidesPerView="auto"
-                freeMode={true}
-                watchSlidesProgress={true}
+                freeMode
+                watchSlidesProgress
                 modules={[Navigation, Scrollbar, Mousewheel]}
                 mousewheel={{ forceToAxis: true }}
                 className={style.swiper}
             >
-                {images.map((image, index) => (
-                    <SwiperSlide className={style.swiperSlide} key={index}>
-                        <img src={image} alt={`Slide ${index}`} />
+                {images.map((src, index) => (
+                    <SwiperSlide className={style.swiperSlide} key={`${ads.id}-${index}`}>
+                        <img src={src} alt={`Фото ${index + 1}`} />
                     </SwiperSlide>
                 ))}
             </Swiper>
 
             <div className={style.infoBlock}>
                 <div className={style.mainInfo}>
-                    <span className={style.price}>800 000 ₽</span>
-                    <h3 className={style.title}>
-                        ВАЗ (LADA) Granta 1.6 MT, 2021, 82 000 км
-                    </h3>
-                    <p className={style.desc}>
-                        Описание автомобиля, включая особенности, состояние и
-                        дополнительные опции.
-                    </p>
-                    <span className={style.location}>с. Сурхахи</span>
-                    <div className={style.date}>{formattedDate}</div>
+                    {priceText && <span className={style.price}>{priceText}</span>}
+                    <h3 className={style.title}>{title}</h3>
+
+                    {/* Если хочешь — короткое описание/фичи можно собрать из полей */}
+                    {/* <p className={style.desc}>
+            {ads?.fuel_type || ads?.transmission || ads?.drive ? (
+              <>
+                {ads?.fuel_type && <>Топливо: {ads.fuel_type} • </>}
+                {ads?.transmission && <>КПП: {ads.transmission} • </>}
+                {ads?.drive && <>Привод: {ads.drive}</>}
+              </>
+            ) : "Описание недоступно"}
+          </p> */}
+
+                    <span className={style.location}>{locationText}</span>
+                    <div className={style.date}>{dateText}</div>
                 </div>
+
                 <div className={style.icons}>
-                    <i className="icon-heart"></i>
-                    <i className="icon-chat"></i>
-                    <i className="icon-share"></i>
+                    <i className="icon-heart" />
+                    <i className="icon-chat" />
+                    <i className="icon-share" />
                 </div>
             </div>
+
+            {/* Если нужно — можно вернуть бейджи */}
             {/* <Ribbon type="new" /> */}
             {/* <Ribbon type="raised" /> */}
         </div>

@@ -18,8 +18,13 @@
         font-weight: 400;
         line-height: 120%;
 
-        @include vw-md {
-            font-size: 32px;
+
+       @include  vw-lg {
+        font-size: 22px;
+
+        }
+       @include vw-md  {
+            font-size: 19px;
         }
     }
     > span {

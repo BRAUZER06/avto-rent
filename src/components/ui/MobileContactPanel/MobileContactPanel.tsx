@@ -2,64 +2,54 @@
 import { useState } from "react";
 import style from "./MobileContactPanel.module.scss";
 import { FullMobileScreenOverlay } from "../FullMobileScreenOverlay/FullMobileScreenOverlay";
-import { HeaderNavPanel } from "@src/components/HeaderMobile/components/HeaderNavPanel/HeaderNavPanel";
-import { Calendar, DateRange } from "react-date-range";
-import { ru } from "date-fns/locale";
-import { addDays } from "date-fns";
 import { CalendarRental } from "../CalendarRental/CalendarRental";
 import { MobileContanctPanelContent } from "@src/components/MobileContanctPanelContent/MobileContanctPanelContent";
 
+import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
+import { OwnerInfoCard } from "../OwnerInfoCard/OwnerInfoCard";
+
 interface MobileContactPanelProps {
     phone?: string;
-    whatsapp?: string;
-    telegram?: string;
+    whatsapp?: string; // номер/URL
+    telegram?: string; // @ник/ник/URL
+    owner?: OwnerInfo;
+    idCompany: string | number;
 }
 
 export const MobileContactPanel = ({
     phone,
     whatsapp,
     telegram,
+    owner,
+    idCompany,
 }: MobileContactPanelProps) => {
-    const [dateRange, setDateRange] = useState([
-        {
-            startDate: new Date(),
-            endDate: addDays(new Date(), 1),
-            key: "selection",
-        },
-    ]);
-
-    const disabledDates = [
-        new Date(2025, 5, 3),
-        new Date(2025, 5, 5),
-        new Date(2025, 5, 7),
-    ];
-
     const [overlayType, setOverlayType] = useState<
         null | "call" | "message" | "calendar"
     >(null);
     const closeOverlay = () => setOverlayType(null);
 
+    const canCall = Boolean(phone);
+    const canMessage = Boolean(whatsapp || telegram);
+    const mediaBaseUrl = mediaUrlHelper();
+
     return (
         <div className={style.container}>
             <div className={style.header}>
-                <div>
-                    <p className={style.nickname}>Частное лицо</p>
-                    <p className={style.fullname}>На Avito с 2025</p>
-                </div>
-                <img
-                    src="https://static.avito.ru/stub_avatars/Т/0_256x256.png"
-                    alt="Аватар"
-                    className={style.avatar}
+                <OwnerInfoCard
+                    owner={owner}
+                    size="sm"
+                    layout="row"
+                    href={`/brands/${encodeURIComponent(String(idCompany))}`} 
                 />
             </div>
 
             <div className={style.buttonsRow}>
-                {phone && (
+                {canCall && (
                     <button className={style.call} onClick={() => setOverlayType("call")}>
                         Позвонить
                     </button>
                 )}
-                {(whatsapp || telegram) && (
+                {canMessage && (
                     <button
                         className={style.message}
                         onClick={() => setOverlayType("message")}
@@ -68,6 +58,7 @@ export const MobileContactPanel = ({
                     </button>
                 )}
             </div>
+
             <button className={style.calendar} onClick={() => setOverlayType("calendar")}>
                 Выбрать слоты аренды
             </button>
@@ -79,7 +70,9 @@ export const MobileContactPanel = ({
                     phone={phone}
                     whatsapp={whatsapp}
                     telegram={telegram}
+                    owner={owner} // прокинул owner
                 />
+
                 {overlayType === "calendar" && (
                     <div className={style.calendarBlock}>
                         <CalendarRental />

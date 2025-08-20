@@ -1,54 +1,82 @@
 "use client";
 
 import Image from "next/image";
-import { CalendarRental } from "../ui/CalendarRental/CalendarRental";
 import style from "./MobileContanctPanelContent.module.scss";
 import { FaWhatsapp, FaTelegramPlane, FaInstagram, FaGlobe } from "react-icons/fa";
+import { OwnerInfoCard, type OwnerInfo } from "../ui/OwnerInfoCard/OwnerInfoCard";
+import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
+
+// ===== helpers для нормализации, краткие версии =====
+const buildTelHref = (raw?: string) => {
+    if (!raw) return null;
+    let digits = raw.replace(/[^\d]/g, "");
+    if (!digits) return null;
+    if (digits.length === 11 && digits.startsWith("8")) digits = `7${digits.slice(1)}`;
+    if (!digits.startsWith("7")) return `tel:+${digits}`;
+    return `tel:+${digits}`;
+};
+const buildWhatsappHref = (raw?: string) => {
+    if (!raw) return null;
+    const s = raw.trim();
+    if (/^https?:\/\//i.test(s)) return s;
+    let digits = s.replace(/[^\d]/g, "");
+    if (!digits) return null;
+    if (digits.length === 11 && digits.startsWith("8")) digits = `7${digits.slice(1)}`;
+    return `https://wa.me/${digits}`;
+};
+const parseTelegram = (raw?: string) => {
+    if (!raw) return {};
+    const s = raw.trim();
+    if (/^https?:\/\//i.test(s)) {
+        try {
+            const u = new URL(s);
+            const parts = u.pathname.split("/").filter(Boolean);
+            if (parts.length) {
+                const username = parts[0].replace(/^@/, "");
+                return { username, url: `https://t.me/${username}` };
+            }
+            return { url: s };
+        } catch {
+            return { url: s };
+        }
+    }
+    const username = s.replace(/^@/, "");
+    return { username, url: `https://t.me/${username}` };
+};
 
 interface MobileContanctPanelContentProps {
     isOpen: boolean;
     toggleNavPanel: () => void;
 
-    nickname?: string;
-    fullname?: string;
-    avatarUrl?: string;
-
-    phone1?: string;
-    phone1Label?: string;
-
-    phone2?: string;
-    phone2Label?: string;
-    showPhone2?: boolean;
-
+    // реальные данные
+    owner?: OwnerInfo;
+    phone?: string;
     whatsapp?: string;
     telegram?: string;
+
+    // опционально — если вдруг нужно будет добавить
     instagram?: string;
     website?: string;
 
-    showCalendar?: boolean;
+    showCalendar?: boolean; // управляется снаружи, тут не используем
 }
 
 export const MobileContanctPanelContent = ({
     isOpen,
     toggleNavPanel,
-    nickname = "@bashir",
-    fullname = "Мохьмад-Башир Ппукин",
-    avatarUrl = "https://static.avito.ru/stub_avatars/Т/0_256x256.png",
-    phone1 = "8 999 111-22-33",
-    phone1Label = "Основной номер",
-    phone2 = "8 928 555-44-33",
-    phone2Label = "Доп. номер",
-    showPhone2 = true,
-
-    // Добавлены реальные значения
-    whatsapp = "79991112233", // Для wa.me
-    telegram = "bashir_auto", // Для t.me/@
-    instagram = "bashir_rent", // Для instagram.com/...
-    website = "https://bashir-rent-auto.ru", // Прямой переход
-
-    showCalendar = false,
+    owner,
+    phone,
+    whatsapp,
+    telegram,
+    instagram,
+    website,
 }: MobileContanctPanelContentProps) => {
     if (!isOpen) return null;
+
+    const mediaBaseUrl = mediaUrlHelper();
+    const telHref = buildTelHref(phone);
+    const waHref = buildWhatsappHref(whatsapp);
+    const tg = parseTelegram(telegram);
 
     return (
         <div onClick={e => e.stopPropagation()} className={style.container}>
@@ -60,7 +88,6 @@ export const MobileContanctPanelContent = ({
                     height={32}
                     alt="Logo"
                 />
-
                 <Image
                     className={style.closeIcon}
                     src="/images/closeMenuIcon.svg"
@@ -72,79 +99,79 @@ export const MobileContanctPanelContent = ({
             </div>
 
             <div className={style.header}>
-                <div>
-                    <p className={style.nickname}>{nickname}</p>
-                    <p className={style.fullname}>{fullname}</p>
-                </div>
-                <img className={style.avatar} src={avatarUrl} alt="Аватар" />
+                <OwnerInfoCard
+                    owner={owner}
+                    size="sm"
+                    layout="row"
+                    href={`/brands/${encodeURIComponent(String(owner?.company_name))}`}
+                />
             </div>
 
-            <div className={style.phoneBlock}>
-                <p className={style.phone}>{phone1}</p>
-                <p className={style.label}>{phone1Label}</p>
-                <button className={style.callButton}>Позвонить</button>
-            </div>
-
-            {showPhone2 && (
+            {phone && (
                 <div className={style.phoneBlock}>
-                    <p className={style.phone}>{phone2}</p>
-                    <p className={style.label}>{phone2Label}</p>
-                    <button className={style.callButton}>Позвонить</button>
+                    <p className={style.phone}>{phone}</p>
+                    {/* можно добавить label, если появится */}
+                    {telHref && (
+                        <a className={style.callButton} href={telHref}>
+                            Позвонить
+                        </a>
+                    )}
                 </div>
             )}
 
             <div className={style.links}>
-                {whatsapp && (
+                {waHref && (
                     <div className={style.linkRow}>
                         <FaWhatsapp className={style.icon} />
-                        <a
-                            href={`https://wa.me/${whatsapp}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            WhatsApp: {whatsapp}
+                        <a href={waHref} target="_blank" rel="noopener noreferrer">
+                            WhatsApp
                         </a>
                     </div>
                 )}
-                {telegram && (
+
+                {tg?.url && (
                     <div className={style.linkRow}>
                         <FaTelegramPlane className={style.icon} />
-                        <a
-                            href={`https://t.me/${telegram}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Telegram: @{telegram}
+                        <a href={tg.url} target="_blank" rel="noopener noreferrer">
+                            Telegram{tg.username ? `: @${tg.username}` : ""}
                         </a>
                     </div>
                 )}
+
                 {instagram && (
                     <div className={style.linkRow}>
                         <FaInstagram className={style.icon} />
                         <a
-                            href={`https://instagram.com/${instagram}`}
+                            href={
+                                /^https?:\/\//i.test(instagram)
+                                    ? instagram
+                                    : `https://instagram.com/${instagram.replace(/^@/, "")}`
+                            }
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            Instagram: @{instagram}
+                            Instagram{instagram.startsWith("@") ? "" : `: @${instagram}`}
                         </a>
                     </div>
                 )}
+
                 {website && (
                     <div className={style.linkRow}>
                         <FaGlobe className={style.icon} />
-                        <a href={website} target="_blank" rel="noopener noreferrer">
-                            Сайт: {website}
+                        <a
+                            href={
+                                /^https?:\/\//i.test(website)
+                                    ? website
+                                    : `https://${website}`
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Сайт
                         </a>
                     </div>
                 )}
             </div>
-
-            {showCalendar && (
-                <div className={style.calendarBlock}>
-                    <CalendarRental />
-                </div>
-            )}
         </div>
     );
 };

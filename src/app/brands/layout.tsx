@@ -13,13 +13,20 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
     return (
-        <MaxWidthWrapper>
+        <div className="flex flex-col min-h-screen">
             <Header />
-            {/* <GoBackButton /> */}
-            {/* <WidgetAdvertisement /> */}
-            <main className="w-full">{children}</main>
+
+            <MaxWidthWrapper>
+                <main className="w-full flex-[1]">
+                    {/* <GoBackButton /> */}
+                    {/* <WidgetAdvertisement /> */}
+                    {children}
+                </main>
+            </MaxWidthWrapper>
+
             <Footer />
-            {/*<Cookie /> */}
-        </MaxWidthWrapper>
+
+            {/* <Cookie /> */}
+        </div>
     );
 }

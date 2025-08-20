@@ -27,14 +27,23 @@
   width: 100%;
   padding: 0.5rem;
   border-radius: 0.375rem;
-  background-color: var(--grey-bg-hover-light);
+  background-color: var(--grey-bg);
   color: var(--grey-text);
-  border: none;
+  border: 1px solid var(--grey-bg-hover-light);
+  transition: all var(--transition-duration);
 
   &::placeholder {
-    color: var(--grey-text-dark);
+    color: var(--grey-light);
+  }
+
+  &:focus {
+    outline: none;
+    background-color: var(--grey-bg-hover-light);
+    border: 1px solid var(--green-main);
   }
 }
+
+
 
 .button {
   width: 100%;
@@ -54,4 +63,13 @@
   font-size: 0.875rem;
   color: var(--blue-text);
   text-align: center;
+}
+
+
+.description {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  
+  color: var(--grey-text-new); // 👈 чуть менее белый
+  margin-top: 1rem;
 }

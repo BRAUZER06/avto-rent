@@ -25,7 +25,7 @@ export const ProfileNavigate = ({ rating = 4.3, reviews = 0, ads = 0 }) => {
                 />
                 <div className={style.profileInfo}>
                     <h2>{profile?.company_name || "Название компании"}</h2>
-                    <div className={style.rating}>
+                    {/* <div className={style.rating}>
                         <span>{rating.toFixed(1)}</span>
                         <div className={style.starsContainer}>
                             <div
@@ -39,7 +39,7 @@ export const ProfileNavigate = ({ rating = 4.3, reviews = 0, ads = 0 }) => {
                         <Link href="/reviews">
                             <p className={style.reviewsLink}>Нет отзывов</p>
                         </Link>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
@@ -48,10 +48,10 @@ export const ProfileNavigate = ({ rating = 4.3, reviews = 0, ads = 0 }) => {
                     <span className={style.statNumber}>{rating.toFixed(1)}</span>
                     <span className={style.statLabel}>Рейтинг</span>
                 </div>
-                <div className={style.statBlock}>
+                {/* <div className={style.statBlock}>
                     <span className={style.statNumber}>{reviews}</span>
                     <span className={style.statLabel}>Отзывов</span>
-                </div>
+                </div> */}
                 <div className={style.statBlock}>
                     <span className={style.statNumber}>{ads}</span>
                     <span className={style.statLabel}>Объявлений</span>

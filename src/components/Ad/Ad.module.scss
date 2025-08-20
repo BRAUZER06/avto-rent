@@ -194,13 +194,18 @@
     }
 
     .companyInfo {
+      
         > h2 {
+        margin-bottom: 5px;
             font-size: 11px;
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
         }
+       > h3{
+         font-size: 12px;
+       }
 
         .starsContainer {
             position: relative;

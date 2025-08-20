@@ -77,15 +77,15 @@ export const HeaderRightBlock = () => {
                         </Link>
 
                         {showAddAutoButton && (
-                            <div className={style.createAds}>
+                            <Link href="/profile/new_auto" className={style.createAds}>
                                 <Image
                                     width={20}
                                     height={20}
                                     src="/images/headerImg/plus.svg"
                                     alt="plus"
                                 />
-                                <Link href="/profile/new_auto">Добавить Атомобиль</Link>
-                            </div>
+                                Добавить Атомобиль
+                            </Link>
                         )}
                     </>
                 ) : (
@@ -99,9 +99,9 @@ export const HeaderRightBlock = () => {
                             />
                         </div>
 
-                        <div className={style.createAds}>
-                            <Link href="/login">Войти</Link>
-                        </div>
+                        <Link href="/login" className={style.createAds}>
+                            Войти
+                        </Link>
                     </>
                 )}
             </div>

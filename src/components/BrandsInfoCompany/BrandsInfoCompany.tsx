@@ -19,7 +19,7 @@ const BrandsInfoCompany = () => {
             <h1 className={styles.companyTitle}>
                 КЛЮЧАВТО | Автомобили с пробегом Пулково
             </h1>
-            <div className={styles.ratingContainer}>
+            {/* <div className={styles.ratingContainer}>
                 <div className={styles.rating}>
                     <span>{(4.5).toFixed(1)}</span>
                     <div className={styles.starsContainer}>
@@ -36,10 +36,10 @@ const BrandsInfoCompany = () => {
                     </Link>
                 </div>
 
-                {/* <a href="#" className={styles.reviewsLink}>
+                <a href="#" className={styles.reviewsLink}>
                     512 отзывов
-                </a> */}
-            </div>
+                </a>
+            </div> */}
             <div className={styles.subscribers}>4 328 подписчиков, 1 подписка</div>
             <div className={styles.registrationDate}>На Авито с июня 2016</div>
             <div className={styles.verification}>

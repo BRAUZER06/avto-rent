@@ -1,21 +1,40 @@
+// @src/lib/api/carService.ts
 import { fetchWithAuth } from "@src/utils/fetchWithAuth";
 import { apiUrlHelper } from "../helpers/getApiUrl";
 import { getAccessToken } from "./tokenService";
 
 const baseUrl = apiUrlHelper();
 
-// 🔹 GET /cars — все машины
-export const getAllCars = async () => {
-    const response = await fetchWithAuth(`${baseUrl}/cars`);
-    if (!response.ok) throw new Error("Не удалось загрузить список машин");
-    return response.json();
+type ListParams = { page?: number; per_page?: number; search?: string, region?:string };
+
+const qs = (params?: ListParams) => {
+    const sp = new URLSearchParams();
+    if (params?.page) sp.set("page", String(params.page));
+    if (params?.per_page) sp.set("per_page", String(params.per_page));
+    if (params?.search) sp.set("q", params.search); // поиск
+    if (params?.region) sp.set("region", params.region); // 👈 добавляем регион
+    const s = sp.toString();
+    return s ? `?${s}` : "";
 };
+
+
 // 🔹 GET /cars — все машины
-export const getCarsCategory = async (categoryCar: string) => {
-    const response = await fetchWithAuth(`${baseUrl}/cars?category=${categoryCar}`);
+export const getAllCars = async (params?: ListParams) => {
+    const response = await fetchWithAuth(`${baseUrl}/cars${qs(params)}`);
     if (!response.ok) throw new Error("Не удалось загрузить список машин");
-    return response.json();
+    return response.json(); // { cars: [...], meta: { page, per_page, total, pages } }
 };
+
+// 🔹 GET /cars?category=...
+export const getCarsCategory = async (categoryCar: string, params?: ListParams) => {
+    console.log("params", params);
+    
+    const url = `${baseUrl}/cars?category=${encodeURIComponent(categoryCar)}${qs(params).replace("?", "&")}`;
+    const response = await fetchWithAuth(url);
+    if (!response.ok) throw new Error("Не удалось загрузить список машин");
+    return response.json(); // { cars, meta }
+};
+
 
 // 🔹 GET /cars/my — мои машины
 export const getMyCars = async () => {

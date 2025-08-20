@@ -8,6 +8,7 @@ import { DetailedPhotoViewer } from "../ui/DetailedPhotoViewer/DetailedPhotoView
 import useWindowWidth from "@src/utils/api/hooks/useWindowWidth";
 import { HeartIcon } from "@public/images/icons";
 import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
+import Link from "next/link";
 
 export const Ad = memo(({ ads, rating = 3.5, isReact = false }) => {
     const ratingPercentage = (rating / 5) * 100;
@@ -80,24 +81,31 @@ export const Ad = memo(({ ads, rating = 3.5, isReact = false }) => {
 
                 <h2 className={style.title}>{ads?.title}</h2>
 
-                <div className={style.containerCompany}>
+                <Link
+                    href={`/brands/${encodeURIComponent(String(ads?.owner?.company_name))}`}
+                    className={style.containerCompany}
+                >
                     <div className={style.companyLogo}>
-                        <img alt="logo" src="/images/MEBEL/mebelCompanyLogo/1.jpg" />
+                        <img
+                            alt="logo"
+                            src={`${baseUrl}/${ads.owner.company_avatar_url}`}
+                        />
                     </div>
 
                     <div className={style.companyInfo}>
-                        <h2>{ads.contacts?.phone_1?.label || "Контакт"}</h2>
-                        <div className={style.starsContainer}>
+                        <h2>{ads.owner.company_name || "Контакт"}</h2>
+                        <h3>{ads.owner.address || "Адрес не указан"}</h3>
+                        {/* <div className={style.starsContainer}>
                             <div
                                 className={style.starsFilled}
                                 style={{ width: `${ratingPercentage}%` }}
                             >
                                 ★★★★★
                             </div>
-                            <div className={style.starsEmpty}>★★★★★</div>
-                        </div>
+                            <div className={style.starsEmpty}>★★★★★</div> 
+                        </div>*/}
                     </div>
-                </div>
+                </Link>
             </div>
 
             <div className={style.hiddenBlock}>

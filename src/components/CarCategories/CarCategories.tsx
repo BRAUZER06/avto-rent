@@ -1,4 +1,4 @@
-"use client"; // если ты используешь app-директорию
+"use client";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,19 +7,27 @@ import { usePathname } from "next/navigation";
 import { categoriesAuto } from "@src/data/categoriesAuto";
 
 export default function CarCategories() {
-    const pathname = usePathname(); // /avto/premium
+    const pathname = usePathname(); // например: /ingushetia/avto/premium  или /avto/premium
+
+    // --- определяем текущий регион ---
+    // Берем первый сегмент (если это регион)
+    const segments = pathname.split("/").filter(Boolean); // ["ingushetia","avto","premium"]
+    const maybeRegion = segments[0];
+    const hasRegion = !["avto"].includes(maybeRegion);
+    const regionPrefix = hasRegion ? `/${maybeRegion}` : "";
 
     return (
         <div className={styles.wrapper}>
             <h2 className={styles.title}>Категории автомобилей</h2>
             <div className={styles.grid}>
                 {categoriesAuto.map(category => {
-                    const isActive = pathname.includes(category.slug);
+                    // текущая активная категория
+                    const isActive = pathname.includes(`/avto/${category.slug}`);
 
                     return (
                         <Link
                             key={category.id}
-                            href={`/avto/${category.slug}`}
+                            href={`${regionPrefix}/avto/${category.slug}`}
                             className={`${styles.card} ${isActive ? styles.active : ""}`}
                         >
                             <span className={styles.label}>{category.title}</span>

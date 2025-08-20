@@ -5,18 +5,24 @@ import { PhotoViewer } from "@src/components/ui/PhotoViewer/PhotoViewer";
 import { DescriptionAds } from "@src/components/ui/DescriptionAds/DescriptionAds";
 import { FeaturesAvtoAds } from "@src/components/ui/Features/FeaturesAvtoAds/FeaturesAvtoAds";
 import { TitleAds } from "@src/components/ui/TitleAds/TitleAds";
-import { BankAds } from "@src/components/ui/BankAds/BankAds";
-import { PhotoViewerMobile } from "@src/components/ui/PhotoViewerMobile/PhotoViewerMobile";
 import useWindowWidth from "@src/utils/api/hooks/useWindowWidth";
 import { AdsTable } from "@src/components/ui/AdsTable/AdsTable";
 import { MobileContactPanel } from "@src/components/ui/MobileContactPanel/MobileContactPanel";
-import dynamic from "next/dynamic";
 import { MapBlockAds } from "@src/components/ui/MapBlockAds/MapBlockAds";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getCarById } from "@src/lib/api/carService";
 import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
+import { PhotoViewerMobile } from "@src/components/ui/PhotoViewerMobile/PhotoViewerMobile";
 
-export default function StandardPageID({ carId }: { carId: string }) {
+type CarImage = { id: number; url: string; position?: number | null };
+
+export default function StandardPageID({
+    carId,
+    region,
+}: {
+    carId: string;
+    region?: string;
+}) {
     const screenWidth = useWindowWidth();
     const [carData, setCarData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -27,9 +33,9 @@ export default function StandardPageID({ carId }: { carId: string }) {
             setLoading(true);
             const res = await getCarById(carId);
             setCarData(res);
-        } catch (error) {
-            setError(error.message || "Ошибка при загрузке данных");
-            console.error("Ошибка:", error);
+        } catch (err: any) {
+            setError(err?.message || "Ошибка при загрузке данных");
+            console.error("Ошибка:", err);
         } finally {
             setLoading(false);
         }
@@ -60,11 +66,16 @@ export default function StandardPageID({ carId }: { carId: string }) {
         return <div className={style.error}>Данные не найдены</div>;
     }
 
-    // Формируем массив URL изображений
-    const imageUrls =
-        carData.car_images
-            ?.sort((a, b) => a.position - b.position)
-            .map(img => `${mediaUrlHelper()}${img.url}`) || [];
+    const baseUrl = mediaUrlHelper();
+    const imageUrls = (() => {
+        const imgs = (carData?.car_images ?? [])
+            .slice()
+            .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+        const arr = imgs
+            .map(img => (img.url?.startsWith("/") ? `${baseUrl}${img.url}` : img.url))
+            .filter(Boolean) as string[];
+        return arr.length ? arr : ["/images/default-car.jpg"];
+    })();
 
     return (
         <div className={style.container}>
@@ -72,6 +83,7 @@ export default function StandardPageID({ carId }: { carId: string }) {
                 <div className={style.margin}>
                     <TitleAds title={carData.title} />
                 </div>
+
                 <div className={style.margin}>
                     {screenWidth > 767 ? (
                         <PhotoViewer images={imageUrls} />
@@ -79,6 +91,7 @@ export default function StandardPageID({ carId }: { carId: string }) {
                         <PhotoViewerMobile images={imageUrls} />
                     )}
                 </div>
+
                 <div className={`${style.margin} ${style.mobileOnly}`}>
                     <MobileContactPanel
                         phone={carData.contacts?.phone_1?.number}
@@ -86,9 +99,11 @@ export default function StandardPageID({ carId }: { carId: string }) {
                         telegram={carData.contacts?.telegram}
                     />
                 </div>
+
                 <div className={style.margin}>
                     <MapBlockAds location={carData.location} />
                 </div>
+
                 <div className={style.margin}>
                     <FeaturesAvtoAds
                         fuelType={carData.fuel_type}
@@ -99,19 +114,16 @@ export default function StandardPageID({ carId }: { carId: string }) {
                         horsepower={carData.horsepower}
                     />
                 </div>
+
                 <div className={style.margin}>
                     <AdsTable data={carData.custom_fields} />
                 </div>
 
-                {/* реклама
-                <div className={style.margin}>
-                    <BankAds />
-                </div>{" "}
-               */}
                 <div className={style.margin}>
                     <DescriptionAds description={carData.description} />
                 </div>
             </div>
+
             <div className={style.rightBlock}>
                 <RightPriceBlock
                     price={carData.price}

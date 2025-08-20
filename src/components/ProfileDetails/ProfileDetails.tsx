@@ -29,6 +29,7 @@ import { SortableImage } from "../ui/SortableImage/SortableImage";
 import { v4 as uuidv4 } from "uuid";
 import { Notification, useNotification } from "../ui/Notification/Notification";
 import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
+import { regions } from "@src/data/Regions";
 
 const ProfileDetails = () => {
     const [activeTab, setActiveTab] = useState("main");
@@ -54,6 +55,7 @@ const ProfileDetails = () => {
         website: "",
         company_avatar_url: "",
         logo_urls: [],
+        region: "",
     });
 
     const [phoneNumbers, setPhoneNumbers] = useState([
@@ -103,15 +105,17 @@ const ProfileDetails = () => {
                     name: data.company_name || "",
                 });
 
-                setCompanyProfileData({
-                    address: data.address || "",
-                    about: data.about || "",
-                    website: data.website || "",
-                    company_avatar_url: data.company_avatar_url
-                        ? baseUrl + data.company_avatar_url
-                        : "",
-                    logo_urls: data.logo_urls?.map(url => baseUrl + url) || [],
-                });
+              setCompanyProfileData({
+                  address: data.address || "",
+                  about: data.about || "",
+                  website: data.website || "",
+                  company_avatar_url: data.company_avatar_url
+                      ? baseUrl + data.company_avatar_url
+                      : "",
+                  logo_urls: data.logo_urls?.map(url => baseUrl + url) || [],
+                  region: data.region || "", 
+              });
+
 
                 if (data.logo_urls?.length) {
                     const loadedImages = data.logo_urls.map(logo => ({
@@ -290,6 +294,7 @@ const ProfileDetails = () => {
             // Текстовые поля
             formData.append("email", profileData.email);
             formData.append("company_name", profileData.name);
+            formData.append("region", companyProfileData.region);
             formData.append("address", companyProfileData.address);
             formData.append("about", companyProfileData.about);
 
@@ -675,6 +680,25 @@ const ProfileDetails = () => {
                                         Загрузить аватар
                                     </span>
                                 )}
+                            </div>
+                            <div className={styles.formGroup} style={{marginTop:'15px' }}>
+                                <label className={styles.formLabel}>Регион:</label>
+                                <select
+                                    className={styles.formControl}
+                                    value={companyProfileData.region}
+                                    onChange={e =>
+                                        handleCompanyProfileDataChange(
+                                            "region",
+                                            e.target.value
+                                        )
+                                    }
+                                >
+                                    {regions.map(region => (
+                                        <option key={region.id} value={region.name}>
+                                            {region.label}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
 
                             {renderCompanyProfileFields()}
