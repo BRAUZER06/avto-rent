@@ -17,20 +17,25 @@ RUN npm run build
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-ENV NODE_ENV=production
-ENV HOSTNAME=0.0.0.0
-ENV PORT=5175
+ENV NODE_ENV=production \
+	HOSTNAME=0.0.0.0 \
+	PORT=5175 \
+	NEXT_TELEMETRY_DISABLED=1
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 
-# Copy only the necessary runtime artifacts from the builder
+# Install only production dependencies
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+# Copy build artifacts
+COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/next.config.js ./next.config.js
 
 EXPOSE 5175
 USER nextjs
 
-# Run the standalone server produced by Next.js
-CMD ["node", "server.js"]
+# Run Next.js server
+CMD ["npm", "run", "start"]
