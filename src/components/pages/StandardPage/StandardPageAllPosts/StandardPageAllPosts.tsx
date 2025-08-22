@@ -14,6 +14,11 @@ import style from "./StandardPageAllPosts.module.scss";
 
 type Car = any;
 
+type ServerPayload = {
+    cars: Car[];
+    meta: { page: number; per_page: number; total: number; pages: number };
+};
+
 // Родительный падеж категорий
 const CATEGORY_GENITIVE: Record<string, string> = {
     all: "автомобилей",
@@ -42,9 +47,11 @@ const REGION_GENITIVE: Record<string, string> = {
 export default function StandardPageAllPosts({
     category,
     region,
+    initial,
 }: {
     category: string;
     region?: string;
+    initial?: ServerPayload; // <-- SSR/SSG первый пакет
 }) {
     const screenWidth = useWindowWidth();
 
@@ -53,23 +60,30 @@ export default function StandardPageAllPosts({
     const searchParams = useSearchParams();
     const router = useRouter();
 
-    const qFromUrl = (searchParams.get("q") ?? "").trim();
+    const qFromUrl = (searchParams.get("search") ?? "").trim();
+    const pageFromUrl = Number(searchParams.get("page") ?? 1) || 1;
+
     const [inputSearch, setInputSearch] = useState(qFromUrl);
     const [search, setSearch] = useState(qFromUrl);
 
     useEffect(() => {
-        const next = (searchParams.get("q") ?? "").trim();
+        const next = (searchParams.get("search") ?? "").trim();
         if (next !== inputSearch) setInputSearch(next);
         if (next !== search) setSearch(next);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams]);
 
+    // Дебаунс-обновление query-параметра (приводит к маршрутизации и подмене initial с сервера)
     useEffect(() => {
         const t = setTimeout(() => {
             const sp = new URLSearchParams(searchParams.toString());
             const trimmed = inputSearch.trim();
-            if (trimmed) sp.set("q", trimmed);
-            else sp.delete("q");
+
+            if (trimmed) sp.set("search", trimmed);
+            else sp.delete("search");
+
+            // При ручном вводе поиска всегда сбрасываем страницу на 1
+            sp.delete("page");
 
             const qs = sp.toString();
             const nextUrl = qs ? `${pathname}?${qs}` : pathname;
@@ -81,30 +95,47 @@ export default function StandardPageAllPosts({
     }, [inputSearch, pathname, router, searchParams]);
 
     // ---------- Данные и пагинация ----------
-    const [ads, setAds] = useState<Car[]>([]);
-    const [page, setPage] = useState<number>(1);
-    const [perPage] = useState<number>(12);
-    const [totalPages, setTotalPages] = useState<number>(0);
-    const [totalAds, setTotalAds] = useState<number>(0);
+    const [ads, setAds] = useState<Car[]>(initial?.cars ?? []);
+    const [page, setPage] = useState<number>(initial?.meta?.page ?? pageFromUrl ?? 1);
+    const [perPage] = useState<number>(initial?.meta?.per_page ?? 12);
+    const [totalPages, setTotalPages] = useState<number>(initial?.meta?.pages ?? 0);
+    const [totalAds, setTotalAds] = useState<number>(initial?.meta?.total ?? 0);
 
-    const [isInitialLoading, setIsInitialLoading] = useState<boolean>(false);
+    const [isInitialLoading, setIsInitialLoading] = useState<boolean>(!initial);
     const [isAppending, setIsAppending] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-    const [reachedEnd, setReachedEnd] = useState<boolean>(false);
+    const [reachedEnd, setReachedEnd] = useState<boolean>(
+        initial ? initial.meta.page >= (initial.meta.pages ?? 1) : false
+    );
 
     const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-    const reset = useCallback(() => {
-        setAds([]);
-        setPage(1);
-        setTotalPages(0);
-        setTotalAds(0);
-        setReachedEnd(false);
-        setError(null);
-    }, []);
+    // Когда приходят новые initial (например, при изменении search или page через URL),
+    // мы полностью переинициализируем состояние.
+    useEffect(() => {
+        if (initial) {
+            setAds(initial.cars ?? []);
+            setPage(initial.meta?.page ?? 1);
+            setTotalPages(initial.meta?.pages ?? 0);
+            setTotalAds(initial.meta?.total ?? 0);
+            setReachedEnd((initial.meta?.page ?? 1) >= (initial.meta?.pages ?? 1));
+            setIsInitialLoading(false);
+            setError(null);
+        } else {
+            // если initial нет — дальше сработает клиентская загрузка
+            setAds([]);
+            setPage(1);
+            setTotalPages(0);
+            setTotalAds(0);
+            setReachedEnd(false);
+            setIsInitialLoading(true);
+            setError(null);
+        }
+    }, [initial]);
 
     const fetchPage = useCallback(
         async (targetPage: number, append: boolean) => {
+            // защита от параллельных запросов
             if (isInitialLoading || isAppending) return;
             if (reachedEnd) return;
 
@@ -136,10 +167,7 @@ export default function StandardPageAllPosts({
                 setPage(meta.page);
                 setTotalPages(meta.pages ?? 1);
                 setTotalAds(meta.total ?? 0);
-
-                if (meta.page >= (meta.pages ?? 1)) {
-                    setReachedEnd(true);
-                }
+                if (meta.page >= (meta.pages ?? 1)) setReachedEnd(true);
             } catch (e) {
                 console.error(e);
                 setError("Не удалось загрузить данные");
@@ -150,16 +178,15 @@ export default function StandardPageAllPosts({
         [category, region, perPage, search, isInitialLoading, isAppending, reachedEnd]
     );
 
+    // Если initial отсутствует (например, сервер не смог отдать) — пробуем забрать первую страницу на клиенте
     useEffect(() => {
-        reset();
-    }, [category, search, region, reset]);
-
-    useEffect(() => {
-        if (ads.length === 0 && !isInitialLoading && !isAppending) {
+        if (!initial && ads.length === 0 && !isInitialLoading && !isAppending) {
             fetchPage(1, false);
         }
-    }, [ads.length, fetchPage, isAppending, isInitialLoading]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [initial]);
 
+    // Бесконечная прокрутка
     useEffect(() => {
         if (!sentinelRef.current) return;
         const el = sentinelRef.current;
@@ -192,6 +219,15 @@ export default function StandardPageAllPosts({
     const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setInputSearch(e.target.value);
     }, []);
+
+    // Ссылка для прогрессивного улучшения SEO (на случай, если JS не выполнится)
+    const nextHref = useMemo(() => {
+        if (!canShowMore) return null;
+        const sp = new URLSearchParams(searchParams.toString());
+        sp.set("page", String(page + 1));
+        const qs = sp.toString();
+        return qs ? `${pathname}?${qs}` : pathname;
+    }, [canShowMore, pathname, searchParams, page]);
 
     return (
         <>
@@ -247,12 +283,18 @@ export default function StandardPageAllPosts({
                     )}
 
                     {canShowMore && (
-                        <button
+                        // Прогрессивное улучшение: <a> с href на следующую страницу,
+                        // но кликом перехватываем и грузим через fetchPage
+                        <a
+                            href={nextHref || "#"}
                             className={style.loadMoreBtn}
-                            onClick={() => fetchPage(page + 1, true)}
+                            onClick={e => {
+                                e.preventDefault();
+                                fetchPage(page + 1, true);
+                            }}
                         >
                             Показать ещё
-                        </button>
+                        </a>
                     )}
 
                     <div ref={sentinelRef} style={{ height: 1 }} />

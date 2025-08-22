@@ -1,13 +1,17 @@
+// @src/components/ImageSwiper/ImageSwiper.tsx
 "use client";
 
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules"; // Добавляем модули
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import clsx from "clsx";
 import styles from "./ImageSwiper.module.scss";
 import { NavigationButton } from "@src/components/ui/NavigationButton/NavigationButton";
 
-export const ImageSwiper = ({ images }: { images: any }) => {
+export const ImageSwiper = ({ images }: { images: string[] }) => {
+    if (!images?.length) return null;
+    console.log("images", images);
+
     return (
         <section className={styles.corporateWrap}>
             <div className={styles.corporate}>
@@ -16,18 +20,11 @@ export const ImageSwiper = ({ images }: { images: any }) => {
                         className={clsx(styles.slider)}
                         spaceBetween={8}
                         slidesPerView={"auto"}
-                        centeredSlides={true}
-                        initialSlide={0}
-                        loop={true}
-                        autoplay={{
-                            delay: 9000,
-                            disableOnInteraction: false,
-                        }}
-                        pagination={{
-                            clickable: true,
-                            dynamicBullets: true,
-                        }}
-                        modules={[Navigation, Pagination, Autoplay]} // Добавляем нужные модули
+                        centeredSlides
+                        loop
+                        autoplay={{ delay: 9000, disableOnInteraction: false }}
+                        pagination={{ clickable: true, dynamicBullets: true }}
+                        modules={[Navigation, Pagination, Autoplay]}
                         navigation={{
                             prevEl: `.${clsx(styles.prev_btn)}`,
                             nextEl: `.${clsx(styles.next_btn)}`,
@@ -42,14 +39,15 @@ export const ImageSwiper = ({ images }: { images: any }) => {
                             },
                         }}
                     >
-                        {images.map((item: any, index: any) => (
-                            <SwiperSlide key={index} className={clsx(styles.slide)}>
+                        {images.map((src, i) => (
+                            <SwiperSlide key={i} className={clsx(styles.slide)}>
                                 <Image
                                     className={styles.corporateVideoItemImage}
-                                    src={item}
+                                    src={src}
                                     width={985}
                                     height={683}
-                                    alt="video"
+                                    alt={`company photo ${i + 1}`}
+                                    priority={i === 0}
                                 />
                             </SwiperSlide>
                         ))}

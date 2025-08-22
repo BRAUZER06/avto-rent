@@ -29,11 +29,17 @@ import { SortableImage } from "../ui/SortableImage/SortableImage";
 import { v4 as uuidv4 } from "uuid";
 import { Notification, useNotification } from "../ui/Notification/Notification";
 import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
-import { regions } from "@src/data/Regions";
+import { regionsFull } from "@src/data/regions";
+import { useAuthStore } from "@src/store/useAuthStore";
+import { useRouter } from "next/navigation";
+import { clearTokens } from "@src/lib/api/tokenService";
 
 const ProfileDetails = () => {
     const [activeTab, setActiveTab] = useState("main");
     const { notification, showNotification } = useNotification();
+    const clearProfile = useAuthStore(s => s.clearProfile);
+    const router = useRouter();
+
     const [type, setType] = useState([
         {
             id: "1",
@@ -105,17 +111,16 @@ const ProfileDetails = () => {
                     name: data.company_name || "",
                 });
 
-              setCompanyProfileData({
-                  address: data.address || "",
-                  about: data.about || "",
-                  website: data.website || "",
-                  company_avatar_url: data.company_avatar_url
-                      ? baseUrl + data.company_avatar_url
-                      : "",
-                  logo_urls: data.logo_urls?.map(url => baseUrl + url) || [],
-                  region: data.region || "", 
-              });
-
+                setCompanyProfileData({
+                    address: data.address || "",
+                    about: data.about || "",
+                    website: data.website || "",
+                    company_avatar_url: data.company_avatar_url
+                        ? baseUrl + data.company_avatar_url
+                        : "",
+                    logo_urls: data.logo_urls?.map(url => baseUrl + url) || [],
+                    region: data.region || "",
+                });
 
                 if (data.logo_urls?.length) {
                     const loadedImages = data.logo_urls.map(logo => ({
@@ -286,73 +291,80 @@ const ProfileDetails = () => {
     };
 
     const handleSave = async () => {
-        const sortedLogos = [...logoImages].sort((a, b) => a.position - b.position);
+        // подстелим соломку: если position не задан — проставим по индексу
+        const withPositions = logoImages.map((img, i) => ({
+            ...img,
+            position: typeof img.position === "number" ? img.position : i,
+        }));
+
+        const sortedLogos = [...withPositions].sort((a, b) => a.position - b.position);
 
         try {
             const formData = new FormData();
 
             // Текстовые поля
-            formData.append("email", profileData.email);
-            formData.append("company_name", profileData.name);
-            formData.append("region", companyProfileData.region);
-            formData.append("address", companyProfileData.address);
-            formData.append("about", companyProfileData.about);
+            formData.append("email", (profileData.email || "").trim());
+            formData.append("company_name", (profileData.name || "").trim());
+            formData.append("region", (companyProfileData.region || "").trim());
+            formData.append("address", (companyProfileData.address || "").trim());
+            formData.append("about", (companyProfileData.about || "").trim());
 
-            formData.append(
-                "whatsapp",
-                socialLinks.find(l => l.type === "WhatsApp")?.url || ""
-            );
-            formData.append(
-                "telegram",
-                socialLinks.find(l => l.type === "Telegram")?.url || ""
-            );
-            formData.append(
-                "instagram",
-                socialLinks.find(l => l.type === "Instagram")?.url || ""
-            );
-            formData.append(
-                "website",
-                socialLinks.find(l => l.type === "WebSite")?.url || ""
-            );
+            const getLink = (type: string) =>
+                (socialLinks.find(l => l.type === type)?.url || "").trim();
 
-            if (phoneNumbers[0]) {
-                formData.append("phone_1[number]", phoneNumbers[0]?.number || "");
-                formData.append("phone_1[label]", phoneNumbers[0]?.description || "");
-            }
+            formData.append("whatsapp", getLink("WhatsApp"));
+            formData.append("telegram", getLink("Telegram"));
+            formData.append("instagram", getLink("Instagram"));
+            formData.append("website", getLink("WebSite"));
 
-            if (phoneNumbers[1]) {
-                formData.append("phone_2[number]", phoneNumbers[1]?.number || "");
-                formData.append("phone_2[label]", phoneNumbers[1]?.description || "");
-            }
+            // Телефоны: "сжимаем" список и ВСЕГДА шлём оба набора полей
+            const compactPhones = phoneNumbers
+                .map(p => ({
+                    number: (p?.number || "").trim(),
+                    description: (p?.description || "").trim(),
+                }))
+                .filter(p => p.number !== "" || p.description !== "");
+
+            const p1 = compactPhones[0] ?? { number: "", description: "" };
+            const p2 = compactPhones[1] ?? { number: "", description: "" };
+
+            formData.append("phone_1[number]", p1.number);
+            formData.append("phone_1[label]", p1.description);
+
+            formData.append("phone_2[number]", p2.number);
+            formData.append("phone_2[label]", p2.description);
 
             // Аватар (1 файл)
             if (avatarImage?.file) {
                 formData.append("company_avatar", avatarImage.file);
             }
 
-            // Логотипы (несколько файлов)
+            // Логотипы: отправляем только новые файлы
             sortedLogos.forEach(img => {
-                if (img.file) {
+                if (img.isNew && img.file) {
                     formData.append("company_logos[]", img.file);
                 }
             });
-            if (removedLogoUrls.length > 0) {
-                formData.append("removed_logo_ids", JSON.stringify(removedLogoUrls));
+
+            // Если есть удалённые логотипы — отправим их id
+            if (removedLogoIds.length > 0) {
+                formData.append("removed_logo_ids", JSON.stringify(removedLogoIds));
             }
 
+            // Позиции логотипов (и новых, и старых)
             formData.append(
                 "logo_positions",
                 JSON.stringify(
                     sortedLogos.map((img, index) => ({
-                        id: img.isNew ? null : img.id,
-                        position: index + 1,
+                        id: img.isNew ? null : img.id, // для новых нет id
+                        position: index + 1, // позиции с 1
                     }))
                 )
             );
 
             // Отправка
             await updateCompanyProfile(formData);
-            await fetchData(); // ⬅️ обновит профиль после сохранения
+            await fetchData(); // обновим профиль после сохранения
             setRemovedLogoIds([]);
             showNotification("Изменения успешно сохранены", "success");
             setIsChanged(false);
@@ -360,6 +372,12 @@ const ProfileDetails = () => {
             console.error("Ошибка сохранения:", error);
             showNotification("Ошибка при сохранении изменений", "error");
         }
+    };
+
+    const exitProfile = () => {
+        clearProfile();
+        clearTokens();
+        router.replace("/login");
     };
 
     const renderCompanyProfileFields = () => (
@@ -609,6 +627,14 @@ const ProfileDetails = () => {
                                 >
                                     Сохранить изменения
                                 </button>
+                                <button
+                                    type="button"
+                                    className={`${styles.saveButton} ${styles.exitButton}`}
+                                    onClick={exitProfile}
+                                    // disabled={!isChanged }
+                                >
+                                    Выйти
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -681,7 +707,10 @@ const ProfileDetails = () => {
                                     </span>
                                 )}
                             </div>
-                            <div className={styles.formGroup} style={{marginTop:'15px' }}>
+                            <div
+                                className={styles.formGroup}
+                                style={{ marginTop: "15px" }}
+                            >
                                 <label className={styles.formLabel}>Регион:</label>
                                 <select
                                     className={styles.formControl}
@@ -693,7 +722,7 @@ const ProfileDetails = () => {
                                         )
                                     }
                                 >
-                                    {regions.map(region => (
+                                    {regionsFull?.map(region => (
                                         <option key={region.id} value={region.name}>
                                             {region.label}
                                         </option>

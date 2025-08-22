@@ -1,4 +1,5 @@
 "use client";
+
 import { RightPriceBlock } from "@src/components/RightPriceBlock/RightPriceBlock";
 import style from "./StandardPageID.module.scss";
 import { PhotoViewer } from "@src/components/ui/PhotoViewer/PhotoViewer";
@@ -9,79 +10,48 @@ import useWindowWidth from "@src/utils/api/hooks/useWindowWidth";
 import { AdsTable } from "@src/components/ui/AdsTable/AdsTable";
 import { MobileContactPanel } from "@src/components/ui/MobileContactPanel/MobileContactPanel";
 import { MapBlockAds } from "@src/components/ui/MapBlockAds/MapBlockAds";
-import { useEffect, useMemo, useState } from "react";
-import { getCarById } from "@src/lib/api/carService";
 import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
 import { PhotoViewerMobile } from "@src/components/ui/PhotoViewerMobile/PhotoViewerMobile";
+import { useMemo } from "react";
 
-type CarImage = { id: number; url: string; position?: number | null };
+type Car = {
+    id: number | string;
+    title: string;
+    price: number | string;
+    location?: string;
+    description?: string;
+    custom_fields?: Record<string, string>;
+    contacts?: any;
+    owner?: any;
+    user_id?: number | string;
+    car_images?: Array<{ id: number; url: string; position?: number | null }>;
+    fuel_type?: string;
+    transmission?: string;
+    engine_capacity?: string | number;
+    drive?: string;
+    year?: number | string;
+    horsepower?: number | string;
+};
 
-export default function StandardPageID({
-    carId,
-    region,
-}: {
-    carId: string;
-    region?: string;
-}) {
+export default function StandardPageID({ car, region }: { car: Car; region?: string }) {
     const screenWidth = useWindowWidth();
-    const [carData, setCarData] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    const fetchCarById = async () => {
-        try {
-            setLoading(true);
-            const res = await getCarById(carId);
-            setCarData(res);
-        } catch (err: any) {
-            setError(err?.message || "Ошибка при загрузке данных");
-            console.error("Ошибка:", err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchCarById();
-    }, [carId]);
-
-    if (loading) {
-        return (
-            <div className={style.loading}>
-                <p>Загрузка данных...</p>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className={style.error}>
-                <p>{error}</p>
-                <button onClick={fetchCarById}>Попробовать снова</button>
-            </div>
-        );
-    }
-
-    if (!carData) {
-        return <div className={style.error}>Данные не найдены</div>;
-    }
-
     const baseUrl = mediaUrlHelper();
-    const imageUrls = (() => {
-        const imgs = (carData?.car_images ?? [])
+
+    const imageUrls = useMemo(() => {
+        const imgs = (car?.car_images ?? [])
             .slice()
             .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
         const arr = imgs
             .map(img => (img.url?.startsWith("/") ? `${baseUrl}${img.url}` : img.url))
             .filter(Boolean) as string[];
         return arr.length ? arr : ["/images/default-car.jpg"];
-    })();
+    }, [car, baseUrl]);
 
     return (
         <div className={style.container}>
             <div className={style.leftBlock}>
                 <div className={style.margin}>
-                    <TitleAds title={carData.title} />
+                    <TitleAds title={car?.title} />
                 </div>
 
                 <div className={style.margin}>
@@ -94,41 +64,42 @@ export default function StandardPageID({
 
                 <div className={`${style.margin} ${style.mobileOnly}`}>
                     <MobileContactPanel
-                        phone={carData.contacts?.phone_1?.number}
-                        whatsapp={carData.contacts?.whatsapp}
-                        telegram={carData.contacts?.telegram}
+                        contacts={car?.contacts}
+                        owner={car?.owner}
+                        companyName={car?.owner?.company_name}
                     />
                 </div>
 
                 <div className={style.margin}>
-                    <MapBlockAds location={carData.location} />
+                    <MapBlockAds location={car?.location} />
                 </div>
 
                 <div className={style.margin}>
                     <FeaturesAvtoAds
-                        fuelType={carData.fuel_type}
-                        transmission={carData.transmission}
-                        engineCapacity={carData.engine_capacity}
-                        drive={carData.drive}
-                        year={carData.year}
-                        horsepower={carData.horsepower}
+                        fuelType={car?.fuel_type}
+                        transmission={car?.transmission}
+                        engineCapacity={car?.engine_capacity}
+                        drive={car?.drive}
+                        year={car?.year}
+                        horsepower={car?.horsepower}
                     />
                 </div>
 
                 <div className={style.margin}>
-                    <AdsTable data={carData.custom_fields} />
+                    <AdsTable data={car?.custom_fields} />
                 </div>
 
                 <div className={style.margin}>
-                    <DescriptionAds description={carData.description} />
+                    <DescriptionAds description={car?.description} />
                 </div>
             </div>
 
             <div className={style.rightBlock}>
                 <RightPriceBlock
-                    price={carData.price}
-                    contacts={carData.contacts}
-                    customFields={carData.custom_fields}
+                    price={car?.price}
+                    contacts={car?.contacts}
+                    customFields={car?.custom_fields}
+                    owner={car?.owner}
                 />
             </div>
         </div>

@@ -1,30 +1,35 @@
 .container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    padding: 20px;
-    grid-auto-rows: minmax(100px, auto);
-
-    @media (max-width: 1024px) {
-        grid-template-columns: repeat(3, 1fr);
-        padding: 20px 0px;
-    }
-
-    @media (max-width: 768px) {
-        grid-template-columns: repeat(2, 1fr);
-        padding: 0px;
-    }
-
-    @media (max-width: 480px) {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 6px;
-    }
+  display: flex;
+  flex-direction: column;
 }
 
-.cardContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
+.itemsList {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* >=768px: 2 колонки */
+  gap: 16px;
+  padding: 20px;
+
+  @media screen and (max-width: 768px) {
+    /* <768px: мобильная верстка, по одной карточке (AdsCardScroll) */
+    display: block;     /* карточки пойдут столбиком */
+    padding: 0;
+  }
+}
+
+.contentDesktop {
+  display: block;        /* >=768px показываем десктопную карту */
+
+  @media screen and (max-width: 768px) {
+    display: none;       /* <768px скрываем десктопную */
+  }
+}
+
+.contentMobile {
+  display: none;         /* >=768px мобильную скрываем */
+
+  @media screen and (max-width: 768px) {
+    display: block;      /* <768px показываем мобильную карту */
+    margin-bottom: 16px;
+  }
 }

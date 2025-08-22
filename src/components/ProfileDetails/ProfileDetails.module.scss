@@ -32,7 +32,7 @@
         padding: 10px 20px;
         cursor: pointer;
         border-bottom: 2px solid transparent;
-        color: #057EFF;
+        color: #057eff;
 
         @media screen and (max-width: 550px) {
             padding: 10px;
@@ -76,8 +76,7 @@
     }
 }
 
-
-.sectionMessenger{
+.sectionMessenger {
     margin-bottom: 10px;
     margin-top: 20px;
 }
@@ -128,32 +127,32 @@
 .formControl {
     width: 100%;
     padding: 8px;
-    
-    border: 1px solid #8F8F8F;
+
+    border: 1px solid #8f8f8f;
     border-radius: 5px;
     font-size: 16px;
     color: var(--grey-text);
     background-color: var(--grey-bg);
     margin-bottom: 5px;
     box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
-    
+
     &::placeholder {
         color: #999; // цвет плейсхолдера
-      }
-    
-      &:disabled {
+    }
+
+    &:disabled {
         background-color: #161616;
         color: #aaa;
         cursor: not-allowed;
         border: 1px solid #ccc;
-      }
+    }
 }
 
 .textarea {
     width: 100%;
     height: 100px;
     padding: 8px;
-    border: 1px solid #8F8F8F;
+    border: 1px solid #8f8f8f;
     border-radius: 5px;
     font-size: 16px;
     color: #fff;
@@ -172,7 +171,7 @@
 
 .addButton,
 .saveButton {
-    background-color: #0079C2;
+    background-color: #0079c2;
     border: none;
     color: #fff;
     padding: 10px 20px;
@@ -199,6 +198,12 @@
     &:disabled {
         background-color: var(--grey-bg);
         cursor: not-allowed;
+    }
+}
+.exitButton {
+    background-color: var(--grey-bg);
+    &:hover:not(:disabled) {
+        background-color: rgb(185, 0, 0);
     }
 }
 

@@ -27,6 +27,7 @@ import OptionCheckbox from "../ui/OptionCheckbox/OptionCheckbox";
 import { FiTrash2, FiPlus, FiLoader } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
+import ImageTooltip from "../ui/ImageTooltip/ImageTooltip";
 
 const MAX_IMAGES = 25;
 
@@ -329,7 +330,7 @@ export const ProfileRedactAuto = ({ carId }: { carId: string }) => {
                 "image_positions",
                 JSON.stringify(
                     images.map((img, index) => ({
-                        id: img.existingId || null, // ID существующего изображения или null для нового
+                        id: img.existingId || null,
                         position: index + 1,
                     }))
                 )
@@ -437,7 +438,15 @@ export const ProfileRedactAuto = ({ carId }: { carId: string }) => {
             {/* Блок с фотографиями */}
             <div>
                 <p className="font-semibold mb-2">
-                    Фотографии ({images.length}/{MAX_IMAGES})
+                    Фотографии ({images.length}/{MAX_IMAGES}){" "}
+                    <p className="text-sm text-zinc-200">
+                        Пример как нужно&nbsp;фотографировать&nbsp;авто&nbsp;
+                        <ImageTooltip
+                            text="вот тут"
+                            src="/assets/redactAvto/vertikalPhone.webp"
+                            alt="Toyota Camry, белая, вид спереди"
+                        />{" "}
+                    </p>
                 </p>
                 <div
                     {...getRootProps()}

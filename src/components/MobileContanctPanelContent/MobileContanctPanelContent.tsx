@@ -1,19 +1,32 @@
 "use client";
-
 import Image from "next/image";
 import style from "./MobileContanctPanelContent.module.scss";
 import { FaWhatsapp, FaTelegramPlane, FaInstagram, FaGlobe } from "react-icons/fa";
 import { OwnerInfoCard, type OwnerInfo } from "../ui/OwnerInfoCard/OwnerInfoCard";
-import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
 
-// ===== helpers для нормализации, краткие версии =====
-const buildTelHref = (raw?: string) => {
-    if (!raw) return null;
-    let digits = raw.replace(/[^\d]/g, "");
-    if (!digits) return null;
-    if (digits.length === 11 && digits.startsWith("8")) digits = `7${digits.slice(1)}`;
-    if (!digits.startsWith("7")) return `tel:+${digits}`;
-    return `tel:+${digits}`;
+/* helpers */
+const formatPhoneDisplay = (raw?: string) => {
+    if (!raw) return "";
+    const digits = raw.replace(/[^\d]/g, "");
+    const e164 =
+        digits.length === 11 && digits.startsWith("8")
+            ? `+7${digits.slice(1)}`
+            : digits.length === 11 && digits.startsWith("7")
+              ? `+${digits}`
+              : raw.trim().startsWith("+")
+                ? raw.trim()
+                : digits.length >= 10
+                  ? `+${digits}`
+                  : raw;
+    const only = e164.replace(/[^\d]/g, "");
+    if (only.length === 11 && only.startsWith("7")) {
+        const p1 = only.slice(1, 4),
+            p2 = only.slice(4, 7),
+            p3 = only.slice(7, 9),
+            p4 = only.slice(9, 11);
+        return `+7 ${p1} ${p2}-${p3}-${p4}`;
+    }
+    return e164;
 };
 const buildWhatsappHref = (raw?: string) => {
     if (!raw) return null;
@@ -44,28 +57,30 @@ const parseTelegram = (raw?: string) => {
     return { username, url: `https://t.me/${username}` };
 };
 
+interface PhoneEntry {
+    number: string;
+    label?: string;
+    href?: string | null;
+}
+
 interface MobileContanctPanelContentProps {
     isOpen: boolean;
     toggleNavPanel: () => void;
 
-    // реальные данные
     owner?: OwnerInfo;
-    phone?: string;
+
+    phones?: PhoneEntry[]; // ⬅️ теперь список телефонов
     whatsapp?: string;
     telegram?: string;
-
-    // опционально — если вдруг нужно будет добавить
     instagram?: string;
     website?: string;
-
-    showCalendar?: boolean; // управляется снаружи, тут не используем
 }
 
 export const MobileContanctPanelContent = ({
     isOpen,
     toggleNavPanel,
     owner,
-    phone,
+    phones = [],
     whatsapp,
     telegram,
     instagram,
@@ -73,8 +88,6 @@ export const MobileContanctPanelContent = ({
 }: MobileContanctPanelContentProps) => {
     if (!isOpen) return null;
 
-    const mediaBaseUrl = mediaUrlHelper();
-    const telHref = buildTelHref(phone);
     const waHref = buildWhatsappHref(whatsapp);
     const tg = parseTelegram(telegram);
 
@@ -101,23 +114,24 @@ export const MobileContanctPanelContent = ({
             <div className={style.header}>
                 <OwnerInfoCard
                     owner={owner}
-                    size="sm"
+                    size="md"
                     layout="row"
                     href={`/brands/${encodeURIComponent(String(owner?.company_name))}`}
                 />
             </div>
 
-            {phone && (
-                <div className={style.phoneBlock}>
-                    <p className={style.phone}>{phone}</p>
-                    {/* можно добавить label, если появится */}
-                    {telHref && (
-                        <a className={style.callButton} href={telHref}>
+            {/* телефоны — один или оба */}
+            {phones.map((p, idx) => (
+                <div key={`${p.number}-${idx}`} className={style.phoneBlock}>
+                    <p className={style.phone}>{formatPhoneDisplay(p.number)}</p>
+                    {p.label && <span className={style.label}>{p.label}</span>}
+                    {p.href && (
+                        <a className={style.callButton} href={p.href}>
                             Позвонить
                         </a>
                     )}
                 </div>
-            )}
+            ))}
 
             <div className={style.links}>
                 {waHref && (

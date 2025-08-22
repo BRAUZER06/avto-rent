@@ -1,146 +1,196 @@
+// @src/components/BrandsInfo/BrandsInfo.tsx
 "use client";
-import { useState } from "react";
-import Image from "next/image";
+
+import { useEffect, useMemo, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Scrollbar } from "swiper/modules";
-import "swiper/swiper-bundle.css"; // Подключаем стили Swiper
-import styles from "./BrandsInfo.module.scss"; // Подключаем стили
+import { Pagination, Scrollbar } from "swiper/modules";
 
-export const BrandsInfo = () => {
-    const [activeTab, setActiveTab] = useState("about");
-    const [showMoreText, setShowMoreText] = useState(false); // Состояние для показа полного текста
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 
-    const images = [
-        " /images/companies/company1.webp",
-        " /images/companies/company2.webp",
-        " /images/companies/company3.webp",
-        " /images/companies/company4.webp",
-        " /images/companies/company5.webp",
-        " /images/companies/company6.webp",
-        " /images/companies/company7.webp",
-        " /images/companies/company8.webp",
-        " /images/companies/company9.webp",
-    ]; // Пример изображений
+import styles from "./BrandsInfo.module.scss";
+import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
+
+type LogoObj = { id?: number; url?: string; position?: number };
+type CompanyDTO = {
+    about?: string | null;
+    address?: string | null;
+    // Бэк может прислать так ИЛИ так:
+    logo_urls?: LogoObj[]; // [{ url, position }]
+    logo_url?: string[]; // ["/uploads/..."]
+};
+
+function joinUrl(base: string, path: string) {
+    if (!path) return "";
+    if (path.startsWith("http")) return path;
+    const b = base.endsWith("/") ? base.slice(0, -1) : base;
+    const p = path.startsWith("/") ? path : `/${path}`;
+    return `${b}${p}`;
+}
+
+export const BrandsInfo = ({ company }: { company?: CompanyDTO }) => {
+    // 1) Без company — ничего не рисуем
+    if (!company) {
+        console.warn("[BrandsInfo] company prop is missing");
+        return null;
+    }
+
+    const base = mediaUrlHelper();
+    const aboutText = (company.about ?? "").trim();
+    const address = (company.address ?? "").trim();
+
+    // 2) Достаём фото из двух возможных форматов
+    const images = useMemo(() => {
+        let list: string[] = [];
+
+        if (Array.isArray(company.logo_urls) && company.logo_urls.length) {
+            list = company.logo_urls
+                .slice()
+                .sort(
+                    (a, b) =>
+                        (a.position ?? Number.MAX_SAFE_INTEGER) -
+                        (b.position ?? Number.MAX_SAFE_INTEGER)
+                )
+                .map(o => joinUrl(base, o.url ?? ""))
+                .filter(Boolean);
+        } else if (Array.isArray(company.logo_url) && company.logo_url.length) {
+            list = company.logo_url.map(u => joinUrl(base, u)).filter(Boolean);
+        }
+
+        return list;
+    }, [company.logo_urls, company.logo_url, base]);
+
+    const hasImages = images.length > 0;
+    const hasAbout = aboutText.length > 0;
+    const hasAddress = address.length > 0;
+
+    const showAboutTab = hasImages || hasAbout;
+    const showAddressTab = hasAddress;
+
+    const [activeTab, setActiveTab] = useState<"about" | "address">("about");
+
+    useEffect(() => {
+        if (activeTab === "about" && !showAboutTab && showAddressTab) {
+            setActiveTab("address");
+        }
+        if (activeTab === "address" && !showAddressTab && showAboutTab) {
+            setActiveTab("about");
+        }
+    }, [activeTab, showAboutTab, showAddressTab]);
+
+    // Если совсем нечего показать — ничего не рендерим
+    if (!showAboutTab && !showAddressTab) return null;
+
+    const multipleTabs = Number(showAboutTab) + Number(showAddressTab) > 1;
 
     return (
         <div className={styles.brandsInfo}>
             <h2 className={styles.title}>Информация</h2>
 
-            <div className={styles.tabs}>
-                <button
-                    className={
-                        activeTab === "about" ? styles.activeTab : styles.tabButton
-                    }
-                    onClick={() => setActiveTab("about")}
-                >
-                    О компании
-                </button>
-                <button
-                    className={
-                        activeTab === "address" ? styles.activeTab : styles.tabButton
-                    }
-                    onClick={() => setActiveTab("address")}
-                >
-                    Адрес
-                </button>
-            </div>
-
-            {activeTab === "about" && (
-                <div className={styles.container}>
-                    <Swiper
-                        spaceBetween={5}
-                        slidesPerView={3.3}
-                        breakpoints={{
-                            300: {
-                                slidesPerView: 1,
-                            },
-
-                            375: {
-                                slidesPerView: 1.4,
-                            },
-
-                            480: {
-                                slidesPerView: 2,
-                            },
-
-                            768: {
-                                slidesPerView: 3,
-                            },
-
-                            1023: {
-                                slidesPerView: 3.3,
-                            },
-                        }}
-                        pagination={{ clickable: true }}
-                        watchOverflow={true}
-                        modules={[Scrollbar]}
-                        className={styles.mySwiper}
-                    >
-                        {images.map((imageUrl, index) => (
-                            <SwiperSlide key={index} className={styles.swiperSlide}>
-                                <img
-                                    src={imageUrl}
-                                    alt={`Slide ${index}`}
-                                    className={styles.swiperImage}
-                                />
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-
-                    <div className={styles.companyText}>
-                        <p className={styles.companyInfo}>
-                            🏆 КЛЮЧАВТО | Автомобили с пробегом — крупнейший автохолдинг
-                            России!
-                        </p>
-                        <p className={styles.companyInfo}>
-                            🏆 Двукратный победитель премии «Автодилер года» по версии
-                            АВОСТАТ.
-                        </p>
-                        <p className={styles.companyInfo}>
-                            🏆 2-е место в рейтинге продавцов поддержанных автомобилей по
-                            версии Forbes.
-                        </p>
-
-                        {showMoreText && (
-                            <p className={styles.companyInfo}>
-                                🚗 Мы предоставляем качественный сервис по продаже
-                                автомобилей с пробегом, обеспечиваем гарантию на каждую
-                                покупку и предлагаем большой выбор автомобилей различных
-                                марок.
-                            </p>
-                        )}
-
-                        <a
-                            onClick={() => setShowMoreText(!showMoreText)} // Логика для показа/скрытия текста
-                            className={styles.readMore}
+            {multipleTabs && (
+                <div className={styles.tabs}>
+                    {showAboutTab && (
+                        <button
+                            className={
+                                activeTab === "about"
+                                    ? styles.activeTab
+                                    : styles.tabButton
+                            }
+                            onClick={() => setActiveTab("about")}
                         >
-                            {!showMoreText && "Читать полностью"}
-                        </a>
-                    </div>
+                            О компании
+                        </button>
+                    )}
+                    {showAddressTab && (
+                        <button
+                            className={
+                                activeTab === "address"
+                                    ? styles.activeTab
+                                    : styles.tabButton
+                            }
+                            onClick={() => setActiveTab("address")}
+                        >
+                            Адрес
+                        </button>
+                    )}
                 </div>
             )}
 
-            {activeTab === "address" && (
+            {/* О компании */}
+            {activeTab === "about" && showAboutTab && (
+                <div className={styles.container}>
+                    {hasImages && (
+                        <Swiper
+                            spaceBetween={5}
+                            slidesPerView={3.3}
+                            breakpoints={{
+                                300: { slidesPerView: 1 },
+                                375: { slidesPerView: 1.4 },
+                                480: { slidesPerView: 2 },
+                                768: { slidesPerView: 3 },
+                                1023: { slidesPerView: 3.3 },
+                            }}
+                            pagination={{ clickable: true }}
+                            watchOverflow
+                            modules={[Pagination, Scrollbar]}
+                            className={styles.mySwiper}
+                        >
+                            {images.map((src, i) => (
+                                <SwiperSlide key={i} className={styles.swiperSlide}>
+                                    <img
+                                        src={src}
+                                        alt={`Фото компании ${i + 1}`}
+                                        className={styles.swiperImage}
+                                    />
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    )}
+
+                    {hasAbout && <CompanyAbout text={aboutText} />}
+                </div>
+            )}
+
+            {/* Адрес */}
+            {activeTab === "address" && showAddressTab && (
                 <div className={styles.addressContainer}>
                     <div className={styles.mapContainer}>
-                        {/* Вставляем карту, например, через iframe */}
                         <iframe
-                            src="https://yandex.ru/map-widget/v1/?um=constructor%3Aec15a3f7f0c785baef5e4dbd29952fd5d68b2b1319c0a78be00b53d73e94db70&amp;source=constructor"
+                            src={`https://yandex.ru/map-widget/v1/?text=${encodeURIComponent(address)}`}
                             width="100%"
                             height="400"
                             frameBorder="0"
                             className={styles.map}
-                        ></iframe>
+                        />
                     </div>
-                    {/* <div className={styles.addressInfo}>
-                        <p>Санкт-Петербург, Шереметьевская ул., 17А</p>
-                        <p>Звёздная, 3,6 км</p>
-                        <p>Купчино, 4,1 км</p>
-                        <p>Открыто до 21:00</p>
-                        <button className={styles.phoneButton}>Показать телефон</button>
-                    </div> */}
+                    <div className={styles.addressInfo}>
+                        <p>{address}</p>
+                        <a
+                            href={`https://yandex.ru/maps/?text=${encodeURIComponent(address)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.openInMaps}
+                        >
+                            Открыть в Яндекс.Картах
+                        </a>
+                    </div>
                 </div>
             )}
         </div>
     );
 };
+
+function CompanyAbout({ text }: { text: string }) {
+    const [expanded, setExpanded] = useState(false);
+    return (
+        <div className={styles.companyText}>
+            <p className={expanded ? styles.aboutExpanded : styles.aboutCollapsed}>
+                {text}
+            </p>
+            <a onClick={() => setExpanded(v => !v)} className={styles.readMore}>
+                {expanded ? "Свернуть" : "Читать полностью"}
+            </a>
+        </div>
+    );
+}

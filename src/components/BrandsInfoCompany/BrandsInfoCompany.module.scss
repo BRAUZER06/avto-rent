@@ -168,3 +168,88 @@
     color: #ccc;
     font-size: 1rem;
 }
+
+
+
+
+
+.muted {
+  color: #c9c9c9;
+  font-weight: 600;
+}
+
+/* Соц. иконки в бренд-цветах */
+.socials {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0 0;
+}
+
+.socialIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+
+  svg { width: 18px; height: 18px; }
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(0,0,0,.25);
+    filter: brightness(1.02);
+  }
+}
+
+/* Брендовые цвета */
+.wa { background: #25D366; }         /* WhatsApp */
+.tg { background: #229ED9; }          /* Telegram */
+.web { background: #5e5e5e; }         /* Website нейтральный */
+
+/* Instagram — градиент */
+.ig {
+  background: linear-gradient(45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
+    #bc1888 100%);
+}
+
+/* Звонки */
+.callWrapper { position: relative; flex: 1; }
+
+.callDropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  background: #111;
+  border: 1px solid #2c2c2c;
+  border-radius: 8px;
+  padding: 6px;
+  z-index: 50;
+  box-shadow: 0 8px 18px rgba(0,0,0,.35);
+}
+
+.callItem {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 6px;
+  color: #eaeaea;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background .15s ease;
+
+  &:hover { background: #1d1d1d; }
+}
+
+.callLabel {
+  margin-left: 6px;
+  color: #a5a5a5;
+  font-size: 13px;
+}

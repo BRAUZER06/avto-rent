@@ -1,11 +1,11 @@
 import "../globals.scss";
 
 import { Header } from "@src/components/Header/Header";
-import { GoBackButton } from "@src/components/GoBackButton/GoBackButton";
 import MaxWidthWrapper from "@src/components/MaxWidthWrapper/MaxWidthWrapper";
 import { Footer } from "@src/components/Footer/Footer";
-import { Cookie } from "@src/components/Cookie/Cookie";
-import { WidgetAdvertisement } from "@src/components/WidgetAdvertisement/WidgetAdvertisement";
+// import { GoBackButton } from "@src/components/GoBackButton/GoBackButton";
+// import { WidgetAdvertisement } from "@src/components/WidgetAdvertisement/WidgetAdvertisement";
+// import { Cookie } from "@src/components/Cookie/Cookie";
 
 interface RootLayoutProps {
     children: React.ReactNode;
@@ -13,13 +13,22 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
     return (
-        <MaxWidthWrapper>
+        <div className="flex min-h-screen flex-col">
+            {/* Хедер на всю ширину */}
             <Header />
-            {/* <GoBackButton /> */}
-            {/* <WidgetAdvertisement /> */}
-            <main className="w-full">{children}</main>
+
+            {/* Ограниченный по ширине контент */}
+            <MaxWidthWrapper>
+                <main className="w-full flex-1">
+                    {/* <GoBackButton /> */}
+                    {/* <WidgetAdvertisement /> */}
+                    {children}
+                </main>
+            </MaxWidthWrapper>
+
+            {/* Футер на всю ширину */}
             <Footer />
-            {/*<Cookie /> */}
-        </MaxWidthWrapper>
+            {/* <Cookie /> */}
+        </div>
     );
 }

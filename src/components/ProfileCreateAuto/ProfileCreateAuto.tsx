@@ -24,31 +24,35 @@ import { createCar } from "@src/lib/api/carService";
 import { Notification, useNotification } from "../ui/Notification/Notification";
 import OptionCheckbox from "../ui/OptionCheckbox/OptionCheckbox";
 import { FiTrash2, FiPlus } from "react-icons/fi";
+import ImageTooltip from "../ui/ImageTooltip/ImageTooltip";
+
 const MAX_IMAGES = 25;
 
 export const ProfileCreateAuto = () => {
     const trimmedCategories: CategoryAutoItem[] = categoriesAuto.slice(1);
     const { notification, showNotification } = useNotification();
-    const [title, setTitle] = useState("Toyota Camry 3.5, белая, 2022");
-    const [description, setDescription] = useState(
-        "Комфортный седан с мощным двигателем и просторным салоном."
-    );
-    const [location, setLocation] = useState("Назрань");
-    const [pricePerDay, setPricePerDay] = useState("3500");
-    const [fuel, setFuel] = useState("бензин");
-    const [transmission, setTransmission] = useState("автомат");
-    const [engineCapacity, setEngineCapacity] = useState("3.5");
-    const [horsepower, setHorsepower] = useState("249");
-    const [year, setYear] = useState("2022");
-    const [drive, setDrive] = useState("передний");
+
+    // ——— Пустые стартовые значения (без тестовых данных) ———
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [location, setLocation] = useState("");
+    const [pricePerDay, setPricePerDay] = useState("");
+    const [fuel, setFuel] = useState("");
+    const [transmission, setTransmission] = useState("");
+    const [engineCapacity, setEngineCapacity] = useState("");
+    const [horsepower, setHorsepower] = useState("");
+    const [year, setYear] = useState("");
+    const [drive, setDrive] = useState("");
     const [hasAirConditioner, setHasAirConditioner] = useState(false);
-    const [category, setCategory] = useState("premium");
-    const [images, setImages] = useState([]);
+    const [category, setCategory] = useState("");
+
+    const [images, setImages] = useState<any[]>([]);
+    // Оставляем только одно поле «Аренда авто на день» и его логику
     const [customFields, setCustomFields] = useState([
         { key: "Аренда авто на день", value: "" },
     ]);
+
     const [isLoading, setIsLoading] = useState(false);
-    console.log("customFields", customFields);
 
     const { getRootProps, getInputProps } = useDropzone({
         accept: { "image/*": [] },
@@ -65,7 +69,7 @@ export const ProfileCreateAuto = () => {
         maxFiles: MAX_IMAGES,
     });
 
-    const removeImage = id => {
+    const removeImage = (id: string) => {
         setImages(prev => prev.filter(img => img.id !== id));
     };
 
@@ -77,8 +81,9 @@ export const ProfileCreateAuto = () => {
         })
     );
 
-    const handleDragEnd = event => {
+    const handleDragEnd = (event: any) => {
         const { active, over } = event;
+        if (!over) return;
         if (active.id !== over.id) {
             const oldIndex = images.findIndex(img => img.id === active.id);
             const newIndex = images.findIndex(img => img.id === over.id);
@@ -90,7 +95,11 @@ export const ProfileCreateAuto = () => {
         setCustomFields([...customFields, { key: "", value: "" }]);
     };
 
-    const handleChangeCustomField = (index, field, value) => {
+    const handleChangeCustomField = (
+        index: number,
+        field: "key" | "value",
+        value: string
+    ) => {
         const updated = [...customFields];
         updated[index][field] = value;
         setCustomFields(updated);
@@ -102,6 +111,7 @@ export const ProfileCreateAuto = () => {
         };
     }, [images]);
 
+    // Автозаполнение первого поля «Аренда авто на день» из цены
     useEffect(() => {
         setCustomFields(prev => {
             const updatedFields = [...prev];
@@ -130,10 +140,7 @@ export const ProfileCreateAuto = () => {
             { field: drive, name: "Привод" },
         ];
 
-        const emptyFields = requiredFields
-            .filter(item => !item.field)
-            .map(item => item.name);
-
+        const emptyFields = requiredFields.filter(i => !i.field).map(i => i.name);
         if (emptyFields.length > 0) {
             showNotification(
                 `Заполните обязательные поля: ${emptyFields.join(", ")}`,
@@ -166,14 +173,14 @@ export const ProfileCreateAuto = () => {
             formData.append("has_air_conditioner", hasAirConditioner.toString());
             formData.append("description", description);
 
-            // Кастомные поля
+            // Кастомные поля (первое — «Аренда авто на день» — остаётся)
             customFields.forEach(({ key, value }) => {
                 if (key.trim() !== "" && value.trim() !== "") {
                     formData.append(`custom_fields[${key}]`, value);
                 }
             });
 
-            // Изображения
+            // Изображения + позиции
             const sortedImages = [...images];
             sortedImages.forEach(img => {
                 if (img.file) formData.append("car_images[]", img.file);
@@ -182,25 +189,22 @@ export const ProfileCreateAuto = () => {
             formData.append(
                 "image_positions",
                 JSON.stringify(
-                    sortedImages.map((img, index) => ({
-                        id: null,
-                        position: index + 1,
-                    }))
+                    sortedImages.map((_, index) => ({ id: null, position: index + 1 }))
                 )
             );
 
             await createCar(formData);
             showNotification("Автомобиль успешно добавлен!", "success");
 
-            // Сброс формы
+            // Сброс формы к пустым значениям (кроме ключа первого поля)
             setTitle("");
             setLocation("");
             setPricePerDay("");
-            setCategory("premium");
+            setCategory("");
             setImages([]);
             setCustomFields([{ key: "Аренда авто на день", value: "" }]);
-            setFuel("бензин");
-            setDrive("задний");
+            setFuel("");
+            setDrive("");
             setHorsepower("");
             setDescription("");
             setEngineCapacity("");
@@ -213,13 +217,14 @@ export const ProfileCreateAuto = () => {
             setIsLoading(false);
         }
     };
+
     const handleCheckboxChange = (id: string) => {
         if (id === "air_conditioner") {
             setHasAirConditioner(prev => !prev);
         }
     };
-    const handleRemoveCustomField = index => {
-        // Удаляем только если это не первое поле
+
+    const handleRemoveCustomField = (index: number) => {
         if (index > 0) {
             setCustomFields(prev => prev.filter((_, i) => i !== index));
         }
@@ -238,7 +243,7 @@ export const ProfileCreateAuto = () => {
                 />
                 <input
                     className="w-full border rounded px-4 py-2 bg-zinc-800 text-white border-zinc-600"
-                    placeholder="Город (например: Назрань)"
+                    placeholder="Город (например: Грозный)"
                     value={location}
                     onChange={e => setLocation(e.target.value)}
                 />
@@ -249,11 +254,16 @@ export const ProfileCreateAuto = () => {
                     value={pricePerDay}
                     onChange={e => setPricePerDay(e.target.value)}
                 />
+
+                {/* Категория с плейсхолдером */}
                 <select
                     className="w-full border rounded px-4 py-2 bg-zinc-800 text-white border-zinc-600"
                     value={category}
                     onChange={e => setCategory(e.target.value)}
                 >
+                    <option value="" disabled>
+                        Выберите категорию
+                    </option>
                     {trimmedCategories.map(cat => (
                         <option key={cat.id} value={cat.slug}>
                             {cat.title}
@@ -264,7 +274,15 @@ export const ProfileCreateAuto = () => {
 
             <div>
                 <p className="font-semibold mb-2">
-                    Фотографии ({images.length}/{MAX_IMAGES})
+                    Фотографии ({images.length}/{MAX_IMAGES}){" "}
+                    <p className="text-sm text-zinc-200">
+                        Пример как нужно&nbsp;фотографировать&nbsp;авто&nbsp;
+                        <ImageTooltip
+                            text="вот тут"
+                            src="/assets/redactAvto/vertikalPhone.webp"
+                            alt="Toyota Camry, белая, вид спереди"
+                        />{" "}
+                    </p>
                 </p>
                 <div
                     {...getRootProps()}
@@ -300,35 +318,49 @@ export const ProfileCreateAuto = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Топливо */}
                 <select
                     className="border rounded px-4 py-2 bg-zinc-800 text-white border-zinc-600"
                     value={fuel}
                     onChange={e => setFuel(e.target.value)}
                 >
+                    <option value="" disabled>
+                        Тип топлива
+                    </option>
                     <option value="бензин">Бензин</option>
                     <option value="дизель">Дизель</option>
                     <option value="гибрид">Гибрид</option>
                     <option value="электро">Электро</option>
                 </select>
+
+                {/* Трансмиссия */}
                 <select
                     className="border rounded px-4 py-2 bg-zinc-800 text-white border-zinc-600"
                     value={transmission}
                     onChange={e => setTransmission(e.target.value)}
                 >
+                    <option value="" disabled>
+                        Коробка передач
+                    </option>
                     <option value="механика">Механика</option>
                     <option value="автомат">Автомат</option>
                     <option value="вариатор">Вариатор</option>
                 </select>
 
+                {/* Привод */}
                 <select
                     className="border rounded px-4 py-2 bg-zinc-800 text-white border-zinc-600"
                     value={drive}
                     onChange={e => setDrive(e.target.value)}
                 >
+                    <option value="" disabled>
+                        Привод
+                    </option>
                     <option value="передний">Передний</option>
                     <option value="задний">Задний</option>
                     <option value="полный">Полный</option>
                 </select>
+
                 <input
                     className="border rounded px-4 py-2 bg-zinc-800 text-white border-zinc-600"
                     placeholder="Объём двигателя"
@@ -347,24 +379,13 @@ export const ProfileCreateAuto = () => {
                     value={year}
                     onChange={e => setYear(e.target.value)}
                 />
+
                 <OptionCheckbox.MobileVersionTwo
                     id="air_conditioner"
                     title="Есть кондиционер"
                     checked={hasAirConditioner}
                     handleCheckboxChange={handleCheckboxChange}
                 />
-                {/* <OptionCheckbox.Desktop
-                    id="air_conditioner"
-                    title="Есть кондиционер"
-                    checked={hasAirConditioner}
-                    handleCheckboxChange={handleCheckboxChange}
-                /> */}
-                {/* <OptionCheckbox.MobileVersionOne
-                    id="air_conditioner"
-                    title="Есть кондиционер"
-                    checked={hasAirConditioner}
-                    handleCheckboxChange={handleCheckboxChange}
-                /> */}
             </div>
 
             <div className="space-y-2 mt-6 mb-6 p-4 border rounded-md border-zinc-700 bg-zinc-900">
@@ -395,7 +416,6 @@ export const ProfileCreateAuto = () => {
                                 disabled={index === 0} // Первое поле нельзя редактировать
                             />
                         </div>
-                        {/* Кнопка удаления только для не-первых полей */}
                         {index > 0 && (
                             <button
                                 type="button"
@@ -427,7 +447,7 @@ export const ProfileCreateAuto = () => {
                 </p>
                 <textarea
                     className="w-full h-[100px] border rounded px-4 py-2 bg-zinc-800 text-white border-zinc-600 resize-none"
-                    placeholder="Просторный и комфортный седан с мощным двигателем и плавным ходом. Идеален для как городских поездок, так и дальних путешествий. В машине есть всё необходимое: кондиционер, современная мультимедиа, большой багажник и отличная шумоизоляция. Авто ухожено, салон чистый, некурящий."
+                    placeholder="Просторный и комфортный седан с мощным двигателем и плавным ходом..."
                     value={description}
                     onChange={e => setDescription(e.target.value)}
                 />
@@ -470,6 +490,7 @@ export const ProfileCreateAuto = () => {
                     )}
                 </button>
             </div>
+
             <Notification notification={notification} />
         </div>
     );

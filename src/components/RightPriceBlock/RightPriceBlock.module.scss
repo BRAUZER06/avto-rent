@@ -272,11 +272,56 @@
     }
   }
   
-  .links {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.links {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  color: #fff;                /* по умолчанию белый текст */
+  transition: transform .12s ease, filter .2s ease;
+
+  &:hover { filter: brightness(.95); }
+  &:active { transform: translateY(1px); }
+
+  /* иконка внутри */
+  .icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
   }
+}
+
+
+.wa  { background: #25D366; }                  /* WhatsApp */
+.tg  { background: #229ED9; }                  /* Telegram */
+.site { background: #2d3748; }                 /* Сайт (нейтральный тёмный) */
+
+/* Instagram — градиент */
+.ig {
+  background: linear-gradient(45deg, #f09433, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888);
+}
+
+/* (необязательно) компактнее на узких экранах */
+@media (max-width: 360px) {
+  .pill {
+    padding: 9px 10px;
+    font-size: 13px;
+    .icon { width: 16px; height: 16px; }
+  }
+}
+
+
   
   .linkRow {
     display: flex;

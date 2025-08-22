@@ -69,6 +69,57 @@
   text-align: center;
 }
 
-.calendarBlock{
-  margin-top: 40px;
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* Общий стиль «пилюль» */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform .12s ease, filter .2s ease;
+
+  &:hover { filter: brightness(.95); }
+  &:active { transform: translateY(1px); }
+
+  .icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+}
+
+/* Брендовые цвета */
+.call       { background: #28a745; }  /* звонок */
+.message    { background: #229ED9; }  /* Telegram по умолчанию */
+.calendarBtn{ background: #3d91ff; margin-top: 12px; }
+
+/* Если хочешь жёстко окрасить «Написать» в цвет WhatsApp,
+   когда TG нет — можно добавить модификатор динамически.
+   Либо так (на будущее):
+   .message--wa { background:#25D366; }
+*/
+
+.calendarBlock {
+  margin-top: 24px;
+}
+
+/* Мелкая адаптация */
+@media (max-width: 360px) {
+  .pill { font-size: 15px; padding: 11px; }
+  .pill .icon { width: 16px; height: 16px; }
 }

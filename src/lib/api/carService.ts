@@ -5,18 +5,17 @@ import { getAccessToken } from "./tokenService";
 
 const baseUrl = apiUrlHelper();
 
-type ListParams = { page?: number; per_page?: number; search?: string, region?:string };
+type ListParams = { page?: number; per_page?: number; search?: string; region?: string };
 
 const qs = (params?: ListParams) => {
     const sp = new URLSearchParams();
     if (params?.page) sp.set("page", String(params.page));
     if (params?.per_page) sp.set("per_page", String(params.per_page));
-    if (params?.search) sp.set("q", params.search); // поиск
+    if (params?.search) sp.set("search", params.search); // поиск
     if (params?.region) sp.set("region", params.region); // 👈 добавляем регион
     const s = sp.toString();
     return s ? `?${s}` : "";
 };
-
 
 // 🔹 GET /cars — все машины
 export const getAllCars = async (params?: ListParams) => {
@@ -28,13 +27,12 @@ export const getAllCars = async (params?: ListParams) => {
 // 🔹 GET /cars?category=...
 export const getCarsCategory = async (categoryCar: string, params?: ListParams) => {
     console.log("params", params);
-    
+
     const url = `${baseUrl}/cars?category=${encodeURIComponent(categoryCar)}${qs(params).replace("?", "&")}`;
     const response = await fetchWithAuth(url);
     if (!response.ok) throw new Error("Не удалось загрузить список машин");
     return response.json(); // { cars, meta }
 };
-
 
 // 🔹 GET /cars/my — мои машины
 export const getMyCars = async () => {

@@ -37,6 +37,9 @@ export const HeaderRightBlock = () => {
     const handleClick = () => {
         router.push("/login");
     };
+    const handleClickHeart = () => {
+        router.push("/favorites");
+    };
 
     console.log(profile);
 
@@ -46,7 +49,7 @@ export const HeaderRightBlock = () => {
                 {isAuthenticated ? (
                     <>
                         {showHeartIcon && (
-                            <div onClick={handleClick} className={style.heart}>
+                            <div onClick={handleClickHeart} className={style.heart}>
                                 <Image
                                     width={20}
                                     height={20}
@@ -90,8 +93,9 @@ export const HeaderRightBlock = () => {
                     </>
                 ) : (
                     <>
-                        <div onClick={handleClick} className={style.heart}>
+                        <div className={style.heart}>
                             <Image
+                                onClick={handleClickHeart}
                                 width={20}
                                 height={20}
                                 src="/images/headerImg/heart.svg"
@@ -99,7 +103,11 @@ export const HeaderRightBlock = () => {
                             />
                         </div>
 
-                        <Link href="/login" className={style.createAds}>
+                        <Link
+                            onClick={handleClick}
+                            href="/login"
+                            className={style.createAds}
+                        >
                             Войти
                         </Link>
                     </>

@@ -4,7 +4,7 @@ import { useState } from "react";
 import styles from "./RegisterPage.module.scss";
 import { signup } from "@src/lib/api/auth";
 import { useRouter } from "next/navigation";
-import { regions } from "@src/data/regions";
+import { regionsFull } from "@src/data/regions";
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -48,8 +48,6 @@ export default function RegisterPage() {
             <form onSubmit={handleRegister} className={styles.form}>
                 <h1 className={styles.title}>Регистрация</h1>
 
-              
-
                 <input
                     type="text"
                     placeholder="Название компании"
@@ -75,7 +73,7 @@ export default function RegisterPage() {
                     className={styles.input}
                 >
                     <option value="">Выберите регион</option>
-                    {regions.map(r => (
+                    {regionsFull?.map(r => (
                         <option key={r.id} value={r.id}>
                             {r.label}
                         </option>

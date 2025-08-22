@@ -5,41 +5,35 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { FaWhatsapp, FaTelegramPlane, FaInstagram, FaGlobe } from "react-icons/fa";
 import style from "./RightPriceBlock.module.scss";
-import Link from "next/link";
 import { CalendarRental } from "../ui/CalendarRental/CalendarRental";
 import { OwnerInfoCard } from "../ui/OwnerInfoCard/OwnerInfoCard";
 
 interface ContactInfo {
     phone_1?: { label?: string; number?: string };
     phone_2?: { label?: string; number?: string };
-    whatsapp?: string; // может быть номером ИЛИ уже готовым URL
-    telegram?: string; // может быть @ник / ник / URL
-    instagram?: string; // может быть ник / URL
-    website?: string; // URL
+    whatsapp?: string;
+    telegram?: string;
+    instagram?: string;
+    website?: string;
     region?: string | null;
 }
-
 interface OwnerInfo {
     company_name?: string;
     company_avatar_url?: string;
-    created_date?: string; // или Date, зависит от бэка
+    created_date?: string;
     address?: string;
 }
-
 interface RightPriceBlockProps {
     price?: string | number;
     contacts?: ContactInfo;
     customFields?: Array<{ key: string; value: string }>;
-    owner?: OwnerInfo; // <-- добавил сюда
+    owner?: OwnerInfo;
 }
 
-// ===== helpers =====
-
-// чистим номер для отображения + форматируем RU (+7 XXX XXX-XX-XX), если сможем
+/** helpers */
 function formatPhoneDisplay(raw?: string): string {
     if (!raw) return "";
     const digits = raw.replace(/[^\d]/g, "");
-    // приводим 8XXXXXXXXXX -> +7XXXXXXXXXX
     const e164 =
         digits.length === 11 && digits.startsWith("8")
             ? `+7${digits.slice(1)}`
@@ -51,7 +45,6 @@ function formatPhoneDisplay(raw?: string): string {
                   ? `+${digits}`
                   : raw;
 
-    // Красиво отформатируем русские номера (11 цифр с кодом страны 7)
     const only = e164.replace(/[^\d]/g, "");
     if (only.length === 11 && only.startsWith("7")) {
         const p1 = only.slice(1, 4);
@@ -62,8 +55,6 @@ function formatPhoneDisplay(raw?: string): string {
     }
     return e164;
 }
-
-// для tel: лучше оставить +E.164, если можем
 function buildTelHref(raw?: string): string | null {
     if (!raw) return null;
     let digits = raw.replace(/[^\d]/g, "");
@@ -73,26 +64,21 @@ function buildTelHref(raw?: string): string | null {
     if (raw.trim().startsWith("+")) return `tel:${raw.trim()}`;
     return `tel:+${digits}`;
 }
-
-// wa.me принимает ТОЛЬКО цифры без плюса
 function buildWhatsappHref(raw?: string): string | null {
     if (!raw) return null;
     const s = raw.trim();
-    if (/^https?:\/\//i.test(s)) return s; // если уже URL — используем как есть
+    if (/^https?:\/\//i.test(s)) return s;
     let digits = s.replace(/[^\d]/g, "");
     if (!digits) return null;
     if (digits.length === 11 && digits.startsWith("8")) digits = `7${digits.slice(1)}`;
     return `https://wa.me/${digits}`;
 }
-
-// Telegram: поддержим @ник / ник / URL
 function parseTelegram(raw?: string): { username?: string; url?: string } {
     if (!raw) return {};
     const s = raw.trim();
     if (/^https?:\/\//i.test(s)) {
         try {
             const u = new URL(s);
-            // t.me/<username> или telegram.me/<username>
             const parts = u.pathname.split("/").filter(Boolean);
             if (parts.length >= 1) {
                 const username = parts[0].replace(/^@/, "");
@@ -106,8 +92,6 @@ function parseTelegram(raw?: string): { username?: string; url?: string } {
     const username = s.replace(/^@/, "");
     return { username, url: `https://t.me/${username}` };
 }
-
-// Instagram: поддержим ник / URL
 function parseInstagram(raw?: string): { handle?: string; url?: string } {
     if (!raw) return {};
     const s = raw.trim();
@@ -115,15 +99,11 @@ function parseInstagram(raw?: string): { handle?: string; url?: string } {
     const handle = s.replace(/^@/, "");
     return { handle, url: `https://instagram.com/${handle}` };
 }
-
-// ensure protocol для сайта
 function ensureHttp(raw?: string): string | null {
     if (!raw) return null;
     if (/^https?:\/\//i.test(raw)) return raw;
     return `https://${raw}`;
 }
-
-// цена: возьмём customFields "Аренда авто на день" или fallback на price
 function buildPriceText(
     price?: string | number,
     customFields?: Array<{ key: string; value: string }>
@@ -134,9 +114,7 @@ function buildPriceText(
     const src = cfVal ?? price;
     if (src == null || src === "") return "Цена не указана";
     const str = String(src);
-    // если уже содержит ₽ — покажем как есть
     if (str.includes("₽")) return str;
-    // вытащим число и покажем ₽
     const num = Number(str.replace(/[^\d.,]/g, "").replace(",", "."));
     if (Number.isFinite(num)) return `${num.toLocaleString("ru-RU")} ₽`;
     return str;
@@ -146,8 +124,10 @@ export const RightPriceBlock = ({
     price,
     contacts,
     customFields,
-    owner, 
+    owner,
 }: RightPriceBlockProps) => {
+    console.log("owner", owner);
+
     const [showContactInfo, setShowContactInfo] = useState(false);
     const [dateRange, setDateRange] = useState([
         { startDate: new Date(), endDate: addDays(new Date(), 1), key: "selection" },
@@ -176,6 +156,10 @@ export const RightPriceBlock = ({
     );
     const siteHref = useMemo(() => ensureHttp(contacts?.website), [contacts?.website]);
 
+    const brandHref = owner?.company_name
+        ? `/brands/${encodeURIComponent(String(owner?.company_name))}`
+        : undefined;
+
     return (
         <div className={style.containerPrice}>
             <span className={style.price}>{priceText}</span>
@@ -196,16 +180,14 @@ export const RightPriceBlock = ({
                 <p>Написать</p>
             </div>
 
-            <Link href="/profile">
-                <div className={style.userInfo}>
-                    <OwnerInfoCard
-                        owner={owner}
-                        size="md"
-                        layout="row"
-                        href={`/brands/${encodeURIComponent(String(owner?.company_name))}`}
-                    />
-                </div>
-            </Link>
+            <div className={style.userInfo}>
+                <OwnerInfoCard
+                    owner={owner}
+                    size="md"
+                    layout="row"
+                    href={brandHref} // <-- БЕЗ /brands/undefined
+                />
+            </div>
 
             {showContactInfo && (
                 <>
@@ -221,68 +203,74 @@ export const RightPriceBlock = ({
                             </div>
                         )}
 
+                        {/* Пилюли-иконки */}
                         <div className={style.links}>
                             {waHref && (
-                                <div className={style.linkRow}>
+                                <a
+                                    href={waHref}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`${style.pill} ${style.wa}`}
+                                    aria-label="Написать в WhatsApp"
+                                >
                                     <FaWhatsapp className={style.icon} />
-                                    <a
-                                        href={waHref}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        WhatsApp
-                                    </a>
-                                </div>
+                                    <span>WhatsApp</span>
+                                </a>
                             )}
 
                             {tgParsed?.url && (
-                                <div className={style.linkRow}>
+                                <a
+                                    href={tgParsed.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`${style.pill} ${style.tg}`}
+                                    aria-label="Написать в Telegram"
+                                >
                                     <FaTelegramPlane className={style.icon} />
-                                    <a
-                                        href={tgParsed.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
+                                    <span>
                                         Telegram
                                         {tgParsed.username
                                             ? `: @${tgParsed.username}`
                                             : ""}
-                                    </a>
-                                </div>
+                                    </span>
+                                </a>
                             )}
 
                             {igParsed?.url && (
-                                <div className={style.linkRow}>
+                                <a
+                                    href={igParsed.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`${style.pill} ${style.ig}`}
+                                    aria-label="Открыть Instagram"
+                                >
                                     <FaInstagram className={style.icon} />
-                                    <a
-                                        href={igParsed.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
+                                    <span>
                                         Instagram
                                         {igParsed.handle ? `: @${igParsed.handle}` : ""}
-                                    </a>
-                                </div>
+                                    </span>
+                                </a>
                             )}
 
                             {siteHref && (
-                                <div className={style.linkRow}>
+                                <a
+                                    href={siteHref}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`${style.pill} ${style.site}`}
+                                    aria-label="Открыть сайт"
+                                >
                                     <FaGlobe className={style.icon} />
-                                    <a
-                                        href={siteHref}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        Сайт
-                                    </a>
-                                </div>
+                                    <span>Сайт</span>
+                                </a>
                             )}
                         </div>
                     </div>
 
-                    <div className={style.calendarBlock}>
-                        <CalendarRental />
-                    </div>
+                    {/* Календарь можно вернуть при необходимости */}
+                    {/* <div className={style.calendarBlock}>
+            <CalendarRental />
+          </div> */}
                 </>
             )}
         </div>

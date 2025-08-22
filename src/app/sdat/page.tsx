@@ -1,28 +1,236 @@
+// app/[[region]]/sdat/page.tsx
 import Link from "next/link";
+import Script from "next/script";
+import { notFound, redirect } from "next/navigation";
+import { regionsFull } from "@src/data/regions";
 
-export const metadata = {
-    title: "Сдать машину в аренду — Условия, Доход и Преимущества",
-    description:
-        "Сдавайте автомобиль в аренду и зарабатывайте от 35 000 ₽ в месяц. Простой процесс, надёжная поддержка, индивидуальные условия и защита.",
-    keywords:
-        "сдать машину в аренду, аренда авто, заработок на автомобиле, пассивный доход, Уфа, Назрань, Ингушетия, сдача авто частнику",
-    openGraph: {
-        title: "Сдайте автомобиль в аренду — до 660 000 ₽ в год",
-        description:
-            "На нашей платформе вы можете сдавать авто в аренду с гибкими условиями, полным сопровождением и стабильным доходом.",
-        type: "website",
-        locale: "ru_RU",
-    },
+// --- Настройки ISR (обновление метаданных/OG раз в N сек) ---
+export const revalidate = 600;
+
+// Валидные регионы из твоего справочника
+const VALID_REGIONS = new Set(
+    regionsFull.filter(r => r.name && r.name.trim() !== "").map(r => r.name)
+);
+
+// Для SSG: страницы без региона и с каждым регионом
+export async function generateStaticParams() {
+    const withRegion = regionsFull
+        .map(r => r.name)
+        .filter(Boolean)
+        .map(region => ({ region }));
+    return [{}, ...withRegion]; // {} — маршрут без региона: /sdat
+}
+
+// Названия регионов (И.п.) и формы «в …» (П.п.)
+const REGION_RU: Record<string, string> = {
+    ingushetia: "Ингушетия",
+    chechnya: "Чечня",
+    dagestan: "Дагестан",
+    "north-ossetia": "Северная Осетия",
+    "kabardino-balkaria": "Кабардино-Балкария",
+    "karachay-cherkessia": "Карачаево-Черкесия",
+    stavropol: "Ставрополь",
+};
+const REGION_PREP: Record<string, string> = {
+    ingushetia: "Ингушетии",
+    chechnya: "Чечне",
+    dagestan: "Дагестане",
+    "north-ossetia": "Северной Осетии",
+    "kabardino-balkaria": "Кабардино-Балкарии",
+    "karachay-cherkessia": "Карачаево-Черкесии",
+    stavropol: "Ставрополье",
 };
 
-export default function CarRentalPage() {
+// Динамические метаданные (title, description, og, canonical)
+export async function generateMetadata({
+    params,
+    searchParams,
+}: {
+    params: { region?: string };
+    searchParams: Record<string, string | string[] | undefined>;
+}) {
+    const region = params?.region;
+    const hasSearch = Boolean(
+        Object.keys(searchParams || {}).length && (searchParams as any).search
+    );
+
+    let title = "Сдать машину в аренду — условия, доход и преимущества";
+    let description =
+        "Сдавайте автомобиль в аренду и зарабатывайте от 35 000 ₽ в месяц. Простой процесс, поддержка, индивидуальные условия и защита.";
+    let path = "/sdat";
+
+    if (region) {
+        if (!VALID_REGIONS.has(region)) {
+            // если прилетел неизвестный регион — канонизируем на общую
+            return {
+                title,
+                description,
+                alternates: { canonical: "/sdat" },
+                robots: hasSearch ? { index: false, follow: true } : undefined,
+                openGraph: {
+                    title,
+                    description,
+                    url: "/sdat",
+                    type: "website",
+                    locale: "ru_RU",
+                },
+            };
+        }
+        const rPrep = REGION_PREP[region] ?? region;
+        const rNom = REGION_RU[region] ?? region;
+        title = `Сдать авто в аренду в ${rNom} — условия и доход`;
+        description = `Разместите автомобиль и сдавайте его в ${rPrep}: от 35 000 ₽ в месяц, понятные условия, проверка арендаторов и поддержка.`;
+        path = `/${region}/sdat`;
+    }
+
+    return {
+        title,
+        description,
+        // Метатег keywords можно оставить, но SEO-ценности почти нет
+        keywords:
+            "сдать машину в аренду, сдать авто в аренду, сдача авто частнику, пассивный доход, аренда авто платформа",
+        alternates: { canonical: path },
+        robots: hasSearch ? { index: false, follow: true } : undefined,
+        openGraph: {
+            title,
+            description,
+            url: path,
+            type: "website",
+            locale: "ru_RU",
+            // при желании добавь image
+            // images: [{ url: "/og/sdat.jpg", width: 1200, height: 630, alt: title }],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+        },
+    };
+}
+
+// JSON-LD: Услуга «Сдать авто», FAQ, Хлебные крошки
+function SeoJsonLd({ region }: { region?: string }) {
+    const path = region ? `/${region}/sdat` : "/sdat";
+    const rPrep = region ? REGION_PREP[region] ?? region : undefined;
+    const rNom = region ? REGION_RU[region] ?? region : undefined;
+
+    const serviceLd = {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: "Сдать автомобиль в аренду",
+        serviceType: "Car rental listing",
+        url: path,
+        areaServed: rNom ? [{ "@type": "AdministrativeArea", name: rNom }] : undefined,
+        provider: {
+            "@type": "Organization",
+            name: "RentAvtoKavkaz", // при желании подставь реальное название
+            url: "/",
+        },
+        offers: {
+            "@type": "Offer",
+            availability: "https://schema.org/InStock",
+            priceCurrency: "RUB",
+        },
+    };
+
+    const faqLd = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: [
+            {
+                "@type": "Question",
+                name: "Сколько можно заработать, сдавая авто в аренду?",
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "В среднем от 35 000 до 80 000 ₽ в месяц — зависит от класса авто, состояния и спроса в регионе.",
+                },
+            },
+            {
+                "@type": "Question",
+                name: "Как происходит проверка арендаторов?",
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Мы используем ручную и автоматическую проверку с учётом истории, документов и риска использования в такси.",
+                },
+            },
+            {
+                "@type": "Question",
+                name: "Можно ли сдавать авто в такси?",
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Нет, коммерческие перевозки и работа в такси запрещены правилами площадки.",
+                },
+            },
+            {
+                "@type": "Question",
+                name: "Какие условия я могу задавать сам?",
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Вы сами определяете тарифы, депозит, пробег, условия передачи и возврата, а также можете отклонять заявки.",
+                },
+            },
+        ],
+    };
+
+    const crumbs = [
+        { "@type": "ListItem", position: 1, name: "Главная", item: "/" },
+        region
+            ? {
+                  "@type": "ListItem",
+                  position: 2,
+                  name: `Сдать авто (${rNom})`,
+                  item: path,
+              }
+            : { "@type": "ListItem", position: 2, name: "Сдать авто", item: path },
+    ].filter(Boolean);
+
+    const breadcrumbLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: crumbs,
+    };
+
+    return (
+        <>
+            <Script
+                id="ld-service-sdat"
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }}
+            />
+            <Script
+                id="ld-faq-sdat"
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+            />
+            <Script
+                id="ld-breadcrumbs-sdat"
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+            />
+        </>
+    );
+}
+
+export default function CarRentalPage({ params }: { params: { region?: string } }) {
+    const region = params?.region;
+
+    // Если передан невалидный регион — редиректим на общую /sdat
+    if (region && !VALID_REGIONS.has(region)) {
+        redirect("/sdat");
+    }
+
+    const rPrep = region ? REGION_PREP[region] ?? region : null; // «в Ингушетии»
+    const cityText = rPrep ? `в ${rPrep}` : "в вашем городе";
+
     return (
         <main className="bg-[#191919] text-white">
+            <SeoJsonLd region={region} />
+
             {/* Hero Section */}
             <section className="bg-gradient-to-r from-[#191919] to-blue-950 py-16 px-4 text-center">
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                    Сдавайте свою машину в аренду в{" "}
-                    <span className="text-blue-400">Вашем городе</span>
+                    Сдавайте свою машину в аренду{" "}
+                    <span className="text-blue-400">{cityText}</span>
                 </h1>
                 <p className="text-2xl text-blue-300 font-semibold mb-6">
                     и зарабатывайте от <span className="text-3xl">35 000 ₽/мес.</span>
@@ -35,8 +243,11 @@ export default function CarRentalPage() {
                 </p>
             </section>
 
+            {/* Earnings Section */}
             <section className="py-16 px-4 text-center">
-                <h2 className="text-3xl font-bold mb-12">Сколько вы заработаете?</h2>
+                <h2 className="text-3xl font-bold mb-12">
+                    Сколько вы заработаете {rPrep ? `в ${rPrep}` : ""}?
+                </h2>
 
                 <div className="flex justify-center gap-4 mb-12 flex-wrap">
                     {["Средний класс", "Отечественные", "Премиум"].map(type => (
@@ -52,132 +263,79 @@ export default function CarRentalPage() {
                 {/* Средний класс */}
                 <h3 className="text-2xl font-semibold mb-6 text-left">Средний класс</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                    <div className="p-4 rounded-xl border border-gray-700 bg-[#1e1e1e] text-left">
-                        <div className="font-bold text-lg mb-1">
-                            Toyota Camry <span className="text-gray-400">2020</span>
-                        </div>
-                        <div className="text-xl font-semibold">
-                            65 000 ₽{" "}
-                            <span className="text-sm text-gray-400">в месяц</span>
-                        </div>
-                        <div className="text-blue-400 font-bold mt-2">
-                            780 000 ₽ <span className="text-sm">в год</span>
-                        </div>
-                    </div>
-                    <div className="p-4 rounded-xl border border-gray-700 bg-[#1e1e1e] text-left">
-                        <div className="font-bold text-lg mb-1">
-                            Kia K5 <span className="text-gray-400">2021</span>
-                        </div>
-                        <div className="text-xl font-semibold">
-                            60 000 ₽{" "}
-                            <span className="text-sm text-gray-400">в месяц</span>
-                        </div>
-                        <div className="text-blue-400 font-bold mt-2">
-                            720 000 ₽ <span className="text-sm">в год</span>
-                        </div>
-                    </div>
-                    <div className="p-4 rounded-xl border border-gray-700 bg-[#1e1e1e] text-left">
-                        <div className="font-bold text-lg mb-1">
-                            Hyundai Sonata <span className="text-gray-400">2019</span>
-                        </div>
-                        <div className="text-xl font-semibold">
-                            55 000 ₽{" "}
-                            <span className="text-sm text-gray-400">в месяц</span>
-                        </div>
-                        <div className="text-blue-400 font-bold mt-2">
-                            660 000 ₽ <span className="text-sm">в год</span>
-                        </div>
-                    </div>
+                    <CardEarning
+                        model="Toyota Camry"
+                        year="2020"
+                        month="65 000 ₽"
+                        yearTotal="780 000 ₽"
+                    />
+                    <CardEarning
+                        model="Kia K5"
+                        year="2021"
+                        month="60 000 ₽"
+                        yearTotal="720 000 ₽"
+                    />
+                    <CardEarning
+                        model="Hyundai Sonata"
+                        year="2019"
+                        month="55 000 ₽"
+                        yearTotal="660 000 ₽"
+                    />
                 </div>
 
                 {/* Отечественные */}
                 <h3 className="text-2xl font-semibold mb-6 text-left">Отечественные</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                    <div className="p-4 rounded-xl border border-gray-700 bg-[#1e1e1e] text-left">
-                        <div className="font-bold text-lg mb-1">
-                            Lada Vesta <span className="text-gray-400">2022</span>
-                        </div>
-                        <div className="text-xl font-semibold">
-                            40 000 ₽{" "}
-                            <span className="text-sm text-gray-400">в месяц</span>
-                        </div>
-                        <div className="text-blue-400 font-bold mt-2">
-                            480 000 ₽ <span className="text-sm">в год</span>
-                        </div>
-                    </div>
-                    <div className="p-4 rounded-xl border border-gray-700 bg-[#1e1e1e] text-left">
-                        <div className="font-bold text-lg mb-1">
-                            Lada Granta <span className="text-gray-400">2021</span>
-                        </div>
-                        <div className="text-xl font-semibold">
-                            35 000 ₽{" "}
-                            <span className="text-sm text-gray-400">в месяц</span>
-                        </div>
-                        <div className="text-blue-400 font-bold mt-2">
-                            420 000 ₽ <span className="text-sm">в год</span>
-                        </div>
-                    </div>
-                    <div className="p-4 rounded-xl border border-gray-700 bg-[#1e1e1e] text-left">
-                        <div className="font-bold text-lg mb-1">
-                            Lada Priora <span className="text-gray-400">2023</span>
-                        </div>
-                        <div className="text-xl font-semibold">
-                            38 000 ₽{" "}
-                            <span className="text-sm text-gray-400">в месяц</span>
-                        </div>
-                        <div className="text-blue-400 font-bold mt-2">
-                            456 000 ₽ <span className="text-sm">в год</span>
-                        </div>
-                    </div>
+                    <CardEarning
+                        model="Lada Vesta"
+                        year="2022"
+                        month="40 000 ₽"
+                        yearTotal="480 000 ₽"
+                    />
+                    <CardEarning
+                        model="Lada Granta"
+                        year="2021"
+                        month="35 000 ₽"
+                        yearTotal="420 000 ₽"
+                    />
+                    <CardEarning
+                        model="Lada Priora"
+                        year="2023"
+                        month="38 000 ₽"
+                        yearTotal="456 000 ₽"
+                    />
                 </div>
 
                 {/* Премиум */}
                 <h3 className="text-2xl font-semibold mb-6 text-left">Премиум</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                    <div className="p-4 rounded-xl border border-gray-700 bg-[#1e1e1e] text-left">
-                        <div className="font-bold text-lg mb-1">
-                            Mercedes E-Class <span className="text-gray-400">2021</span>
-                        </div>
-                        <div className="text-xl font-semibold">
-                            80 000 ₽{" "}
-                            <span className="text-sm text-gray-400">в месяц</span>
-                        </div>
-                        <div className="text-blue-400 font-bold mt-2">
-                            960 000 ₽ <span className="text-sm">в год</span>
-                        </div>
-                    </div>
-                    <div className="p-4 rounded-xl border border-gray-700 bg-[#1e1e1e] text-left">
-                        <div className="font-bold text-lg mb-1">
-                            BMW 5 Series <span className="text-gray-400">2020</span>
-                        </div>
-                        <div className="text-xl font-semibold">
-                            78 000 ₽{" "}
-                            <span className="text-sm text-gray-400">в месяц</span>
-                        </div>
-                        <div className="text-blue-400 font-bold mt-2">
-                            936 000 ₽ <span className="text-sm">в год</span>
-                        </div>
-                    </div>
-                    <div className="p-4 rounded-xl border border-gray-700 bg-[#1e1e1e] text-left">
-                        <div className="font-bold text-lg mb-1">
-                            Mercedes W223 <span className="text-gray-400">2021</span>
-                        </div>
-                        <div className="text-xl font-semibold">
-                            95 000 ₽{" "}
-                            <span className="text-sm text-gray-400">в месяц</span>
-                        </div>
-                        <div className="text-blue-400 font-bold mt-2">
-                            1 140 000 ₽ <span className="text-sm">в год</span>
-                        </div>
-                    </div>
+                    <CardEarning
+                        model="Mercedes E-Class"
+                        year="2021"
+                        month="80 000 ₽"
+                        yearTotal="960 000 ₽"
+                    />
+                    <CardEarning
+                        model="BMW 5 Series"
+                        year="2020"
+                        month="78 000 ₽"
+                        yearTotal="936 000 ₽"
+                    />
+                    <CardEarning
+                        model="Mercedes W223"
+                        year="2021"
+                        month="95 000 ₽"
+                        yearTotal="1 140 000 ₽"
+                    />
                 </div>
 
                 <p className="mt-6 text-sm text-gray-400">
-                    Доход зависит от состояния автомобиля, пробега и региона.
+                    Доход зависит от состояния автомобиля, пробега и спроса{" "}
+                    {rPrep ? `в ${rPrep}` : "в регионе"}.
                 </p>
             </section>
 
-            {/* How it works Section */}
+            {/* How it works */}
             <section className="py-16 px-4 text-center bg-[#202020]">
                 <h2 className="text-3xl font-bold mb-10">Как это работает?</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -185,7 +343,7 @@ export default function CarRentalPage() {
                         {
                             step: "1",
                             title: "Заполняете условия",
-                            desc: "Фотографии, стоимость, депозит и другое описание.",
+                            desc: "Фотографии, стоимость, депозит и описание.",
                         },
                         {
                             step: "2",
@@ -212,11 +370,12 @@ export default function CarRentalPage() {
                 </div>
                 <Link href="/auth">
                     <button className="mt-10 px-6 py-3 bg-blue-600 text-white rounded-full text-lg font-semibold">
-                        Зарегистрироватья
+                        Зарегистрироваться
                     </button>
                 </Link>
             </section>
-            {/* Advantages Section */}
+
+            {/* Advantages */}
             <section className="bg-[#1a1a1a] text-white py-16 px-4">
                 <h2 className="text-3xl font-bold text-center mb-10">
                     Наши преимущества
@@ -225,19 +384,19 @@ export default function CarRentalPage() {
                     {[
                         {
                             title: "Минимальная стоимость размещения",
-                            desc: "Самые низкие цены в России за публикацию авто на нашей площадке.",
+                            desc: "Самые низкие цены в России за публикацию авто.",
                         },
                         {
                             title: "Честная конкуренция",
-                            desc: "Мы не продвигаем никого индивидуально — всё зависит от качества профиля и подхода.",
+                            desc: "Не продвигаем никого индивидуально — всё решает качество профиля.",
                         },
                         {
                             title: "Никакого такси",
-                            desc: "Запрещена сдача автомобиля в такси и другие коммерческие перевозки.",
+                            desc: "Запрещены коммерческие перевозки, включая такси.",
                         },
                         {
                             title: "Проверка арендаторов",
-                            desc: "Каждый пользователь проходит ручную и автоматическую службу проверки.",
+                            desc: "Ручная и автоматическая проверка для снижения рисков.",
                         },
                     ].map((item, i) => (
                         <div
@@ -250,7 +409,8 @@ export default function CarRentalPage() {
                     ))}
                 </div>
             </section>
-            {/* Personalization Section */}
+
+            {/* Personalization */}
             <section className="bg-[#202020] py-16 px-4">
                 <h2 className="text-3xl font-bold text-center mb-10">
                     Индивидуальный подход
@@ -259,19 +419,19 @@ export default function CarRentalPage() {
                     {[
                         {
                             title: "Ваше авто — вам решать",
-                            desc: "Вы сами задаёте тарифы, депозит, место передачи.",
+                            desc: "Вы задаёте тарифы, депозит, место передачи.",
                         },
                         {
                             title: "Продвижение через качество",
-                            desc: "Заполняйте профиль и поднимайтесь в выдаче — всё зависит от вас.",
+                            desc: "Заполняйте профиль и поднимайтесь в выдаче.",
                         },
                         {
                             title: "Гибкость условий аренды",
-                            desc: "Выбирайте, кому сдавать и на каких условиях. Всё под вашим контролем.",
+                            desc: "Выбирайте, кому сдавать и на каких условиях.",
                         },
                         {
                             title: "Прозрачная статистика",
-                            desc: "Следите за откликами и просмотрами вашего авто в личном кабинете.",
+                            desc: "Отклики и просмотры видны в личном кабинете.",
                         },
                     ].map((item, i) => (
                         <div
@@ -284,24 +444,25 @@ export default function CarRentalPage() {
                     ))}
                 </div>
             </section>
-            {/* Renter Types Section */}
+
+            {/* Renters */}
             <section className="py-16 px-4 text-center">
                 <h2 className="text-3xl font-bold mb-10">Кто будет вашим арендатором?</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
                     {[
                         {
                             title: "Семьи или друзья",
-                            desc: "Берут авто, чтобы съездить на дачу или в дом отдыха.",
+                            desc: "Поездки на дачу, в дом отдыха и по делам.",
                             img: "/sdam_page/famaly.png",
                         },
                         {
                             title: "Деловые люди",
-                            desc: "Часто командировки и рабочие поездки.",
+                            desc: "Командировки и рабочие поездки.",
                             img: "/sdam_page/buss.png",
                         },
                         {
                             title: "Путешественники",
-                            desc: "Аренда для поездок в другие города.",
+                            desc: "Поездки в другие города и регионы.",
                             img: "/sdam_page/travel.png",
                         },
                     ].map((item, i) => (
@@ -324,6 +485,56 @@ export default function CarRentalPage() {
                     ))}
                 </div>
             </section>
+
+            {/* Внутренняя перелинковка для релевантности */}
+            <section className="pb-16 px-4 text-center">
+                <div className="text-sm text-gray-400">
+                    Посмотрите также:{" "}
+                    <Link href="/avto" className="text-blue-400 underline">
+                        аренда авто
+                    </Link>
+                    {region && (
+                        <>
+                            {" "}
+                            в{" "}
+                            <Link
+                                href={`/${region}/avto/all`}
+                                className="text-blue-400 underline"
+                            >
+                                {REGION_PREP[region] ?? region}
+                            </Link>
+                        </>
+                    )}
+                    .
+                </div>
+            </section>
         </main>
+    );
+}
+
+// Вспомогательная карточка дохода (UI)
+function CardEarning({
+    model,
+    year,
+    month,
+    yearTotal,
+}: {
+    model: string;
+    year: string;
+    month: string;
+    yearTotal: string;
+}) {
+    return (
+        <div className="p-4 rounded-xl border border-gray-700 bg-[#1e1e1e] text-left">
+            <div className="font-bold text-lg mb-1">
+                {model} <span className="text-gray-400">{year}</span>
+            </div>
+            <div className="text-xl font-semibold">
+                {month} <span className="text-sm text-gray-400">в месяц</span>
+            </div>
+            <div className="text-blue-400 font-bold mt-2">
+                {yearTotal} <span className="text-sm">в год</span>
+            </div>
+        </div>
     );
 }

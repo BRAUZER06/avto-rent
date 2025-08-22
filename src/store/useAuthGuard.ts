@@ -1,26 +1,48 @@
+// src/lib/hooks/useAuthGuard.ts
 "use client";
 
-import { useEffect, startTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "./useAuthStore";
 import { getAccessToken } from "@src/lib/api/tokenService";
 import { fetchCompanyProfile } from "@src/lib/api/profileService";
 
-export const useAuthGuard = () => {
+export function useAuthGuard() {
     const router = useRouter();
-    const profile = useAuthStore(state => state.profile);
+    const pathname = usePathname();
+    const profile = useAuthStore(s => s.profile);
+    const clearProfile = useAuthStore(s => s.clearProfile);
+    const [checking, setChecking] = useState(true);
 
     useEffect(() => {
-        const token = getAccessToken();
-        if (!token) {
-            startTransition(() => router.replace("/login"));
-            return;
-        }
+        let cancelled = false;
 
-        if (!profile) {
-            fetchCompanyProfile().catch(() => {
-                startTransition(() => router.replace("/login"));
-            });
-        }
-    }, [profile, router]);
-};
+        (async () => {
+            const token = typeof window !== "undefined" ? getAccessToken() : null;
+
+            if (!token) {
+                clearProfile();
+                router.replace(`/login?next=${encodeURIComponent(pathname)}`);
+                return;
+            }
+
+            if (!profile) {
+                try {
+                    await fetchCompanyProfile();
+                } catch {
+                    clearProfile();
+                    router.replace(`/login?next=${encodeURIComponent(pathname)}`);
+                    return;
+                }
+            }
+
+            if (!cancelled) setChecking(false);
+        })();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [profile, router, pathname, clearProfile]);
+
+    return checking;
+}

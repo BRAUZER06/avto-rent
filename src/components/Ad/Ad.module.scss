@@ -363,29 +363,44 @@
 }
 
 
-.container {
-    &:hover .heartIconContainer {
-        color: #eaeaea;
-        opacity: 1;
-    }
-}
-
+/* базовое состояние: скрыто, цвет почти белый */
 .heartIconContainer {
-    filter: drop-shadow(0 0.2rem 0.25rem rgba(0, 0, 0, 0.6));
-    cursor: pointer;
-    position: absolute;
-    right: 15px;
-    top: 15px;
-    // color: #c8c8c8;
-    // color: #f63;
-    // color: #ff5515;
-
-    // color: var(--grey-text);
-    opacity: 0;
-    &:hover {
-        color: #f6652f !important;
-    }
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  opacity: 0;
+  color: #eaeaea;
+  cursor: pointer;
+  filter: drop-shadow(0 0.2rem 0.25rem rgba(0,0,0,.6));
+  transition: color .15s ease, opacity .15s ease, transform .05s ease;
 }
+
+/* показать иконку при ховере карточки */
+.container:hover .heartIconContainer { opacity: 1; }
+
+/* ховер по самой иконке — ТОЛЬКО если не активна */
+.heartIconContainer:not(.active):hover { color: #ffae91; }
+
+/* активное состояние: ярко-оранжевый и цвет не меняется на hover */
+.heartIconContainer.active { color: #f6652f; opacity: 1; }
+.heartIconContainer.active:hover { color: #f6652f; }
+
+/* лёгкий «клик» эффект */
+.heartIconContainer:active { transform: translateY(1px); }
+
+/* чтобы svg красился текущим цветом */
+.heartIcon,
+.heartIcon * {
+  fill: currentColor;
+  stroke: currentColor; /* на случай иконки со stroke */
+}
+
+
+.active {
+  opacity: 1;       
+  color: #f6652f;    
+}
+
 .heartIcon {
     width: 30px;
     height: 30px;

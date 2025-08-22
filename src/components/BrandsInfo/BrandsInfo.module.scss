@@ -112,3 +112,44 @@
         object-fit: cover;
     }
 }
+
+
+  /* свёрнутое/развёрнутое описание */
+  .aboutCollapsed {
+    display: -webkit-box;
+    -webkit-line-clamp: 6; /* сколько строк показывать */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: pre-wrap;
+    line-height: 20px; /* совпадает с .companyInfo */
+  }
+
+  .aboutExpanded {
+    white-space: pre-wrap;
+    line-height: 20px;
+  }
+
+  /* приглушённый текст (для подпояснений, если нужно) */
+  .muted {
+    color: #c9c9c9;
+  }
+
+  /* плейсхолдер, если адреса нет */
+  .mapPlaceholder {
+    height: 180px;
+    display: grid;
+    place-items: center;
+    color: #bdbdbd;
+    background: #121212;
+    border: 1px solid #929292;
+    border-radius: 4px;
+  }
+
+  /* ссылка "Открыть в Яндекс.Картах" */
+  .openInMaps {
+    color: #0099f7;
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover { opacity: 0.9; }
+  }

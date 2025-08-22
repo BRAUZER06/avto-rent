@@ -1,35 +1,116 @@
 "use client";
 
-import { formatDateForAds } from "@src/lib/helpers/formatters/formatDateForAds";
+import { memo, useRef, useState, useEffect, useCallback } from "react";
+import clsx from "clsx";
+import Link from "next/link";
 import style from "./Ad.module.scss";
-import { memo, useRef, useState } from "react";
-import { ModalImage } from "../ui/ModalImage/ModalImage";
-import { DetailedPhotoViewer } from "../ui/DetailedPhotoViewer/DetailedPhotoViewer";
-import useWindowWidth from "@src/utils/api/hooks/useWindowWidth";
 import { HeartIcon } from "@public/images/icons";
 import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
-import Link from "next/link";
 
-export const Ad = memo(({ ads, rating = 3.5, isReact = false }) => {
-    const ratingPercentage = (rating / 5) * 100;
-    const [isModalOpen, setModalOpen] = useState<boolean>(false);
+const FAV_KEY = "favorite_car_ids";
+
+export const Ad = memo(({ ads, isReact = false }: any) => {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const containerRef = useRef(null);
-    const screenWidth = useWindowWidth();
+    const containerRef = useRef<HTMLDivElement | null>(null);
     const baseUrl = mediaUrlHelper();
 
     const images = ads?.car_images || [];
+    const adId = Number(ads?.id);
 
-    const handleImageClick = event => {
+    // Инициализация состояния избранного из localStorage
+    const [isFav, setIsFav] = useState<boolean>(() => {
+        if (typeof window === "undefined" || !Number.isFinite(adId)) return false;
+        try {
+            const raw = localStorage.getItem(FAV_KEY);
+            const arr = raw ? JSON.parse(raw) : [];
+            return Array.isArray(arr) && arr.map(Number).includes(adId);
+        } catch {
+            return false;
+        }
+    });
+
+    // Мини-синхронизация после маунта (важно при SSR и при смене adId)
+    useEffect(() => {
+        if (typeof window === "undefined" || !Number.isFinite(adId)) return;
+        try {
+            const raw = localStorage.getItem(FAV_KEY);
+            const arr = raw ? JSON.parse(raw) : [];
+            const inFav = Array.isArray(arr) && arr.map(Number).includes(adId);
+            if (inFav !== isFav) setIsFav(inFav);
+        } catch {
+            /* noop */
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [adId]);
+
+    // Клик по сердцу — только localStorage
+    const handleFavClick = useCallback(
+        (e: React.MouseEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!Number.isFinite(adId)) return;
+
+            const next = !isFav;
+            setIsFav(next);
+
+            try {
+                const raw = localStorage.getItem(FAV_KEY);
+                const parsed = raw ? JSON.parse(raw) : [];
+                const ids = Array.isArray(parsed)
+                    ? parsed.map(Number).filter(Number.isFinite)
+                    : [];
+                const set = new Set<number>(ids);
+
+                if (next) set.add(adId);
+                else set.delete(adId);
+
+                localStorage.setItem(FAV_KEY, JSON.stringify([...set]));
+                // уведомим другие компоненты/вкладки в этой же вкладке
+                window.dispatchEvent(
+                    new CustomEvent("favorites:changed", {
+                        detail: { id: adId, value: next },
+                    })
+                );
+            } catch {
+                /* noop */
+            }
+        },
+        [adId, isFav]
+    );
+
+    // Синхронизация при изменении избранного в других вкладках/компонентах
+    useEffect(() => {
+        const sync = () => {
+            try {
+                const raw = localStorage.getItem(FAV_KEY);
+                const arr = raw ? JSON.parse(raw) : [];
+                const inFav = Array.isArray(arr) && arr.map(Number).includes(adId);
+                setIsFav(inFav);
+            } catch {
+                /* noop */
+            }
+        };
+
+        const onStorage = (e: StorageEvent) => {
+            if (e.key === FAV_KEY) sync();
+        };
+        const onCustom = () => sync();
+
+        window.addEventListener("storage", onStorage);
+        window.addEventListener("favorites:changed", onCustom as EventListener);
+
+        return () => {
+            window.removeEventListener("storage", onStorage);
+            window.removeEventListener("favorites:changed", onCustom as EventListener);
+        };
+    }, [adId]);
+
+    const handleImageClick = (event: React.MouseEvent) => {
         event.stopPropagation();
-        // if (screenWidth > 767) {
-        //     setModalOpen(true);
-        // }
     };
 
-    const handleMouseMove = event => {
+    const handleMouseMove = (event: React.MouseEvent) => {
         if (!images.length || !containerRef.current) return;
-
         const { clientX } = event;
         const { left, width } = containerRef.current.getBoundingClientRect();
         const mouseX = clientX - left;
@@ -53,6 +134,7 @@ export const Ad = memo(({ ads, rating = 3.5, isReact = false }) => {
                             ? `${baseUrl}${images[currentIndex].url}`
                             : "/images/default-car.jpg"
                     }
+                    alt={ads?.title || "car"}
                 />
 
                 <div className={style.carSpecsBlock}>
@@ -88,22 +170,13 @@ export const Ad = memo(({ ads, rating = 3.5, isReact = false }) => {
                     <div className={style.companyLogo}>
                         <img
                             alt="logo"
-                            src={`${baseUrl}/${ads.owner.company_avatar_url}`}
+                            src={`${baseUrl}/${ads?.owner?.company_avatar_url}`}
                         />
                     </div>
 
                     <div className={style.companyInfo}>
-                        <h2>{ads.owner.company_name || "Контакт"}</h2>
-                        <h3>{ads.owner.address || "Адрес не указан"}</h3>
-                        {/* <div className={style.starsContainer}>
-                            <div
-                                className={style.starsFilled}
-                                style={{ width: `${ratingPercentage}%` }}
-                            >
-                                ★★★★★
-                            </div>
-                            <div className={style.starsEmpty}>★★★★★</div> 
-                        </div>*/}
+                        <h2>{ads?.owner?.company_name || "Контакт"}</h2>
+                        <h3>{ads?.owner?.address || "Адрес не указан"}</h3>
                     </div>
                 </Link>
             </div>
@@ -146,20 +219,17 @@ export const Ad = memo(({ ads, rating = 3.5, isReact = false }) => {
                 </div>
             </div>
 
-            <div className={style.heartIconContainer}>
+            {/* Избранное */}
+            <button
+                type="button"
+                onClick={handleFavClick}
+                className={clsx(style.heartIconContainer, isFav && style.active)}
+                aria-pressed={isFav}
+                aria-label={isFav ? "Убрать из избранного" : "Добавить в избранное"}
+                title={isFav ? "Убрать из избранного" : "В избранное"}
+            >
                 <HeartIcon className={style.heartIcon} />
-            </div>
-
-            {/* {screenWidth > 767 && (
-                <ModalImage isVisible={isModalOpen} onClose={() => setModalOpen(false)}>
-                    <DetailedPhotoViewer
-                        images={images}
-                        isVisible={isModalOpen}
-                        onClose={() => setModalOpen(false)}
-                        initialIndex={currentIndex}
-                    />
-                </ModalImage>
-            )} */}
+            </button>
         </div>
     );
 });
