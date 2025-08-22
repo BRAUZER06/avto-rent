@@ -8,7 +8,6 @@ import Link from "next/link";
 import { Listbox } from "@headlessui/react";
 
 import useOutsideClick from "@src/utils/api/hooks/useOutsideClick";
-import { VacancyAllCountType } from "@src/lib/types/homepage";
 
 import style from "./HeaderMultiSelect.module.scss";
 import CarCategories from "@src/components/CarCategories/CarCategories";
@@ -32,15 +31,7 @@ HeaderMultiSelect.Text = memo(({ text, path }: { text: string; path: string }) =
 
 // Подкомпонент для текста с числом
 HeaderMultiSelect.TextAndNumber = memo(
-    ({
-        text,
-        number,
-        path,
-    }: {
-        text: string;
-        number: VacancyAllCountType;
-        path: string;
-    }) => {
+    ({ text, number, path }: { text: string; number: number | string; path: string }) => {
         return (
             <div className={style.customListBox}>
                 <Listbox>

@@ -9,8 +9,9 @@ import style from "./HeaderNavPanel.module.scss";
 import HeaderNavPanelItem from "../HeaderNavPanelItem/HeaderNavPanelItem";
 import HeaderNavPanelItemCar from "../HeaderNavPanelItemCar/HeaderNavPanelItemCar";
 import { HEADER_ABOUT, HEADER_RENT } from "@src/data/header-nav";
-import { fetchCountAllHomePage } from "@src/lib/api/homePage";
+
 import { useAuthStore } from "@src/store/useAuthStore";
+import { getCountAllCars } from "@src/lib/api/carService"; // ← добавили
 
 interface HeaderNavPanelProps {
     isOpen: boolean;
@@ -18,8 +19,8 @@ interface HeaderNavPanelProps {
 }
 
 export const HeaderNavPanel = ({ isOpen, toggleNavPanel }: HeaderNavPanelProps) => {
-    const [countVacancies, setCountVacancies] = useState<number>(0);
     const [searchText, setSearchText] = useState("");
+    const [totalCars, setTotalCars] = useState<number | null>(null); // ← добавили
     const { replace, push } = useRouter();
 
     const { profile } = useAuthStore();
@@ -47,9 +48,14 @@ export const HeaderNavPanel = ({ isOpen, toggleNavPanel }: HeaderNavPanelProps) 
     };
 
     useEffect(() => {
-        (async function fetchData() {
-            const count = await fetchCountAllHomePage();
-            setCountVacancies(count);
+        (async () => {
+            try {
+                const res = await getCountAllCars(); // { total_cars_count: number }
+                setTotalCars(Number(res?.total_cars_count) || 0);
+            } catch (e) {
+                console.error("Не удалось получить количество авто:", e);
+                setTotalCars(0);
+            }
         })();
     }, []);
 
@@ -102,7 +108,7 @@ export const HeaderNavPanel = ({ isOpen, toggleNavPanel }: HeaderNavPanelProps) 
 
                 <HeaderNavPanelItem.TextAndNumber
                     toggleNavPanel={toggleNavPanel}
-                    number={367}
+                    number={totalCars ?? 0} // ← используем живое число
                     text={"Все Авто"}
                     path={"/avto/all"}
                 />

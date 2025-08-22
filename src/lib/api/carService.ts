@@ -93,3 +93,9 @@ export const deletePhotoCar = async (logoId: number): Promise<void> => {
         throw new Error("Не удалось удалить фото");
     }
 };
+// 🔹 GET /cars — Кол-вл всеч машин
+export const getCountAllCars = async () => {
+    const response = await fetchWithAuth(`${baseUrl}/cars/total_count`);
+    if (!response.ok) throw new Error("Не удалось загрузить цифру кол-ва автомобилей");
+    return response.json();
+};

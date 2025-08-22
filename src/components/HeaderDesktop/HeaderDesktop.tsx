@@ -26,17 +26,22 @@ import { HeaderRightBlock } from "./components/HeaderRightBlock/HeaderRightBlock
 import { SelectCheckboxGroup } from "../ui/SelectWithOverlayAndCheckbox/components/SelectCheckboxGroup/SelectCheckboxGroup";
 import { MobileSelectCheckboxGroup } from "../ui/MobileSelectCheckboxGroup/MobileSelectCheckboxGroup";
 import { RegionSelect } from "../ui/RegionSelect/RegionSelect";
-
-
+import { getCountAllCars } from "@src/lib/api/carService";
 
 export const HeaderDesktop = memo(() => {
-    const [countVacancies, setCountVacancies] = useState<number>(0);
     const [selectedRegion, setSelectedRegion] = useState("");
+    const [totalCars, setTotalCars] = useState<number | null>(null);
 
     useEffect(() => {
-        (async function fetchData() {
-            const count = await fetchCountAllHomePage();
-            setCountVacancies(count);
+        (async () => {
+            try {
+                const res = await getCountAllCars();
+
+                setTotalCars(Number(res?.total_cars_count) || 0);
+            } catch (e) {
+                console.error("Не удалось получить количество авто:", e);
+                setTotalCars(0);
+            }
         })();
     }, []);
 
@@ -69,7 +74,7 @@ export const HeaderDesktop = memo(() => {
                     /> */}
                     <HeaderMultiSelect.SelectListCar name={"Автомобили"} />
                     <HeaderMultiSelect.TextAndNumber
-                        number={367}
+                        number={totalCars ?? 0}
                         text={"Все Авто"}
                         path={"/avto/all"}
                     />
