@@ -10,9 +10,10 @@ import useWindowWidth from "@src/utils/api/hooks/useWindowWidth";
 import { AdsTable } from "@src/components/ui/AdsTable/AdsTable";
 import { MobileContactPanel } from "@src/components/ui/MobileContactPanel/MobileContactPanel";
 import { MapBlockAds } from "@src/components/ui/MapBlockAds/MapBlockAds";
-import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
+
 import { PhotoViewerMobile } from "@src/components/ui/PhotoViewerMobile/PhotoViewerMobile";
 import { useMemo } from "react";
+import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 
 type Car = {
     id: number | string;
@@ -35,17 +36,16 @@ type Car = {
 
 export default function StandardPageID({ car, region }: { car: Car; region?: string }) {
     const screenWidth = useWindowWidth();
-    const baseUrl = mediaUrlHelper();
 
     const imageUrls = useMemo(() => {
         const imgs = (car?.car_images ?? [])
             .slice()
-            .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+            .sort((a: any, b: any) => (a.position ?? 0) - (b.position ?? 0));
         const arr = imgs
-            .map(img => (img.url?.startsWith("/") ? `${baseUrl}${img.url}` : img.url))
+            .map((img: any) => formatImageUrl(img.url))
             .filter(Boolean) as string[];
         return arr.length ? arr : ["/images/default-car.jpg"];
-    }, [car, baseUrl]);
+    }, [car]);
 
     return (
         <div className={style.container}>

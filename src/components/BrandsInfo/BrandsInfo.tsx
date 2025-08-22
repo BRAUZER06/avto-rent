@@ -10,7 +10,7 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 
 import styles from "./BrandsInfo.module.scss";
-import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
+import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 
 type LogoObj = { id?: number; url?: string; position?: number };
 type CompanyDTO = {
@@ -36,14 +36,12 @@ export const BrandsInfo = ({ company }: { company?: CompanyDTO }) => {
         return null;
     }
 
-    const base = mediaUrlHelper();
     const aboutText = (company.about ?? "").trim();
     const address = (company.address ?? "").trim();
 
     // 2) Достаём фото из двух возможных форматов
     const images = useMemo(() => {
         let list: string[] = [];
-
         if (Array.isArray(company.logo_urls) && company.logo_urls.length) {
             list = company.logo_urls
                 .slice()
@@ -52,14 +50,13 @@ export const BrandsInfo = ({ company }: { company?: CompanyDTO }) => {
                         (a.position ?? Number.MAX_SAFE_INTEGER) -
                         (b.position ?? Number.MAX_SAFE_INTEGER)
                 )
-                .map(o => joinUrl(base, o.url ?? ""))
+                .map(o => formatImageUrl(o.url ?? ""))
                 .filter(Boolean);
         } else if (Array.isArray(company.logo_url) && company.logo_url.length) {
-            list = company.logo_url.map(u => joinUrl(base, u)).filter(Boolean);
+            list = company.logo_url.map(u => formatImageUrl(u)).filter(Boolean);
         }
-
         return list;
-    }, [company.logo_urls, company.logo_url, base]);
+    }, [company.logo_urls, company.logo_url]);
 
     const hasImages = images.length > 0;
     const hasAbout = aboutText.length > 0;

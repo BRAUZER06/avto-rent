@@ -10,7 +10,6 @@ import { NavigationButton } from "@src/components/ui/NavigationButton/Navigation
 
 export const ImageSwiper = ({ images }: { images: string[] }) => {
     if (!images?.length) return null;
-    console.log("images", images);
 
     return (
         <section className={styles.corporateWrap}>

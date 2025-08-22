@@ -6,11 +6,11 @@ import Link from "next/link";
 import Image from "next/image";
 import styles from "./BrandsInfoCompany.module.scss";
 
-import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
 import { regionsFull } from "@src/data/regions";
 
 // иконки
 import { FaInstagram, FaTelegramPlane, FaWhatsapp, FaGlobe } from "react-icons/fa";
+import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 
 type LogoObj = { id: number; url: string; position?: number; raw_url?: string };
 type PhoneObj = { label?: string | null; number?: string | null };
@@ -55,8 +55,6 @@ export default function BrandsInfoCompany({
     // rating = 2.5,
     // reviewsCount = 0,
 }: Props) {
-    const base = mediaUrlHelper();
-
     // 1) Аватар приоритетно, иначе 1-я фотка из logo_urls
     const avatarPath = company?.company_avatar_url || null;
 
@@ -64,10 +62,9 @@ export default function BrandsInfoCompany({
 
     const logoSrc = useMemo(() => {
         const p = avatarPath ?? fallbackLogo;
-        if (!p) return "/images/default-company.jpg";
-        return p.startsWith("http") ? p : `${base}${p}`;
-    }, [avatarPath, fallbackLogo, base]);
-
+        const src = formatImageUrl(p || "");
+        return src || "/images/default-company.jpg";
+    }, [avatarPath, fallbackLogo]);
     // регион (читаемый)
     const regionLabel = useMemo(
         () => regionsFull.find(r => r.name === company?.region)?.label ?? null,

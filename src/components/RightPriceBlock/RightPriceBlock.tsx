@@ -126,8 +126,6 @@ export const RightPriceBlock = ({
     customFields,
     owner,
 }: RightPriceBlockProps) => {
-    console.log("owner", owner);
-
     const [showContactInfo, setShowContactInfo] = useState(false);
     const [dateRange, setDateRange] = useState([
         { startDate: new Date(), endDate: addDays(new Date(), 1), key: "selection" },

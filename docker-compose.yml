@@ -3,17 +3,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - .:/app
-      - /app/node_modules
-    ports:
-      - '5175:5175'
+    image: avto-rent-frontend:latest
     environment:
-      - HOSTNAME=0.0.0.0
-      - PORT=5175
-    networks:
-      - avto_rent_default
-
-networks:
-  avto_rent_default:
-    driver: bridge
+      HOSTNAME: 0.0.0.0
+      PORT: 5175
+      NODE_ENV: production
+    ports:
+      - "127.0.0.1:5175:5175"
+    restart: unless-stopped

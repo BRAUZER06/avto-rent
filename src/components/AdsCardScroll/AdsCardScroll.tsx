@@ -7,9 +7,9 @@ import { Navigation, Scrollbar, Mousewheel } from "swiper/modules";
 import "swiper/swiper-bundle.css";
 
 import style from "./AdsCardScroll.module.scss";
-import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
 import Image from "next/image";
 import { Heart } from "@public/images/floatingMenu";
+import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 
 type CarImage = { id: number; url: string; position?: number };
 type Owner = {
@@ -100,17 +100,15 @@ function writeFavIds(ids: number[]) {
 }
 
 export const AdsCardScroll = memo(({ ads }: Props) => {
-    const baseUrl = mediaUrlHelper();
-
     const images = useMemo(() => {
         const arr = (ads?.car_images ?? [])
             .filter(Boolean)
             .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
-            .map(img => (img.url?.startsWith("/") ? `${baseUrl}${img.url}` : img.url))
+            .map(img => formatImageUrl(img.url))
             .filter(Boolean) as string[];
 
         return arr.length > 0 ? arr : ["/images/default-car.jpg"];
-    }, [ads?.car_images, baseUrl]);
+    }, [ads?.car_images]);
 
     const priceText = useMemo(() => {
         if (ads?.price == null || ads?.price === "") return "";
@@ -142,11 +140,8 @@ export const AdsCardScroll = memo(({ ads }: Props) => {
     const { relative: dateRelative, exact: dateExact } = humanizeDate(ads?.created_at);
 
     const companyName = ads?.owner?.company_name || "";
-    const companyAvatar = ads?.owner?.company_avatar_url
-        ? ads.owner.company_avatar_url.startsWith("/")
-            ? `${baseUrl}${ads.owner.company_avatar_url}`
-            : ads.owner.company_avatar_url
-        : "";
+    const companyAvatar = formatImageUrl(ads?.owner?.company_avatar_url || "");
+
     const addressText = ads?.owner?.address || ads?.location || "";
     const companyHref = companyName ? `/brands/${encodeURIComponent(companyName)}` : "";
 

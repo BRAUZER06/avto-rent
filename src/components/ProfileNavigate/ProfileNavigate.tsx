@@ -3,22 +3,21 @@ import React from "react";
 import Link from "next/link";
 import style from "./ProfileNavigate.module.scss";
 import { useAuthStore } from "@src/store/useAuthStore";
-import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
+import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 
 export const ProfileNavigate = ({ rating = 4.3, reviews = 0, ads = 0 }) => {
     const ratingPercentage = (rating / 5) * 100;
 
     const { profile, setProfile } = useAuthStore();
-    const baseUrl = mediaUrlHelper();
 
     return (
         <div className={style.container}>
             <div className={style.profileBlock}>
+                +{" "}
                 <img
                     src={
-                        profile?.company_avatar_url
-                            ? baseUrl + profile.company_avatar_url
-                            : "/placeholder-avatar.jpg"
+                        formatImageUrl(profile?.company_avatar_url || "") ||
+                        "/placeholder-avatar.jpg"
                     }
                     alt="Profile"
                     className={style.avatar}

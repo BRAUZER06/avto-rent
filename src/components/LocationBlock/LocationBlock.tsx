@@ -3,11 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./LocationBlock.module.scss";
-import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
+import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 
 export const LocationBlock = ({ data }: { data: any }) => {
-    const baseUrl = mediaUrlHelper();
-
     return (
         <div className={styles.cardLocation}>
             <h2 className={styles.cardLocationTitle}>Локация</h2>
@@ -30,7 +28,10 @@ export const LocationBlock = ({ data }: { data: any }) => {
                     {data.picture && (
                         <Image
                             className={styles.cardLocationImage}
-                            src={`${baseUrl}${data.picture?.url}`}
+                            src={
+                                formatImageUrl(data.picture?.url) ||
+                                "/images/location-placeholder.jpg"
+                            }
                             width={910}
                             height={365}
                             alt={data.address}

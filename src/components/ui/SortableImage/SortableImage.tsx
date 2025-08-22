@@ -9,8 +9,6 @@ export const SortableImage = ({ id, url, onRemove, isDeleting }) => {
         id,
     });
 
-    console.log("url", url);
-
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,

@@ -3,14 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./PeopleBlock.module.scss";
-import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
+import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 
 export const PeopleBlock = ({ data, title }: { data: any; title: string }) => {
     if (!Array.isArray(data)) {
         data = [data];
     }
 
-    const baseUrl = mediaUrlHelper();
     return (
         <div className={styles.cardPerson}>
             <h2 className={styles.cardPersonTitle}>{title}</h2>
@@ -41,7 +40,10 @@ export const PeopleBlock = ({ data, title }: { data: any; title: string }) => {
                                 >
                                     <Image
                                         className={styles.cardPersonBlockSpeakerImage}
-                                        src={`${baseUrl}${item.photo?.url}`}
+                                        src={
+                                            formatImageUrl(item?.photo?.url) ||
+                                            "/images/default-avatar.png"
+                                        }
                                         width={92}
                                         height={92}
                                         alt={item.lastName}

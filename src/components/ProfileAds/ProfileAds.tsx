@@ -59,7 +59,6 @@ const ProfileAds = () => {
     {
         error && <p style={{ color: "red" }}>{error}</p>;
     }
-    console.log("filteredAds", filteredAds[0]);
 
     return (
         <div className={styles.container}>

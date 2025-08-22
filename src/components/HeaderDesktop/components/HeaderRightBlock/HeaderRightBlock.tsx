@@ -41,8 +41,6 @@ export const HeaderRightBlock = () => {
         router.push("/favorites");
     };
 
-    console.log(profile);
-
     return (
         <div className={style.search}>
             <div className={style.container}>

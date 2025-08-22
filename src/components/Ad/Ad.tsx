@@ -5,14 +5,13 @@ import clsx from "clsx";
 import Link from "next/link";
 import style from "./Ad.module.scss";
 import { HeartIcon } from "@public/images/icons";
-import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
+import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 
 const FAV_KEY = "favorite_car_ids";
 
 export const Ad = memo(({ ads, isReact = false }: any) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const containerRef = useRef<HTMLDivElement | null>(null);
-    const baseUrl = mediaUrlHelper();
 
     const images = ads?.car_images || [];
     const adId = Number(ads?.id);
@@ -109,7 +108,7 @@ export const Ad = memo(({ ads, isReact = false }: any) => {
         event.stopPropagation();
     };
 
-    const handleMouseMove = (event: React.MouseEvent) => {
+    const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
         if (!images.length || !containerRef.current) return;
         const { clientX } = event;
         const { left, width } = containerRef.current.getBoundingClientRect();
@@ -131,7 +130,8 @@ export const Ad = memo(({ ads, isReact = false }: any) => {
                 <img
                     src={
                         images[currentIndex]?.url
-                            ? `${baseUrl}${images[currentIndex].url}`
+                            ? formatImageUrl(images[currentIndex].url) ||
+                              "/images/default-car.jpg"
                             : "/images/default-car.jpg"
                     }
                     alt={ads?.title || "car"}
@@ -170,7 +170,12 @@ export const Ad = memo(({ ads, isReact = false }: any) => {
                     <div className={style.companyLogo}>
                         <img
                             alt="logo"
-                            src={`${baseUrl}/${ads?.owner?.company_avatar_url}`}
+                            src={
+                                ads.owner?.company_avatar_url
+                                    ? formatImageUrl(ads.owner.company_avatar_url) ||
+                                      "/images/default-car.jpg"
+                                    : "/images/default-car.jpg"
+                            }
                         />
                     </div>
 

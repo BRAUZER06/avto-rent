@@ -14,7 +14,7 @@ export const regionsFull: Region[] = [
 ];
 
 export const regionsShort: Region[] = [
-    { id: 0, name: "", label: "ВСЕ" },
+    { id: 0, name: "", label: "Все регионы" },
     { id: 1, name: "ingushetia", label: "ИНГУШЕТИЯ" },
     { id: 2, name: "chechnya", label: "ЧЕЧНЯ" },
     { id: 3, name: "north-ossetia", label: "ОСЕТИЯ" },
@@ -23,3 +23,5 @@ export const regionsShort: Region[] = [
     { id: 6, name: "stavropol", label: "СТАВРОПОЛЬ" },
     { id: 7, name: "dagestan", label: "ДАГЕСТАН" },
 ];
+
+export const regions = regionsFull;

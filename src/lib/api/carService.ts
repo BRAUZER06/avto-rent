@@ -26,8 +26,6 @@ export const getAllCars = async (params?: ListParams) => {
 
 // 🔹 GET /cars?category=...
 export const getCarsCategory = async (categoryCar: string, params?: ListParams) => {
-    console.log("params", params);
-
     const url = `${baseUrl}/cars?category=${encodeURIComponent(categoryCar)}${qs(params).replace("?", "&")}`;
     const response = await fetchWithAuth(url);
     if (!response.ok) throw new Error("Не удалось загрузить список машин");

@@ -23,7 +23,7 @@ export const FilterDesktopBanquetHalls: React.FC<Props> = memo(({ ...props }) =>
         readyMeals,
         toggleReadyMeals,
         prepayment,
-        
+
         togglePrepayment,
         brideRoom,
         toggleBrideRoom,
@@ -44,8 +44,6 @@ export const FilterDesktopBanquetHalls: React.FC<Props> = memo(({ ...props }) =>
         handleHouseAreaChange,
         houseArea,
     } = props;
-
-    console.log(internetAvailability);
 
     return (
         <div className={style.container}>
@@ -101,7 +99,6 @@ export const FilterDesktopBanquetHalls: React.FC<Props> = memo(({ ...props }) =>
                     />
                 </div>
             )}
-          
             {buildingLevels && handleBuildingLevelsChange && (
                 <div className={style.block}>
                     <span className={style.title}>Этажность</span>

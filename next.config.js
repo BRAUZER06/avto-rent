@@ -1,4 +1,7 @@
 module.exports = {
+    // Generate standalone server for Docker runtime
+    output: "standalone",
+
     typescript: {
         ignoreBuildErrors: true,
     },

@@ -8,9 +8,8 @@ import BrandsInfoCompany from "@src/components/BrandsInfoCompany/BrandsInfoCompa
 import { ListAds } from "@src/components/ListAds/ListAds";
 import { BrandsInfo } from "@src/components/BrandsInfo/BrandsInfo";
 import style from "./BrandPage.module.scss";
-
-import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
 import { CompanyDTO, getCompanyByName } from "@src/lib/api/companies";
+import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 
 type Props = {
     name: string;
@@ -52,9 +51,7 @@ export default function BrandPage({ name, initial }: Props) {
         };
     }, [name, initial]);
 
-    const base = mediaUrlHelper();
-    const images =
-        company?.logo_url?.map(p => (p?.startsWith("http") ? p : `${base}${p}`)) ?? [];
+    const images = company?.logo_url?.map(p => formatImageUrl(p)).filter(Boolean) ?? [];
 
     return (
         <div>

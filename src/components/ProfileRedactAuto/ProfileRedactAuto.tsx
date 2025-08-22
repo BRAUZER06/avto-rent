@@ -26,8 +26,8 @@ import { Notification, useNotification } from "../ui/Notification/Notification";
 import OptionCheckbox from "../ui/OptionCheckbox/OptionCheckbox";
 import { FiTrash2, FiPlus, FiLoader } from "react-icons/fi";
 import { useRouter } from "next/navigation";
-import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
 import ImageTooltip from "../ui/ImageTooltip/ImageTooltip";
+import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 
 const MAX_IMAGES = 25;
 
@@ -71,7 +71,6 @@ export const ProfileRedactAuto = ({ carId }: { carId: string }) => {
         { key: "Аренда авто на день", value: "" },
     ]);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const baseUrl = mediaUrlHelper();
 
     // Загрузка данных автомобиля
     const fetchCarData = useCallback(async () => {
@@ -107,10 +106,10 @@ export const ProfileRedactAuto = ({ carId }: { carId: string }) => {
             const loadedImages = (carData.car_images || []).map(img => ({
                 id: uuidv4(),
                 file: null,
-                preview: `${baseUrl}/${img.url}`,
+                preview: formatImageUrl(img.url),
+
                 existingId: img.id,
             }));
-            console.log("loadedImages", loadedImages);
 
             setImages(loadedImages);
 
@@ -159,8 +158,6 @@ export const ProfileRedactAuto = ({ carId }: { carId: string }) => {
     // Удаление изображения
     // Изменяем функцию removeImage
     const removeImage = async (id: string) => {
-        console.log("1");
-
         try {
             const imageToRemove = images.find(img => img.id === id);
 

@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { WysiwygRenderer } from "@lib/helpers/WysiwygRenderer";
+
 import { Modal } from "../ui/Modal/Modal";
 import styles from "./LecturesBlock.module.scss";
-import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
+
+import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 
 export const LecturesBlock = ({ data }: { data: any }) => {
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
@@ -14,7 +15,6 @@ export const LecturesBlock = ({ data }: { data: any }) => {
         setModalOpen(true);
     };
 
-    const baseUrl = mediaUrlHelper();
     return (
         <div className={styles.lectures}>
             <h2 id="lectures" className={styles.lecturesTitle}>
@@ -29,7 +29,10 @@ export const LecturesBlock = ({ data }: { data: any }) => {
                         >
                             <Image
                                 className={styles.lecturesListItemImage}
-                                src={`${baseUrl}${item.preview?.url}`}
+                                src={
+                                    formatImageUrl(item.preview?.url) ||
+                                    "/images/placeholder.jpg"
+                                }
                                 width={725}
                                 height={392}
                                 alt={item.title}

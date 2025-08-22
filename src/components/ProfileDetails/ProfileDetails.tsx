@@ -28,11 +28,11 @@ import {
 import { SortableImage } from "../ui/SortableImage/SortableImage";
 import { v4 as uuidv4 } from "uuid";
 import { Notification, useNotification } from "../ui/Notification/Notification";
-import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
 import { regionsFull } from "@src/data/regions";
 import { useAuthStore } from "@src/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { clearTokens } from "@src/lib/api/tokenService";
+import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 
 const ProfileDetails = () => {
     const [activeTab, setActiveTab] = useState("main");
@@ -103,7 +103,6 @@ const ProfileDetails = () => {
     const fetchData = useCallback(async () => {
         try {
             const data = await fetchCompanyProfile();
-            const baseUrl = mediaUrlHelper();
 
             if (data) {
                 setProfileData({
@@ -115,10 +114,12 @@ const ProfileDetails = () => {
                     address: data.address || "",
                     about: data.about || "",
                     website: data.website || "",
-                    company_avatar_url: data.company_avatar_url
-                        ? baseUrl + data.company_avatar_url
-                        : "",
-                    logo_urls: data.logo_urls?.map(url => baseUrl + url) || [],
+                    company_avatar_url: formatImageUrl(data.company_avatar_url) || "",
+                    logo_urls: Array.isArray(data.logo_urls)
+                        ? data.logo_urls
+                              .map((l: any) => formatImageUrl(l.url))
+                              .filter(Boolean)
+                        : [],
                     region: data.region || "",
                 });
 
@@ -126,7 +127,7 @@ const ProfileDetails = () => {
                     const loadedImages = data.logo_urls.map(logo => ({
                         id: logo.id,
                         file: null,
-                        preview: baseUrl + logo.url,
+                        preview: formatImageUrl(logo.url),
                         isNew: false,
                     }));
                     setLogoImages(loadedImages);
@@ -135,7 +136,7 @@ const ProfileDetails = () => {
                 if (data.company_avatar_url) {
                     setAvatarImage({
                         file: null,
-                        preview: baseUrl + data.company_avatar_url,
+                        preview: formatImageUrl(data.company_avatar_url) || "",
                     });
                 }
 
@@ -465,7 +466,6 @@ const ProfileDetails = () => {
             setLogoImages(positionedImages);
         }
     };
-    console.log("logoImages", logoImages);
 
     return (
         <div className={styles.container}>
