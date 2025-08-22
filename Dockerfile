@@ -25,9 +25,10 @@ ENV NODE_ENV=production \
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 
-# Install only production dependencies
+# Install only production dependencies (skip husky and all install scripts)
+ENV HUSKY=0
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm ci --omit=dev --ignore-scripts
 
 # Copy build artifacts
 COPY --from=builder /app/.next ./.next
