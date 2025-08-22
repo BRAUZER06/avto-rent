@@ -8,26 +8,29 @@ import { DetailedPhotoViewer } from "../ui/DetailedPhotoViewer/DetailedPhotoView
 import useWindowWidth from "@src/utils/api/hooks/useWindowWidth";
 import { HeartIcon } from "@public/images/icons";
 import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
+import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 import Link from "next/link";
 
-export const Ad = memo(({ ads, rating = 3.5, isReact = false }) => {
+type AdProps = { ads: any; rating?: number; isReact?: boolean };
+
+export const Ad = memo(({ ads, rating = 3.5, isReact = false }: AdProps) => {
     const ratingPercentage = (rating / 5) * 100;
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const containerRef = useRef(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
     const screenWidth = useWindowWidth();
     const baseUrl = mediaUrlHelper();
 
     const images = ads?.car_images || [];
 
-    const handleImageClick = event => {
+    const handleImageClick = (event: React.MouseEvent<HTMLDivElement>) => {
         event.stopPropagation();
         // if (screenWidth > 767) {
         //     setModalOpen(true);
         // }
     };
 
-    const handleMouseMove = event => {
+    const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
         if (!images.length || !containerRef.current) return;
 
         const { clientX } = event;
@@ -50,9 +53,10 @@ export const Ad = memo(({ ads, rating = 3.5, isReact = false }) => {
                 <img
                     src={
                         images[currentIndex]?.url
-                            ? `${baseUrl}${images[currentIndex].url}`
+                            ? formatImageUrl(images[currentIndex].url) || "/images/default-car.jpg"
                             : "/images/default-car.jpg"
                     }
+                    alt="Фото автомобиля"
                 />
 
                 <div className={style.carSpecsBlock}>
@@ -88,7 +92,11 @@ export const Ad = memo(({ ads, rating = 3.5, isReact = false }) => {
                     <div className={style.companyLogo}>
                         <img
                             alt="logo"
-                            src={`${baseUrl}/${ads.owner.company_avatar_url}`}
+                            src={
+                                ads.owner?.company_avatar_url
+                                    ? formatImageUrl(ads.owner.company_avatar_url) || "/images/default-car.jpg"
+                                    : "/images/default-car.jpg"
+                            }
                         />
                     </div>
 

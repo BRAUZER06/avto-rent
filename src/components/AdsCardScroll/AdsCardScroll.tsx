@@ -8,6 +8,7 @@ import "swiper/swiper-bundle.css";
 import style from "./AdsCardScroll.module.scss";
 import { formatDateForAds } from "@src/lib/helpers/formatters/formatDateForAds";
 import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
+import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 
 // Если есть тип — подставь вместо any
 type CarImage = { id: number; url: string; position?: number };
@@ -36,7 +37,8 @@ export const AdsCardScroll = memo(({ ads }: Props) => {
         const arr = (ads?.car_images ?? [])
             .filter(Boolean)
             .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
-            .map(img => (img.url?.startsWith("/") ? `${baseUrl}${img.url}` : img.url));
+            .map(img => formatImageUrl(img.url))
+            .filter(Boolean) as string[];
 
         // Фолбэк — одна картинка-заглушка
         return arr.length > 0 ? arr : ["/images/default-car.jpg"];

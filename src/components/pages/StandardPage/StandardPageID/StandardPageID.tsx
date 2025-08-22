@@ -12,6 +12,7 @@ import { MapBlockAds } from "@src/components/ui/MapBlockAds/MapBlockAds";
 import { useEffect, useMemo, useState } from "react";
 import { getCarById } from "@src/lib/api/carService";
 import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
+import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 import { PhotoViewerMobile } from "@src/components/ui/PhotoViewerMobile/PhotoViewerMobile";
 
 type CarImage = { id: number; url: string; position?: number | null };
@@ -70,9 +71,9 @@ export default function StandardPageID({
     const imageUrls = (() => {
         const imgs = (carData?.car_images ?? [])
             .slice()
-            .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+            .sort((a: CarImage, b: CarImage) => (a.position ?? 0) - (b.position ?? 0));
         const arr = imgs
-            .map(img => (img.url?.startsWith("/") ? `${baseUrl}${img.url}` : img.url))
+            .map((img: CarImage) => formatImageUrl(img.url))
             .filter(Boolean) as string[];
         return arr.length ? arr : ["/images/default-car.jpg"];
     })();
@@ -97,6 +98,8 @@ export default function StandardPageID({
                         phone={carData.contacts?.phone_1?.number}
                         whatsapp={carData.contacts?.whatsapp}
                         telegram={carData.contacts?.telegram}
+                        idCompany={carData?.owner?.company_name || carData?.owner?.id || "company"}
+                        owner={carData?.owner}
                     />
                 </div>
 
