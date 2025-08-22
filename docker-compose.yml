@@ -3,17 +3,39 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - .:/app
-      - /app/node_modules
-    ports:
-      - '5175:5175'
+    image: avto-rent-frontend:latest
     environment:
-      - HOSTNAME=0.0.0.0
-      - PORT=5175
-    networks:
-      - avto_rent_default
+      HOSTNAME: 0.0.0.0
+      PORT: 5175
+      NODE_ENV: production
+    expose:
+      - "5175"
+    depends_on:
+      - backend
+
+  # Placeholder for your Rails backend. Adjust to your repo/image.
+  # Assumes Rails listens on port 3000 inside the container.
+  backend:
+    image: your-rails-backend-image:latest
+    environment:
+      RAILS_ENV: production
+      RACK_ENV: production
+      # DATABASE_URL: ...
+      # SECRET_KEY_BASE: ...
+    expose:
+      - "3000"
+
+  # Reverse proxy to serve everything on one domain
+  nginx:
+    image: nginx:1.27-alpine
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
 
 networks:
-  avto_rent_default:
+  default:
     driver: bridge
