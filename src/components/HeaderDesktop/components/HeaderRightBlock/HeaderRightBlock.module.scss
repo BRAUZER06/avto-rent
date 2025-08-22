@@ -7,13 +7,12 @@
     height: 48px;
     max-width: 270px;
     border-radius: 33px;
-    font-family: "X5 Sans";
+    font-family: "Reggular";
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
     line-height: 140%;
 
- 
     // &::before,
     // &::after {
     //     content: "";
@@ -72,7 +71,7 @@
     cursor: pointer;
     display: flex;
     margin-right: 7px;
-    img{
+    img {
         margin-right: 5px;
         min-width: 20px;
         width: 20px;
@@ -89,7 +88,7 @@
 .createAds {
     margin-right: -15px;
     flex: 1;
-   
+
     width: 155px;
     padding: 0px 15px;
     cursor: pointer;
@@ -99,14 +98,14 @@
     justify-content: center;
     text-align: center;
     border-radius: 26px;
-    background-color: #0079C2;
+    background-color: #0079c2;
 
     color: #fff;
     line-height: 120%;
     font-size: 15x;
     height: 40px;
 
-    &:hover{
+    &:hover {
         background-color: var(--blue-text);
     }
 }

@@ -3,7 +3,7 @@
 .container {
     display: flex;
     flex-direction: column;
-    font-family: "X5 Sans";
+    font-family: "Reggular";
 }
 
 .headerNav {
@@ -28,7 +28,6 @@
     display: inline-flex;
     align-items: center;
     align-self: flex-start;
-    
 }
 
 .goBackImg {
@@ -38,7 +37,6 @@
 }
 
 .goBackText {
-   
     color: var(--grey-ligter);
     font-size: 17px;
     font-style: normal;

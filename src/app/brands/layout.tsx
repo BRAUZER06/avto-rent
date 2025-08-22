@@ -5,7 +5,6 @@ import { GoBackButton } from "@src/components/GoBackButton/GoBackButton";
 import MaxWidthWrapper from "@src/components/MaxWidthWrapper/MaxWidthWrapper";
 import { Footer } from "@src/components/Footer/Footer";
 import { Cookie } from "@src/components/Cookie/Cookie";
-import { WidgetAdvertisement } from "@src/components/WidgetAdvertisement/WidgetAdvertisement";
 
 interface RootLayoutProps {
     children: React.ReactNode;
@@ -19,7 +18,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
             <MaxWidthWrapper>
                 <main className="w-full flex-[1]">
                     {/* <GoBackButton /> */}
-                    {/* <WidgetAdvertisement /> */}
+
                     {children}
                 </main>
             </MaxWidthWrapper>

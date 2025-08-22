@@ -3,7 +3,7 @@
 
 .containerDesktop {
     cursor: pointer;
-    font-family: "X5 Sans";
+    font-family: "Reggular";
     border-radius: 8px;
     height: auto;
     width: 100%;
@@ -53,7 +53,7 @@
     color: var(--white-color);
     cursor: pointer;
     user-select: none;
-    font-family: "X5 Sans";
+    font-family: "Reggular";
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -72,7 +72,7 @@
 
 .containerMobileVersionOne {
     cursor: pointer;
-    font-family: "X5 Sans";
+    font-family: "Reggular";
     border-radius: 8px;
     background-color: var(--grey-bg);
     height: 52px;
@@ -123,7 +123,7 @@
     color: var(--white-color);
     cursor: pointer;
     user-select: none;
-    font-family: "X5 Sans";
+    font-family: "Reggular";
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -140,14 +140,11 @@
 // MobileVersionTwo
 // MobileVersionTwo
 
-
-
 .containerMobileVersionTwo {
     cursor: pointer;
     display: flex;
     align-items: center;
     padding: 7px 0px;
-    
 }
 
 .customCheckboxMobileVersionTwo {
@@ -189,7 +186,7 @@
     color: var(--white-color);
     cursor: pointer;
     user-select: none;
-    font-family: "X5 Sans";
+    font-family: "Reggular";
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -203,12 +200,10 @@
     text-overflow: ellipsis;
 }
 
-.margin{
+.margin {
     margin-left: 20px;
     display: flex;
 }
-
-
 
 .tooltipIcon {
     cursor: help;
@@ -217,8 +212,7 @@
     font-weight: bold;
     font-size: 16px;
     color: #ffffff;
-    border-radius:  50%;
+    border-radius: 50%;
     background-color: rgb(243, 71, 71);
     padding: 5px 7px;
-  }
-  
+}

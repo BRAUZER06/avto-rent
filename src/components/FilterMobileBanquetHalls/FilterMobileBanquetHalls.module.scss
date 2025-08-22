@@ -3,8 +3,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-family: "X5 Sans";
-   
+    font-family: "Reggular";
 }
 
 .filterContainer {
@@ -19,7 +18,7 @@
     border-radius: 10px;
     margin-bottom: 21px;
 
-    &:hover{
+    &:hover {
         background-color: var(--blue-text--brightest);
     }
 }

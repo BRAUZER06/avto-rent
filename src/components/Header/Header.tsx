@@ -3,7 +3,6 @@
 import CarCategories from "../CarCategories/CarCategories";
 import { HeaderDesktop } from "../HeaderDesktop/HeaderDesktop";
 import { HeaderMobile } from "../HeaderMobile/HeaderMobile";
-// import { WidgetAdvertisement } from "../WidgetAdvertisement/WidgetAdvertisement";
 
 import style from "./Header.module.scss";
 
@@ -27,8 +26,6 @@ export const Header = () => {
             <div className={style.inner}>
                 <CarCategories collapsible={true} defaultOpen={false} />
             </div>
-
-            {/* <WidgetAdvertisement /> */}
         </>
     );
 };

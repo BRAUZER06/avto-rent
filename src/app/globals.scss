@@ -1,11 +1,10 @@
 @import "../lib/assets/styles/main.scss";
 
 html {
-   
     scroll-behavior: smooth;
 }
 body {
-    font-family: "X5 Sans";
+    font-family: "Reggular";
 }
 
 ::-webkit-scrollbar {
@@ -56,18 +55,15 @@ a:focus {
 }
 
 .wrapper {
-  max-width: 1280px;   // или 1200px, или что тебе ближе к макету
-  width: 100%;
-  padding: 20px;
-  margin: 0 auto;
+    max-width: 1280px; // или 1200px, или что тебе ближе к макету
+    width: 100%;
+    padding: 20px;
+    margin: 0 auto;
 
-  @include vw-md {
-    padding: 20px 10px;
-  }
+    @include vw-md {
+        padding: 20px 10px;
+    }
 }
-
-
-
 
 // :global {
 //     .rdrCalendarWrapper {
@@ -76,33 +72,32 @@ a:focus {
 //       border-radius: 12px;
 //       padding: 10px;
 //     }
-  
+
 //     .rdrMonthAndYearPickers select {
 //       background-color: #333;
 //       color: white;
 //       border: 1px solid #555;
 //     }
-  
+
 //     .rdrDayNumber span {
 //       color: white;
 //     }
-  
+
 //     .rdrDayPassive span {
 //       color: #777;
 //     }
-  
+
 //     .rdrDayDisabled {
 //       background-color: #2a2a2a;
 //       cursor: not-allowed;
 //     }
-  
+
 //     .rdrSelected,
 //     .rdrInRange {
 //       background: #fcb902;
 //     }
-  
+
 //     .rdrDayToday span {
 //       border-bottom: 2px solid #fcb902;
 //     }
 //   }
-  

@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "x5-career",
+      "name": "rent-avto-kavkaz",
       "dependencies": {
         "@headlessui/react": "^1.7.18",
         "@next/font": "^14.1.0",

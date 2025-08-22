@@ -4,7 +4,7 @@ import { Header } from "@src/components/Header/Header";
 import MaxWidthWrapper from "@src/components/MaxWidthWrapper/MaxWidthWrapper";
 import { Footer } from "@src/components/Footer/Footer";
 // import { GoBackButton } from "@src/components/GoBackButton/GoBackButton";
-// import { WidgetAdvertisement } from "@src/components/WidgetAdvertisement/WidgetAdvertisement";
+//
 // import { Cookie } from "@src/components/Cookie/Cookie";
 
 interface RootLayoutProps {
@@ -21,7 +21,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
             <MaxWidthWrapper>
                 <main className="w-full flex-1">
                     {/* <GoBackButton /> */}
-                    {/* <WidgetAdvertisement /> */}
+
                     {children}
                 </main>
             </MaxWidthWrapper>
