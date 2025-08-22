@@ -36,6 +36,7 @@ export default function CarCategories() {
                                 alt={category.title}
                                 width={100}
                                 height={75}
+                                unoptimized
                                 className={styles.image}
                             />
                         </Link>
