@@ -25,7 +25,7 @@ export const Header = () => {
 
             {/* КАТЕГОРИИ — ОТДЕЛЬНЫЙ БЛОК, ТОЖЕ С ОГРАНИЧЕНИЕМ ШИРИНЫ */}
             <div className={style.inner}>
-                <CarCategories />
+                <CarCategories collapsible={true} defaultOpen={false} />
             </div>
 
             {/* <WidgetAdvertisement /> */}

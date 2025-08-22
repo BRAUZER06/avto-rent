@@ -1,7 +1,9 @@
 .wrapper {
-  padding: 24px 0px;
+  padding: 24px 0;
   color: white;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .title {
@@ -17,15 +19,48 @@
   }
 }
 
+.gridWrap {
+  position: relative;
+  transition: max-height .25s ease;
+}
+
+@media (max-width: 640px) {
+  .gridWrap {
+    max-height: 25vh;
+    overflow: hidden;
+  }
+
+  .gridWrap::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 64px;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0),
+      var(--app-bg, #0f0f0f)
+    );
+    opacity: 1;
+    transition: opacity .2s ease;
+  }
+
+  .open {
+    max-height: none;
+  }
+  .open::after {
+    opacity: 0;
+  }
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 20px;
 
   @media (max-width: 640px) {
-    grid-template-columns: repeat(2, 1fr); // 2 карточки на мобильных
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
-   
   }
 }
 
@@ -36,7 +71,7 @@
   background-color: #2e2d2b;
   border-radius: 14px;
   padding: 16px 20px;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, border-color .2s ease, background-color .2s ease;
   cursor: pointer;
   border: 2px solid transparent;
 
@@ -79,5 +114,33 @@
   @media (max-width: 640px) {
     width: 100px;
     height: 45px;
+  }
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px auto 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .15s ease, transform .05s ease, border-color .15s ease;
+  -webkit-tap-highlight-color: transparent;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+  &:active {
+    transform: translateY(1px);
+  }
+
+  @media (min-width: 641px) {
+    display: none;
   }
 }
