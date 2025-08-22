@@ -29,7 +29,7 @@ import { SortableImage } from "../ui/SortableImage/SortableImage";
 import { v4 as uuidv4 } from "uuid";
 import { Notification, useNotification } from "../ui/Notification/Notification";
 import { mediaUrlHelper } from "@src/lib/helpers/getApiUrl";
-import { regions } from "@src/data/Regions";
+import { regions } from "@src/data/regions";
 
 const ProfileDetails = () => {
     const [activeTab, setActiveTab] = useState("main");

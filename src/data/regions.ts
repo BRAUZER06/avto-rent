@@ -23,3 +23,5 @@ export const regionsShort: Region[] = [
     { id: 6, name: "stavropol", label: "СТАВРОПОЛЬ" },
     { id: 7, name: "dagestan", label: "ДАГЕСТАН" },
 ];
+
+export const regions = regionsFull;
