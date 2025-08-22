@@ -99,3 +99,19 @@ export const getCountAllCars = async () => {
     if (!response.ok) throw new Error("Не удалось загрузить цифру кол-ва автомобилей");
     return response.json();
 };
+
+// 🔹 DELETE /cars/:id — удалить машину целиком
+export const deleteCar = async (id: number | string): Promise<void> => {
+    const response = await fetchWithAuth(`${baseUrl}/cars/${id}`, {
+        method: "DELETE",
+    });
+
+    if (!response.ok) {
+        let msg = "Не удалось удалить авто";
+        try {
+            const text = await response.text();
+            if (text) msg = text;
+        } catch {}
+        throw new Error(msg);
+    }
+};

@@ -1,11 +1,18 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useMemo } from "react";
 import styles from "./ProfileAds.module.scss";
-import { AdsCard } from "../AdsCard/AdsCard";
 import { Ad } from "../Ad/Ad";
-import { testAdss } from "@src/data/testAdsDeleted";
-import { getCarById, getMyCars } from "@src/lib/api/carService";
+import { AdsCardScroll } from "../AdsCardScroll/AdsCardScroll";
+import { getMyCars } from "@src/lib/api/carService";
+import useWindowWidth from "@src/utils/api/hooks/useWindowWidth";
+
+type Car = {
+    id: number;
+    status?: "active" | "archived" | string;
+    created_at?: string;
+    [k: string]: any;
+};
 
 const tabs = [
     { id: "all", title: "Все объявления" },
@@ -13,56 +20,77 @@ const tabs = [
     // { id: "archived", title: "В архиве" },
 ];
 
-const adsData = [
-    // Dummy data for ads
-    { id: 1, title: "Ad 1", status: "active" },
-    { id: 2, title: "Ad 2", status: "archived" },
-    { id: 3, title: "Ad 3", status: "active" },
-    { id: 4, title: "Ad 4", status: "archived" },
-    { id: 5, title: "Ad 5", status: "active" },
-];
-
 const ProfileAds = () => {
-    const [ads, setAds] = useState<any[]>([]);
+    const [ads, setAds] = useState<Car[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
     const [activeTab, setActiveTab] = useState("all");
 
-    const filteredAds = ads
-        .filter(ad => activeTab === "all" || ad.status === activeTab)
-        .slice(ads.length - 4, ads.length);
+    const width = useWindowWidth();
+    const isMobile = width <= 768; // ← брейкпоинт: мобилка = AdsCardScroll, десктоп = Ad
 
-    const handleTabChange = useCallback(tabId => {
+    const handleTabChange = useCallback((tabId: string) => {
         setActiveTab(tabId);
     }, []);
 
     useEffect(() => {
-        const loadCars = async () => {
+        let mounted = true;
+        (async () => {
             try {
+                setIsLoading(true);
                 const data = await getMyCars();
-                // const data = await getCarById(60);
-                setAds(data);
-            } catch (e: any) {
-                setError(e.message || "Ошибка при загрузке объявлений");
-            } finally {
-                setIsLoading(false);
-            }
-        };
+                if (!mounted) return;
 
-        loadCars();
+                const sorted = Array.isArray(data)
+                    ? [...data].sort((a: Car, b: Car) => {
+                          const da = a?.created_at ? +new Date(a.created_at) : 0;
+                          const db = b?.created_at ? +new Date(b.created_at) : 0;
+                          return db - da;
+                      })
+                    : [];
+
+                setAds(sorted);
+            } catch (e: any) {
+                if (!mounted) return;
+                setError(e?.message || "Ошибка при загрузке объявлений");
+            } finally {
+                if (mounted) setIsLoading(false);
+            }
+        })();
+        return () => {
+            mounted = false;
+        };
     }, []);
 
-    {
-        isLoading && <p>Загрузка объявлений...</p>;
+    const filteredAds = useMemo(() => {
+        let list = ads;
+        if (activeTab !== "all") list = list.filter(a => a.status === activeTab);
+        return list;
+        // return list.slice(-4); // последние 4
+    }, [ads, activeTab]);
+
+    if (isLoading) {
+        return (
+            <div className={styles.container}>
+                <h2 className={styles.title}>Мои Авто</h2>
+                <div className={styles.loading}>Загрузка объявлений…</div>
+            </div>
+        );
     }
-    {
-        error && <p style={{ color: "red" }}>{error}</p>;
+
+    if (error) {
+        return (
+            <div className={styles.container}>
+                <h2 className={styles.title}>Мои Авто</h2>
+                <div className={styles.error}>{error}</div>
+            </div>
+        );
     }
 
     return (
         <div className={styles.container}>
             <h2 className={styles.title}>Мои Авто</h2>
+
             <div className={styles.tabs}>
                 {tabs.map(tab => (
                     <button
@@ -74,19 +102,43 @@ const ProfileAds = () => {
                     </button>
                 ))}
             </div>
+
             <div className={styles.adsContainer}>
-                <div
-                    className={`${styles.itemsList} ${
-                        filteredAds.length === 1 ? styles.single : ""
-                    }`}
-                >
-                    {!!filteredAds?.length &&
-                        filteredAds.map((item, index) => (
-                            <div key={item.id || index} className={styles.contentDesktop}>
-                                <Ad ads={item} />
+                {filteredAds.length === 0 ? (
+                    <div className={styles.empty}>
+                        Пока нет объявлений. Добавьте первое в&nbsp;
+                        <a href="/profile/new_auto">профиле</a>.
+                    </div>
+                ) : (
+                    <div
+                        className={`${styles.itemsList} ${
+                            filteredAds.length === 1 ? styles.single : ""
+                        }`}
+                    >
+                        {filteredAds.map(item => (
+                            <div key={item.id} className={styles.contentDesktop}>
+                                {isMobile ? (
+                                    <AdsCardScroll
+                                        onDeleted={id =>
+                                            setAds(prev => prev.filter(a => a.id !== id))
+                                        }
+                                        isOwner={true}
+                                        ads={item}
+                                    />
+                                ) : (
+                                    <Ad
+                                        onDeleted={id =>
+                                            setAds(prev => prev.filter(a => a.id !== id))
+                                        }
+                                        ads={item}
+                                        isOwner={true}
+                                        isReact
+                                    />
+                                )}
                             </div>
                         ))}
-                </div>
+                    </div>
+                )}
             </div>
         </div>
     );

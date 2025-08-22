@@ -1,22 +1,39 @@
 "use client";
 
 import { memo, useRef, useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import Link from "next/link";
 import style from "./Ad.module.scss";
 import { HeartIcon } from "@public/images/icons";
 import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
+import { deleteCar } from "@src/lib/api/carService";
 
 const FAV_KEY = "favorite_car_ids";
 
-export const Ad = memo(({ ads, isReact = false }: any) => {
+type CarImage = { id: number; url: string; position?: number | null };
+
+type Props = {
+    ads: any;
+    /** режим владельца — показывать кнопки "Редактировать" и "Удалить" */
+    isOwner?: boolean;
+    /** колбэк после успешного удаления (чтобы список мог убрать карточку) */
+    onDeleted?: (id: number) => void;
+    /** для обратной совместимости, если где-то уже использовался */
+    isReact?: boolean;
+};
+
+export const Ad = memo(({ ads, isOwner = false, onDeleted, isReact = false }: Props) => {
+    const router = useRouter();
     const [currentIndex, setCurrentIndex] = useState(0);
     const containerRef = useRef<HTMLDivElement | null>(null);
 
-    const images = ads?.car_images || [];
+    const images: CarImage[] = Array.isArray(ads?.car_images)
+        ? [...ads.car_images].filter(Boolean)
+        : [];
     const adId = Number(ads?.id);
 
-    // Инициализация состояния избранного из localStorage
+    // ----- Избранное -----
     const [isFav, setIsFav] = useState<boolean>(() => {
         if (typeof window === "undefined" || !Number.isFinite(adId)) return false;
         try {
@@ -28,7 +45,6 @@ export const Ad = memo(({ ads, isReact = false }: any) => {
         }
     });
 
-    // Мини-синхронизация после маунта (важно при SSR и при смене adId)
     useEffect(() => {
         if (typeof window === "undefined" || !Number.isFinite(adId)) return;
         try {
@@ -36,13 +52,10 @@ export const Ad = memo(({ ads, isReact = false }: any) => {
             const arr = raw ? JSON.parse(raw) : [];
             const inFav = Array.isArray(arr) && arr.map(Number).includes(adId);
             if (inFav !== isFav) setIsFav(inFav);
-        } catch {
-            /* noop */
-        }
+        } catch {}
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [adId]);
 
-    // Клик по сердцу — только localStorage
     const handleFavClick = useCallback(
         (e: React.MouseEvent) => {
             e.preventDefault();
@@ -64,20 +77,16 @@ export const Ad = memo(({ ads, isReact = false }: any) => {
                 else set.delete(adId);
 
                 localStorage.setItem(FAV_KEY, JSON.stringify([...set]));
-                // уведомим другие компоненты/вкладки в этой же вкладке
                 window.dispatchEvent(
                     new CustomEvent("favorites:changed", {
                         detail: { id: adId, value: next },
                     })
                 );
-            } catch {
-                /* noop */
-            }
+            } catch {}
         },
         [adId, isFav]
     );
 
-    // Синхронизация при изменении избранного в других вкладках/компонентах
     useEffect(() => {
         const sync = () => {
             try {
@@ -85,9 +94,7 @@ export const Ad = memo(({ ads, isReact = false }: any) => {
                 const arr = raw ? JSON.parse(raw) : [];
                 const inFav = Array.isArray(arr) && arr.map(Number).includes(adId);
                 setIsFav(inFav);
-            } catch {
-                /* noop */
-            }
+            } catch {}
         };
 
         const onStorage = (e: StorageEvent) => {
@@ -97,13 +104,13 @@ export const Ad = memo(({ ads, isReact = false }: any) => {
 
         window.addEventListener("storage", onStorage);
         window.addEventListener("favorites:changed", onCustom as EventListener);
-
         return () => {
             window.removeEventListener("storage", onStorage);
             window.removeEventListener("favorites:changed", onCustom as EventListener);
         };
     }, [adId]);
 
+    // ----- изображения (hover-перелистывание) -----
     const handleImageClick = (event: React.MouseEvent) => {
         event.stopPropagation();
     };
@@ -113,11 +120,42 @@ export const Ad = memo(({ ads, isReact = false }: any) => {
         const { clientX } = event;
         const { left, width } = containerRef.current.getBoundingClientRect();
         const mouseX = clientX - left;
-        const newImageIndex = Math.floor((mouseX / width) * images.length);
-        if (newImageIndex !== currentIndex && newImageIndex < images.length) {
-            setCurrentIndex(newImageIndex);
-        }
+        const len = images.length;
+        let idx = Math.floor((mouseX / width) * len);
+        if (idx < 0) idx = 0;
+        if (idx >= len) idx = len - 1;
+        if (idx !== currentIndex) setCurrentIndex(idx);
     };
+
+    // ----- режим владельца -----
+    const ownerMode = isOwner || isReact;
+
+    const handleEdit = useCallback(() => {
+        router.push(`/profile/redact_auto/${ads.id}`);
+    }, [router, ads?.id]);
+
+    const [deleting, setDeleting] = useState(false);
+    const handleDeleteCar = useCallback(async () => {
+        if (!Number.isFinite(adId)) return;
+        const ok = window.confirm("Удалить объявление целиком? Это действие необратимо.");
+        if (!ok) return;
+
+        try {
+            setDeleting(true);
+            await deleteCar(adId);
+            if (onDeleted) onDeleted(adId);
+            else router.refresh(); // либо router.push("/profile/my_cars")
+        } catch (err: any) {
+            console.error(err);
+            alert(err?.message || "Не удалось удалить объявление");
+        } finally {
+            setDeleting(false);
+        }
+    }, [adId, onDeleted, router]);
+
+    const currentSrc = images[currentIndex]?.url
+        ? formatImageUrl(images[currentIndex].url) || "/images/default-car.jpg"
+        : "/images/default-car.jpg";
 
     return (
         <div className={style.container}>
@@ -127,15 +165,7 @@ export const Ad = memo(({ ads, isReact = false }: any) => {
                 onMouseMove={handleMouseMove}
                 className={style.swipeBlock}
             >
-                <img
-                    src={
-                        images[currentIndex]?.url
-                            ? formatImageUrl(images[currentIndex].url) ||
-                              "/images/default-car.jpg"
-                            : "/images/default-car.jpg"
-                    }
-                    alt={ads?.title || "car"}
-                />
+                <img src={currentSrc} alt={ads?.title || "car"} />
 
                 <div className={style.carSpecsBlock}>
                     {ads?.horsepower && (
@@ -163,27 +193,31 @@ export const Ad = memo(({ ads, isReact = false }: any) => {
 
                 <h2 className={style.title}>{ads?.title}</h2>
 
-                <Link
-                    href={`/brands/${encodeURIComponent(String(ads?.owner?.company_name))}`}
-                    className={style.containerCompany}
-                >
-                    <div className={style.companyLogo}>
-                        <img
-                            alt="logo"
-                            src={
-                                ads.owner?.company_avatar_url
-                                    ? formatImageUrl(ads.owner.company_avatar_url) ||
-                                      "/images/default-car.jpg"
-                                    : "/images/default-car.jpg"
-                            }
-                        />
-                    </div>
+                {isOwner ? (
+                    ""
+                ) : (
+                    <Link
+                        href={`/brands/${encodeURIComponent(String(ads?.owner?.company_name))}`}
+                        className={style.containerCompany}
+                    >
+                        <div className={style.companyLogo}>
+                            <img
+                                alt="logo"
+                                src={
+                                    ads.owner?.company_avatar_url
+                                        ? formatImageUrl(ads.owner.company_avatar_url) ||
+                                          "/images/default-car.jpg"
+                                        : "/images/default-car.jpg"
+                                }
+                            />
+                        </div>
 
-                    <div className={style.companyInfo}>
-                        <h2>{ads?.owner?.company_name || "Контакт"}</h2>
-                        <h3>{ads?.owner?.address || "Адрес не указан"}</h3>
-                    </div>
-                </Link>
+                        <div className={style.companyInfo}>
+                            <h2>{ads?.owner?.company_name || "Контакт"}</h2>
+                            <h3>{ads?.owner?.address || "Адрес не указан"}</h3>
+                        </div>
+                    </Link>
+                )}
             </div>
 
             <div className={style.hiddenBlock}>
@@ -215,10 +249,24 @@ export const Ad = memo(({ ads, isReact = false }: any) => {
 
                     <button className={style.buyButton}>Перейти</button>
 
-                    {!!isReact && (
+                    {ownerMode && (
                         <>
-                            <button className={style.editButton}>Редактировать</button>
-                            <button className={style.deleteButton}>Удалить</button>
+                            <button
+                                className={style.editButton}
+                                onClick={handleEdit}
+                                disabled={deleting}
+                                title="Редактировать объявление"
+                            >
+                                Редактировать
+                            </button>
+                            <button
+                                className={style.deleteButton}
+                                onClick={handleDeleteCar}
+                                disabled={deleting}
+                                title="Удалить объявление"
+                            >
+                                {deleting ? "Удаление..." : "Удалить"}
+                            </button>
                         </>
                     )}
                 </div>

@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { memo, useMemo, useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Scrollbar, Mousewheel } from "swiper/modules";
 import "swiper/swiper-bundle.css";
 
 import style from "./AdsCardScroll.module.scss";
-import Image from "next/image";
 import { Heart } from "@public/images/floatingMenu";
 import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
+import { deleteCar } from "@src/lib/api/carService";
 
 type CarImage = { id: number; url: string; position?: number };
 type Owner = {
@@ -30,7 +31,6 @@ type Car = {
     car_images?: CarImage[];
     owner?: Owner;
     contacts?: Contacts;
-
     engine_capacity?: string | number | null;
     horsepower?: number | null;
     transmission?: string | null;
@@ -38,7 +38,11 @@ type Car = {
     has_air_conditioner?: boolean | null;
 };
 
-type Props = { ads: Car };
+type Props = {
+    ads: Car;
+    isOwner?: boolean; // режим владельца
+    onDeleted?: (id: number) => void; // колбэк после удаления
+};
 
 const FAV_KEY = "favorite_car_ids";
 
@@ -99,16 +103,24 @@ function writeFavIds(ids: number[]) {
     localStorage.setItem(FAV_KEY, JSON.stringify(ids));
 }
 
-export const AdsCardScroll = memo(({ ads }: Props) => {
+export const AdsCardScroll = memo(({ ads, isOwner = false, onDeleted }: Props) => {
+    const router = useRouter();
+
+    const sortedImgs = useMemo<CarImage[]>(
+        () =>
+            (ads?.car_images ?? [])
+                .filter(Boolean)
+                .slice()
+                .sort((a, b) => (a.position ?? 0) - (b.position ?? 0)),
+        [ads?.car_images]
+    );
+
     const images = useMemo(() => {
-        const arr = (ads?.car_images ?? [])
-            .filter(Boolean)
-            .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+        const arr = sortedImgs
             .map(img => formatImageUrl(img.url))
             .filter(Boolean) as string[];
-
         return arr.length > 0 ? arr : ["/images/default-car.jpg"];
-    }, [ads?.car_images]);
+    }, [sortedImgs]);
 
     const priceText = useMemo(() => {
         if (ads?.price == null || ads?.price === "") return "";
@@ -148,7 +160,7 @@ export const AdsCardScroll = memo(({ ads }: Props) => {
     const phoneRaw = ads?.contacts?.phone_1?.number || null;
     const telHref = phoneRaw ? `tel:${normalizePhone(phoneRaw)}` : null;
 
-    // спецификации
+    // спеки
     const engineText = (() => {
         const v = ads?.engine_capacity;
         if (v == null || v === "") return null;
@@ -166,12 +178,9 @@ export const AdsCardScroll = memo(({ ads }: Props) => {
 
     // избранное
     const [isFav, setIsFav] = useState(false);
-
     useEffect(() => {
         setIsFav(readFavIds().includes(ads.id));
     }, [ads.id]);
-
-    // синхронизация между вкладками
     useEffect(() => {
         const onStorage = (e: StorageEvent) => {
             if (e.key !== FAV_KEY) return;
@@ -197,6 +206,29 @@ export const AdsCardScroll = memo(({ ads }: Props) => {
         },
         [ads.id]
     );
+
+    // --- действия владельца ---
+    const handleEdit = useCallback(() => {
+        router.push(`/profile/redact_auto/${ads.id}`);
+    }, [router, ads.id]);
+
+    const [deleting, setDeleting] = useState(false);
+    const handleDeleteCar = useCallback(async () => {
+        const ok = window.confirm("Удалить объявление целиком? Это действие необратимо.");
+        if (!ok) return;
+
+        try {
+            setDeleting(true);
+            await deleteCar(ads.id);
+            if (onDeleted) onDeleted(ads.id);
+            else router.refresh(); // либо router.push("/profile/my_cars")
+        } catch (err: any) {
+            console.error(err);
+            alert(err?.message || "Не удалось удалить объявление");
+        } finally {
+            setDeleting(false);
+        }
+    }, [ads.id, onDeleted, router]);
 
     return (
         <div className={style.container}>
@@ -239,55 +271,46 @@ export const AdsCardScroll = memo(({ ads }: Props) => {
                         </div>
                     )}
 
-                    {/* {ads?.location / дата — при желании вернёшь} */}
-
                     {companyName && (
                         <div className={style.company}>
-                            <div className={style.companyLeft}>
-                                <img
-                                    className={style.avatar}
-                                    src={
-                                        companyAvatar || "/images/company-placeholder.png"
-                                    }
-                                    alt={companyName}
-                                    loading="lazy"
-                                />
-                                <div className={style.companyMeta}>
-                                    {companyHref ? (
-                                        <Link
-                                            href={companyHref}
-                                            className={style.companyName}
-                                            title={`Перейти в профиль ${companyName}`}
-                                        >
-                                            {companyName}
-                                        </Link>
-                                    ) : (
-                                        <span className={style.companyName}>
-                                            {companyName}
-                                        </span>
-                                    )}
-                                    {addressText && (
-                                        <div className={style.companyAddress}>
-                                            {addressText}
-                                        </div>
-                                    )}
+                            {isOwner ? (
+                                ""
+                            ) : (
+                                <div className={style.companyLeft}>
+                                    <img
+                                        className={style.avatar}
+                                        src={
+                                            companyAvatar ||
+                                            "/images/company-placeholder.png"
+                                        }
+                                        alt={companyName}
+                                        loading="lazy"
+                                    />
+                                    <div className={style.companyMeta}>
+                                        {companyHref ? (
+                                            <Link
+                                                href={companyHref}
+                                                className={style.companyName}
+                                                title={`Перейти в профиль ${companyName}`}
+                                            >
+                                                {companyName}
+                                            </Link>
+                                        ) : (
+                                            <span className={style.companyName}>
+                                                {companyName}
+                                            </span>
+                                        )}
+                                        {addressText && (
+                                            <div className={style.companyAddress}>
+                                                {addressText}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
                             <div className={style.companyRight}>
-                                {/* СЕРДЦЕ слева от кнопки звонка */}
-
-                                {/* <div
-                                    onClick={toggleFav}
-                                    className={`${style.favBtn} ${isFav ? style.favActive : ""}`}
-                                >
-                                    <Image
-                                        width={20}
-                                        height={20}
-                                        src="/images/headerImg/heart.svg"
-                                        alt="heart"
-                                    />
-                                </div> */}
+                                {/* Избранное */}
                                 <button
                                     type="button"
                                     className={`${style.favBtn} ${isFav ? style.favActive : ""}`}
@@ -299,60 +322,53 @@ export const AdsCardScroll = memo(({ ads }: Props) => {
                                     aria-pressed={isFav}
                                     onClick={toggleFav}
                                 >
-                                    {/* <svg
-                                        viewBox="0 0 24 24"
-                                        className={style.favIcon}
-                                        aria-hidden="true"
-                                    >
-                                        <path d="M12 21s-6.716-4.303-9.293-6.879C1.147 12.561 1 10.21 2.414 8.797c1.414-1.414 3.707-1.414 5.121 0L12 13.263l4.465-4.466c1.414-1.414 3.707-1.414 5.121 0 1.414 1.414 1.268 3.764-.293 5.324C18.716 16.697 12 21 12 21z" />
-                                    </svg> */}
                                     <Heart className={style.favIcon} />
                                 </button>
 
-                                {telHref && (
-                                    <a
-                                        href={telHref}
-                                        className={style.callBtn}
-                                        aria-label={`Позвонить ${companyName}`}
-                                    >
-                                        <svg
-                                            viewBox="0 0 24 24"
-                                            className={style.callIcon}
-                                            aria-hidden="true"
+                                {/* Если владелец — показываем редактирование/удаление, иначе — «Позвонить» */}
+                                {isOwner ? (
+                                    <>
+                                        <button
+                                            type="button"
+                                            className={`${style.callBtn} ${style.redact}`}
+                                            onClick={handleEdit}
+                                            title="Редактировать"
+                                            disabled={deleting}
                                         >
-                                            <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l1.82-1.82a1 1 0 011.02-.24c1.12.37 2.33.57 3.55.57a1 1 0 011 1V21a1 1 0 01-1 1C10.4 22 2 13.6 2 3a1 1 0 011-1h3.11a1 1 0 011 1c0 1.22.2 2.43.57 3.55a1 1 0 01-.24 1.02l-1.82 1.82z" />
-                                        </svg>
-                                        Позвонить
-                                    </a>
+                                            Редактировать
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className={`${style.callBtn} ${style.deleted}`}
+                                            onClick={handleDeleteCar}
+                                            title="Удалить объявление"
+                                            disabled={deleting}
+                                        >
+                                            {deleting ? "Удаление..." : "Удалить"}
+                                        </button>
+                                    </>
+                                ) : (
+                                    telHref && (
+                                        <a
+                                            href={telHref}
+                                            className={style.callBtn}
+                                            aria-label={`Позвонить ${companyName}`}
+                                        >
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                className={style.callIcon}
+                                                aria-hidden="true"
+                                            >
+                                                <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l1.82-1.82a1 1 0 011.02-.24c1.12.37 2.33.57 3.55.57a1 1 0 011 1V21a1 1 0 01-1 1C10.4 22 2 13.6 2 3a1 1 0 011-1h3.11a1 1 0 011 1c0 1.22.2 2.43.57 3.55a1 1 0 01-.24 1.02l-1.82 1.82z" />
+                                            </svg>
+                                            Позвонить
+                                        </a>
+                                    )
                                 )}
                             </div>
                         </div>
                     )}
                 </div>
-
-                {/* <div className={style.actions}>
-                    <button
-                        className={style.iconBtn}
-                        aria-label="Добавить в избранное"
-                        type="button"
-                    >
-                        <i className="icon-heart" />
-                    </button>
-                    <button
-                        className={style.iconBtn}
-                        aria-label="Написать сообщение"
-                        type="button"
-                    >
-                        <i className="icon-chat" />
-                    </button>
-                    <button
-                        className={style.iconBtn}
-                        aria-label="Поделиться"
-                        type="button"
-                    >
-                        <i className="icon-share" />
-                    </button>
-                </div> */}
             </div>
         </div>
     );
