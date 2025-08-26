@@ -74,10 +74,8 @@ export default function StandardPageAllPosts({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams]);
 
-    const debouncedSearch = useDebounce(inputSearch, 700);
-
     useEffect(() => {
-        const trimmed = debouncedSearch.trim();
+        const trimmed = search.trim();
 
         const sp = new URLSearchParams(searchParams.toString());
         if (trimmed) sp.set("search", trimmed);
@@ -87,13 +85,15 @@ export default function StandardPageAllPosts({
         const qs = sp.toString();
         const nextUrl = qs ? `${pathname}?${qs}` : pathname;
 
-        // Проверяем, отличается ли новый URL от текущего
         const currentUrl =
             pathname + (searchParams.toString() ? `?${searchParams.toString()}` : "");
         if (nextUrl !== currentUrl) {
             router.replace(nextUrl, { scroll: false });
         }
-    }, [debouncedSearch, pathname, router, searchParams]);
+    }, [search, pathname, router, searchParams]);
+    const handleSearchSubmit = useCallback(() => {
+        setSearch(inputSearch);
+    }, [inputSearch]);
 
     // ---------- Данные и пагинация ----------
     const [ads, setAds] = useState<Car[]>(initial?.cars ?? []);
@@ -234,6 +234,7 @@ export default function StandardPageAllPosts({
         <>
             <CountAndSearchWrapper
                 handleInputChange={handleInputChange}
+                handleSearchSubmit={handleSearchSubmit}
                 count={totalAds}
                 inputSearch={inputSearch}
             />

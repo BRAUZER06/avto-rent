@@ -11,6 +11,7 @@ interface CountAndSearchWrapperProps {
     count: number;
     inputSearch: string;
     handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    handleSearchSubmit: () => void;
 }
 
 // Родительный падеж по слагу региона
@@ -38,7 +39,7 @@ function getRegionSlugFromUrl(pathname: string, searchParams: URLSearchParams) {
 }
 
 export const CountAndSearchWrapper: React.FC<CountAndSearchWrapperProps> = memo(
-    ({ count, inputSearch, handleInputChange }) => {
+    ({ count, inputSearch, handleInputChange, handleSearchSubmit }) => {
         const pathname = usePathname();
         const searchParams = useSearchParams();
 
@@ -60,7 +61,11 @@ export const CountAndSearchWrapper: React.FC<CountAndSearchWrapperProps> = memo(
                 <NamePagesAndCountItems text={title} count={count || 0} />
 
                 <div className={style.searchAndBtnContainer}>
-                    <SearchBig value={inputSearch} handleOnChange={handleInputChange} />
+                    <SearchBig
+                        value={inputSearch}
+                        handleOnChange={handleInputChange}
+                        handleOnSubmit={handleSearchSubmit}
+                    />
                 </div>
             </div>
         );

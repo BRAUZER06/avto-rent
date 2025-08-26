@@ -16,19 +16,7 @@ const VALID_REGIONS = new Set(
     regionsFull.filter(r => r.name && r.name.trim() !== "").map(r => r.name)
 );
 
-// Генерим пути и с регионом, и без региона
-export async function generateStaticParams() {
-    const cats = categoriesAuto.map(c => c.slug);
-    const regions = regionsFull.map(r => r.name).filter(Boolean) as string[];
-
-    // без региона
-    const noRegion = cats.map(slug => ({ slug }));
-
-    // с регионом
-    const withRegion = regions.flatMap(region => cats.map(slug => ({ region, slug })));
-
-    return [...noRegion, ...withRegion];
-}
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://rentavtokavkaz.ru";
 
 const REGION_RU: Record<string, string> = {
     ingushetia: "Ингушетия",
@@ -81,12 +69,14 @@ export async function generateMetadata({
     return {
         title,
         description,
-        alternates: { canonical: path },
+        alternates: {
+            canonical: `${baseUrl}${path}`, // canonical без search
+        },
         robots: hasSearch ? { index: false, follow: true } : undefined,
         openGraph: {
             title,
             description,
-            url: path,
+            url: `${baseUrl}${path}`,
             type: "website",
         },
     };
@@ -134,10 +124,10 @@ function ItemListJsonLd({
 }) {
     if (!initial?.cars?.length) return null;
     const prefix = region ? `/${region}` : "";
-    const items = initial.cars.slice(0, 10).map((car: any, idx: number) => ({
+    const items = initial.cars.slice(0, 10).map((car, idx) => ({
         "@type": "ListItem",
         position: idx + 1,
-        url: `${prefix}/avto/car/${car.id}`,
+        url: `${baseUrl}${prefix}/avto/car/${car.id}`,
         name: car.title,
         image: car?.car_images?.[0]?.url || undefined,
     }));
@@ -157,8 +147,13 @@ function ItemListJsonLd({
 
 function BreadcrumbsJsonLd({ region, slug }: { region?: string; slug: string }) {
     const trail = [
-        { "@type": "ListItem", position: 1, name: "Главная", item: "/" },
-        { "@type": "ListItem", position: 2, name: "Аренда авто", item: "/avto" },
+        { "@type": "ListItem", position: 1, name: "Главная", item: `${baseUrl}/` },
+        {
+            "@type": "ListItem",
+            position: 2,
+            name: "Аренда авто",
+            item: `${baseUrl}/avto`,
+        },
     ];
 
     const regionPart = region
@@ -167,13 +162,13 @@ function BreadcrumbsJsonLd({ region, slug }: { region?: string; slug: string }) 
                   "@type": "ListItem",
                   position: 3,
                   name: REGION_RU[region] ?? region,
-                  item: `/${region}/avto`,
+                  item: `${baseUrl}/${region}/avto`,
               },
               {
                   "@type": "ListItem",
                   position: 4,
                   name: CAT_RU[slug] ?? slug,
-                  item: `/${region}/avto/${slug}`,
+                  item: `${baseUrl}/${region}/avto/${slug}`,
               },
           ]
         : [
@@ -181,7 +176,7 @@ function BreadcrumbsJsonLd({ region, slug }: { region?: string; slug: string }) 
                   "@type": "ListItem",
                   position: 3,
                   name: CAT_RU[slug] ?? slug,
-                  item: `/avto/${slug}`,
+                  item: `${baseUrl}/avto/${slug}`,
               },
           ];
 
@@ -212,7 +207,6 @@ export default async function CategoryPage({
     const category = categoriesAuto.find(c => c.slug === slug);
     if (!category) return notFound();
 
-    // Если регион передан, но невалиден — редирект на версию без региона
     if (region && !VALID_REGIONS.has(region)) {
         redirect(`/avto/${category.slug}`);
     }
@@ -232,7 +226,7 @@ export default async function CategoryPage({
             search,
         });
     } catch {
-        initial = null; // пусть клиентская часть попробует загрузить
+        initial = null;
     }
 
     return (

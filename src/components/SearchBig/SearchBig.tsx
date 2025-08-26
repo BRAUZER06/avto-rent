@@ -7,9 +7,10 @@ import { memo } from "react";
 interface Props {
     value: string;
     handleOnChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    handleOnSubmit: () => void;
 }
 
-export const SearchBig = memo(({ value, handleOnChange }: Props) => {
+export const SearchBig = memo(({ value, handleOnChange, handleOnSubmit }: Props) => {
     return (
         <>
             {/* <div className={style.search}>
@@ -37,6 +38,12 @@ export const SearchBig = memo(({ value, handleOnChange }: Props) => {
                     type="text"
                     value={value}
                     onChange={event => handleOnChange(event)}
+                    onKeyDown={e => {
+                        if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleOnSubmit();
+                        }
+                    }}
                 />
 
                 <Image
@@ -45,6 +52,7 @@ export const SearchBig = memo(({ value, handleOnChange }: Props) => {
                     width={44}
                     height={44}
                     alt="Logo"
+                    onClick={handleOnSubmit}
                 />
             </div>
         </>
