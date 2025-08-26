@@ -9,6 +9,19 @@ module.exports = {
         missingSuspenseWithCSRBailout: false,
     },
     images: {
-        domains: ["rentavtokavkaz.ru", "static-maps.yandex.ru"],
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "rentavtokavkaz.ru",
+                port: "",
+                pathname: "/**",
+            },
+            {
+                protocol: "https",
+                hostname: "static-maps.yandex.ru",
+                port: "",
+                pathname: "/**",
+            },
+        ],
     },
 };

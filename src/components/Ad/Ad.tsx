@@ -27,7 +27,7 @@ export const Ad = memo(({ ads, isOwner = false, onDeleted, isReact = false }: Pr
     const router = useRouter();
     const [currentIndex, setCurrentIndex] = useState(0);
     const containerRef = useRef<HTMLDivElement | null>(null);
-
+    const [mounted, setMounted] = useState(false);
     const images: CarImage[] = Array.isArray(ads?.car_images)
         ? [...ads.car_images].filter(Boolean)
         : [];
@@ -86,6 +86,10 @@ export const Ad = memo(({ ads, isOwner = false, onDeleted, isReact = false }: Pr
         },
         [adId, isFav]
     );
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     useEffect(() => {
         const sync = () => {
@@ -193,14 +197,16 @@ export const Ad = memo(({ ads, isOwner = false, onDeleted, isReact = false }: Pr
 
                 <h2 className={style.title}>{ads?.title}</h2>
 
-                {isOwner ? (
-                    ""
-                ) : (
-                    <Link
-                        href={`/brands/${encodeURIComponent(String(ads?.owner?.company_name))}`}
+                {mounted && !isOwner && ads?.owner?.company_name && (
+                    <div
                         className={style.containerCompany}
+                        onClick={() =>
+                            router.push(
+                                SearchBig_searchInput__Y3A4A`/brands/${encodeURIComponent(String(ads.owner.company_name ?? ""))}`
+                            )
+                        }
                     >
-                        <div className={style.companyLogo}>
+                        <span className={style.companyLogo}>
                             <img
                                 alt="logo"
                                 src={
@@ -210,13 +216,13 @@ export const Ad = memo(({ ads, isOwner = false, onDeleted, isReact = false }: Pr
                                         : "/images/default-car.jpg"
                                 }
                             />
-                        </div>
+                        </span>
 
                         <div className={style.companyInfo}>
                             <h2>{ads?.owner?.company_name || "Контакт"}</h2>
                             <h3>{ads?.owner?.address || "Адрес не указан"}</h3>
                         </div>
-                    </Link>
+                    </div>
                 )}
             </div>
 
@@ -273,16 +279,18 @@ export const Ad = memo(({ ads, isOwner = false, onDeleted, isReact = false }: Pr
             </div>
 
             {/* Избранное */}
-            <button
-                type="button"
-                onClick={handleFavClick}
-                className={clsx(style.heartIconContainer, isFav && style.active)}
-                aria-pressed={isFav}
-                aria-label={isFav ? "Убрать из избранного" : "Добавить в избранное"}
-                title={isFav ? "Убрать из избранного" : "В избранное"}
-            >
-                <HeartIcon className={style.heartIcon} />
-            </button>
+            {mounted && (
+                <button
+                    type="button"
+                    onClick={handleFavClick}
+                    className={clsx(style.heartIconContainer, isFav && style.active)}
+                    aria-pressed={isFav}
+                    aria-label={isFav ? "Убрать из избранного" : "Добавить в избранное"}
+                    title={isFav ? "Убрать из избранного" : "В избранное"}
+                >
+                    <HeartIcon className={style.heartIcon} />
+                </button>
+            )}
         </div>
     );
 });

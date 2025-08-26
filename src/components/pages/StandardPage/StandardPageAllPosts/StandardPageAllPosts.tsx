@@ -11,6 +11,7 @@ import useWindowWidth from "@src/utils/api/hooks/useWindowWidth";
 import { getAllCars, getCarsCategory } from "@src/lib/api/carService";
 
 import style from "./StandardPageAllPosts.module.scss";
+import { useDebounce } from "@src/utils/api/hooks/useDebounce";
 
 type Car = any;
 
@@ -73,26 +74,26 @@ export default function StandardPageAllPosts({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams]);
 
-    // Дебаунс-обновление query-параметра (приводит к маршрутизации и подмене initial с сервера)
+    const debouncedSearch = useDebounce(inputSearch, 700);
+
     useEffect(() => {
-        const t = setTimeout(() => {
-            const sp = new URLSearchParams(searchParams.toString());
-            const trimmed = inputSearch.trim();
+        const trimmed = debouncedSearch.trim();
 
-            if (trimmed) sp.set("search", trimmed);
-            else sp.delete("search");
+        const sp = new URLSearchParams(searchParams.toString());
+        if (trimmed) sp.set("search", trimmed);
+        else sp.delete("search");
 
-            // При ручном вводе поиска всегда сбрасываем страницу на 1
-            sp.delete("page");
+        sp.delete("page"); // сброс страницы на 1
+        const qs = sp.toString();
+        const nextUrl = qs ? `${pathname}?${qs}` : pathname;
 
-            const qs = sp.toString();
-            const nextUrl = qs ? `${pathname}?${qs}` : pathname;
+        // Проверяем, отличается ли новый URL от текущего
+        const currentUrl =
+            pathname + (searchParams.toString() ? `?${searchParams.toString()}` : "");
+        if (nextUrl !== currentUrl) {
             router.replace(nextUrl, { scroll: false });
-        }, 300);
-
-        return () => clearTimeout(t);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [inputSearch, pathname, router, searchParams]);
+        }
+    }, [debouncedSearch, pathname, router, searchParams]);
 
     // ---------- Данные и пагинация ----------
     const [ads, setAds] = useState<Car[]>(initial?.cars ?? []);
