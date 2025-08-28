@@ -7,7 +7,10 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
+
+
 COPY . .
+RUN mkdir -p .next/cache && chmod -R 777 .next
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 

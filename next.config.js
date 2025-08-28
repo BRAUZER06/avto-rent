@@ -1,5 +1,5 @@
+/** @type {import('next').NextConfig} */
 module.exports = {
-    // Generate standalone server for Docker runtime
     output: "standalone",
 
     typescript: {
@@ -24,4 +24,6 @@ module.exports = {
             },
         ],
     },
+
+    metadataBase: new URL("https://rentavtokavkaz.ru"),
 };
