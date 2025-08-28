@@ -5,8 +5,7 @@ const SITE =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") || "https://rentavtokavkaz.ru";
 
 const API =
-    process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") ||
-    "https://rentavtokavkaz.ru/api";
+    process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "") || "https://rentavtokavkaz.ru";
 
 const CHUNK_SIZE = 5000; // до 50k на файл по стандарту (оставим запасом)
 

@@ -23,7 +23,7 @@ export const ListAds = memo(function ListAds({ cars }: { cars?: Car[] | null }) 
                     isDesktop ? (
                         <Link
                             key={`${item?.id ?? "noid"}-${i}`}
-                            href={`/avto/car/${item.id}`}
+                            href={`/car/${item.id}`}
                             className={style.contentDesktop}
                         >
                             <Ad ads={item} />
@@ -33,7 +33,7 @@ export const ListAds = memo(function ListAds({ cars }: { cars?: Car[] | null }) 
                             key={`${item?.id ?? "noid"}-${i}`}
                             className={style.contentMobile}
                         >
-                            <Link href={`/avto/car/${item.id}`}>
+                            <Link href={`/car/${item.id}`}>
                                 <AdsCardScroll ads={item} />
                             </Link>
                         </div>

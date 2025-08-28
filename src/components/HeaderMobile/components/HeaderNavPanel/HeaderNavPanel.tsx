@@ -68,6 +68,8 @@ export const HeaderNavPanel = ({ isOpen, toggleNavPanel }: HeaderNavPanelProps) 
                     width={128}
                     height={60}
                     alt="Logo"
+                    unoptimized
+                    priority
                 />
 
                 <Image

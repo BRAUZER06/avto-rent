@@ -36,6 +36,8 @@ export const HeaderMobile = () => {
                 width={104}
                 height={32}
                 alt="Logo"
+                unoptimized
+                priority
             />
 
             {/* 👇 селект региона */}

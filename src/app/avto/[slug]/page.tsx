@@ -1,4 +1,4 @@
-// app/[[region]]/avto/[slug]/page.tsx
+// app/avto/[slug]/page.tsx
 import StandardPageAllPosts from "@src/components/pages/StandardPage/StandardPageAllPosts/StandardPageAllPosts";
 import { categoriesAuto } from "@src/data/categoriesAuto";
 import { regionsFull } from "@src/data/regions";
@@ -95,7 +95,7 @@ async function fetchPageOnServer({
     perPage: number;
     search?: string;
 }): Promise<ServerPayload> {
-    const base = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || "";
+    const base = process.env.NEXT_PUBLIC_API_URL;
 
     const qs = new URLSearchParams({
         page: String(page),

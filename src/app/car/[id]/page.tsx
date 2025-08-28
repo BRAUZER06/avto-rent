@@ -1,4 +1,4 @@
-// app/[[region]]/avto/car/[id]/page.tsx
+// app/car/[id]/page.tsx
 import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { cookies, headers } from "next/headers";
@@ -7,16 +7,12 @@ import StandardPageID from "@src/components/pages/StandardPage/StandardPageID/St
 const SITE_URL =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") || "https://rentavtokavkaz.ru";
 
-const API_BASE_URL =
-    process.env.API_BASE_URL ||
-    process.env.NEXT_PUBLIC_API_BASE_URL ||
-    "https://rentavtokavkaz.ru";
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 function absMedia(url?: string | null): string | null {
     if (!url) return null;
     if (/^https?:\/\//i.test(url)) return url;
-    if (!API_BASE_URL) return url;
-    return `${API_BASE_URL}${url}`;
+    return `${API}${url}`;
 }
 
 function extractImages(car: any): string[] {
@@ -27,7 +23,7 @@ function extractImages(car: any): string[] {
                 (a?.position ?? Number.MAX_SAFE_INTEGER) -
                 (b?.position ?? Number.MAX_SAFE_INTEGER)
         )
-        .map((i: any) => absMedia(i?.url))
+        .map(i => absMedia(i?.url))
         .filter(Boolean)
         .slice(0, 10) as string[];
 }
@@ -39,12 +35,11 @@ function priceText(car: any): string | null {
             .includes("аренда авто на день")
     )?.value;
     const src = cfVal ?? car?.price;
-    if (src == null || src === "") return null;
+    if (!src) return null;
     const str = String(src);
     if (str.includes("₽")) return str;
     const num = Number(str.replace(/[^\d.,]/g, "").replace(",", "."));
-    if (Number.isFinite(num)) return `${num.toLocaleString("ru-RU")} ₽`;
-    return str;
+    return Number.isFinite(num) ? `${num.toLocaleString("ru-RU")} ₽` : str;
 }
 
 function buildTitle(car: any): string {
@@ -61,16 +56,15 @@ function buildDescription(car: any): string {
         car?.fuel_type ? `Топливо: ${car.fuel_type}` : null,
         car?.transmission ? `КПП: ${car.transmission}` : null,
     ].filter(Boolean);
-    return String(bits.join(". ")) || "Аренда автомобиля на Кавказе.";
+    return bits.join(". ") || "Аренда автомобиля на Кавказе.";
 }
 
 async function fetchCarById(id: string, opts: { redirectOn401?: boolean } = {}) {
-    if (!API_BASE_URL) throw new Error("API_BASE_URL не задан в .env");
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("access_token")?.value;
     const h = await headers();
 
-    const res = await fetch(`${API_BASE_URL}/cars/${encodeURIComponent(id)}`, {
+    const res = await fetch(`${API}/cars/${encodeURIComponent(id)}`, {
         method: "GET",
         headers: {
             Accept: "application/json",
@@ -94,9 +88,9 @@ async function fetchCarById(id: string, opts: { redirectOn401?: boolean } = {}) 
 export async function generateMetadata({
     params,
 }: {
-    params: { id: string; region?: string };
+    params: { id: string };
 }): Promise<Metadata> {
-    const id = params?.id;
+    const id = params.id;
     if (!id) {
         return {
             title: "Авто — Аренда авто Кавказ",
@@ -105,7 +99,6 @@ export async function generateMetadata({
     }
 
     const car = await fetchCarById(id, { redirectOn401: false });
-
     if (!car) {
         return {
             title: "Объявление не найдено — Аренда авто Кавказ",
@@ -116,7 +109,7 @@ export async function generateMetadata({
 
     const title = buildTitle(car);
     const description = buildDescription(car);
-    const canonical = `${SITE_URL}/avto/car/${encodeURIComponent(String(car.id))}`;
+    const canonical = `${SITE_URL}/car/${encodeURIComponent(String(car.id))}`;
     const ogImages = extractImages(car);
 
     return {
@@ -138,11 +131,10 @@ export async function generateMetadata({
             description,
             images: ogImages.length ? [ogImages[0]] : undefined,
         },
-        // Можно добавить icons, keywords и т.д.
     };
 }
 
-// ---------- JSON-LD builders ----------
+// ---------- JSON-LD ----------
 function vehicleJsonLd(car: any) {
     const images = extractImages(car);
     const priceNum = Number(
@@ -171,7 +163,7 @@ function vehicleJsonLd(car: any) {
             priceCurrency: "RUB",
             availability: "https://schema.org/InStock",
             businessFunction: "http://purl.org/goodrelations/v1#LeaseOut",
-            url: `${SITE_URL}/avto/car/${encodeURIComponent(String(car?.id))}`,
+            url: `${SITE_URL}/car/${encodeURIComponent(String(car?.id))}`,
         },
         ...(car?.owner?.company_name && {
             seller: {
@@ -190,23 +182,19 @@ function breadcrumbsJsonLd(car: any) {
         "@type": "BreadcrumbList",
         itemListElement: [
             { "@type": "ListItem", position: 1, name: "Главная", item: `${SITE_URL}/` },
-            { "@type": "ListItem", position: 2, name: "Авто", item: `${SITE_URL}/avto` },
+            { "@type": "ListItem", position: 2, name: "Авто", item: `${SITE_URL}/car` },
             {
                 "@type": "ListItem",
                 position: 3,
                 name: car?.title ?? "Авто",
-                item: `${SITE_URL}/avto/car/${encodeURIComponent(String(car?.id))}`,
+                item: `${SITE_URL}/car/${encodeURIComponent(String(car?.id))}`,
             },
         ],
     };
 }
 
 // ---------- Page ----------
-export default async function Page({
-    params,
-}: {
-    params: { id: string; region?: string };
-}) {
+export default async function Page({ params }: { params: { id: string } }) {
     if (!params?.id) return notFound();
 
     const car = await fetchCarById(params.id, { redirectOn401: false });
@@ -225,8 +213,7 @@ export default async function Page({
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(ldBreadcrumbs) }}
             />
-
-            <StandardPageID car={car} region={params.region} />
+            <StandardPageID car={car} />
         </>
     );
 }

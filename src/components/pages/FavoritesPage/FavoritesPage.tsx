@@ -146,16 +146,13 @@ export default function FavoritesPage() {
                 {cars.map((item: Car) => (
                     <div key={item.id}>
                         {/* Десктоп */}
-                        <Link
-                            href={`/avto/car/${item.id}`}
-                            className={styles.contentDesktop}
-                        >
+                        <Link href={`/car/${item.id}`} className={styles.contentDesktop}>
                             <Ad ads={item} />
                         </Link>
 
                         {/* Мобилка */}
                         <div className={styles.contentMobile}>
-                            <Link href={`/avto/car/${item.id}`}>
+                            <Link href={`/car/${item.id}`}>
                                 <AdsCardScroll ads={item} />
                             </Link>
                         </div>

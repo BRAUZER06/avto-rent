@@ -30,6 +30,8 @@ export const HeaderNavSubPanelCar = ({
                     width={128}
                     height={60}
                     alt="Logo"
+                    unoptimized
+                    priority
                 />
 
                 <Image
