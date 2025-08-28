@@ -8,7 +8,9 @@ const SITE_URL =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") || "https://rentavtokavkaz.ru";
 
 const API_BASE_URL =
-    process.env.API_BASE_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "";
+    process.env.API_BASE_URL ||
+    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    "https://rentavtokavkaz.ru";
 
 function absMedia(url?: string | null): string | null {
     if (!url) return null;
