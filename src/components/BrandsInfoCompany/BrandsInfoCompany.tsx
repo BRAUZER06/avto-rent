@@ -159,6 +159,7 @@ export default function BrandsInfoCompany({
                     width={153}
                     height={102}
                     className={styles.companyLogo}
+                    priority
                 />
             </div>
 

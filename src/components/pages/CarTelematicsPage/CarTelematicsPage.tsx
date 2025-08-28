@@ -127,6 +127,7 @@ export default function CarTelematicsPage() {
                             alt="Карта маршрута"
                             fill
                             className={styles.mapImage}
+                            priority
                         />
                         <div className={styles.mapOverlay}>
                             <p>Текущая позиция: 55.7°N, 37.6°E</p>
