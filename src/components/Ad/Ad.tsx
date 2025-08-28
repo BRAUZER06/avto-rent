@@ -32,6 +32,7 @@ export const Ad = memo(({ ads, isOwner = false, onDeleted, isReact = false }: Pr
         ? [...ads.car_images].filter(Boolean)
         : [];
     const adId = Number(ads?.id);
+    if (!ads) return null;
 
     // ----- Избранное -----
     const [isFav, setIsFav] = useState<boolean>(() => {
@@ -202,7 +203,7 @@ export const Ad = memo(({ ads, isOwner = false, onDeleted, isReact = false }: Pr
                         className={style.containerCompany}
                         onClick={() =>
                             router.push(
-                                SearchBig_searchInput__Y3A4A`/brands/${encodeURIComponent(String(ads.owner.company_name ?? ""))}`
+                                `/brands/${encodeURIComponent(String(ads?.owner?.company_name ?? ""))}`
                             )
                         }
                     >
@@ -210,9 +211,10 @@ export const Ad = memo(({ ads, isOwner = false, onDeleted, isReact = false }: Pr
                             <img
                                 alt="logo"
                                 src={
-                                    ads.owner?.company_avatar_url
-                                        ? formatImageUrl(ads.owner.company_avatar_url) ||
-                                          "/images/default-car.jpg"
+                                    ads?.owner?.company_avatar_url
+                                        ? formatImageUrl(
+                                              ads?.owner?.company_avatar_url
+                                          ) || "/images/default-car.jpg"
                                         : "/images/default-car.jpg"
                                 }
                             />

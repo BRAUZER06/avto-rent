@@ -43,15 +43,15 @@ export const Footer = () => {
                     </div>
                 </div>
 
-                <div className={style.footerConditions}>
+                {/* <div className={style.footerConditions}>
                     <Link
                         className={style.conditionsLink}
-                        href={"/assets/files/b89ab324-a666-4388-92d6-1ba37404c24b.pdf"}
+                        href={"/assets/files/b24b.pdf"}
                         target="_blank"
                     >
                         Политика в отношении обработки персональных данных
                     </Link>
-                </div>
+                </div> */}
 
                 {/* 
         <div className={style.footerText}>
