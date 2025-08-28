@@ -20,7 +20,9 @@ export async function GET() {
         process.env.NEXT_PUBLIC_SITE_URL || "https://rentavtokavkaz.ru"
     );
     const API_URL = trimTrailingSlash(
-        process.env.NEXT_PUBLIC_API_URL || "https://rentavtokavkaz.ru/api"
+        process.env.NEXT_PUBLIC_API_URL ||
+            process.env.API_URL ||
+            "https://rentavtokavkaz.ru/api"
     );
 
     const AUTH = process.env.SITEMAP_BEARER;

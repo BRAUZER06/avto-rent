@@ -95,7 +95,7 @@ async function fetchPageOnServer({
     perPage: number;
     search?: string;
 }): Promise<ServerPayload> {
-    const base = process.env.NEXT_PUBLIC_API_URL;
+    const base = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL;
 
     const qs = new URLSearchParams({
         page: String(page),

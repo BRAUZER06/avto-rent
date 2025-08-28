@@ -7,7 +7,7 @@ import StandardPageID from "@src/components/pages/StandardPage/StandardPageID/St
 const SITE_URL =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") || "https://rentavtokavkaz.ru";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL;
 
 function absMedia(url?: string | null): string | null {
     if (!url) return null;
