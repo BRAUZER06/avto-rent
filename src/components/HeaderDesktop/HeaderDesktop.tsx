@@ -29,7 +29,6 @@ import { RegionSelect } from "../ui/RegionSelect/RegionSelect";
 import { getCountAllCars } from "@src/lib/api/carService";
 
 export const HeaderDesktop = memo(() => {
-    const [selectedRegion, setSelectedRegion] = useState("");
     const [totalCars, setTotalCars] = useState<number | null>(null);
 
     useEffect(() => {
@@ -54,16 +53,14 @@ export const HeaderDesktop = memo(() => {
                     src="/assets/header/logoCarText.png"
                     width={128}
                     height={60}
+                    unoptimized
+                    priority
                     alt="Logo"
                 />
             </Link>
 
             <div className={style.regionSelectWrap}>
-                <RegionSelect
-                    value={selectedRegion}
-                    onChange={setSelectedRegion}
-                    placeholder="Выберите регион"
-                />
+                <RegionSelect placeholder="Выберите регион" />
             </div>
 
             <nav className={style.menu}>
