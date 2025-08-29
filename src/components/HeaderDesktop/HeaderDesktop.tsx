@@ -1,17 +1,5 @@
 import Image from "next/image";
-import {
-    HEADER_ABOUT,
-    HEADER_DIRECTIONS,
-    HEADER_VACANCY,
-    HEADER_MEROPTIYATIYA,
-    HEADER_BLOG,
-    HEADER_TECHNOLOGY,
-    HEADER_INTERNSHIP,
-    HEADER_AUTO,
-    HEADER_SERVICES,
-    HEADER_POPULAR_ADS,
-    HEADER_RENT,
-} from "@src/data/header-nav";
+import { HEADER_ABOUT, HEADER_RENT } from "@src/data/header-nav";
 
 import HeaderMultiSelect from "./components/HeaderMultiSelect/HeaderMultiSelect";
 import { HeaderSearch } from "./components/HeaderSearch/HeaderSearch";
@@ -25,8 +13,12 @@ import { fetchCountAllHomePage } from "@src/lib/api/homePage";
 import { HeaderRightBlock } from "./components/HeaderRightBlock/HeaderRightBlock";
 import { SelectCheckboxGroup } from "../ui/SelectWithOverlayAndCheckbox/components/SelectCheckboxGroup/SelectCheckboxGroup";
 import { MobileSelectCheckboxGroup } from "../ui/MobileSelectCheckboxGroup/MobileSelectCheckboxGroup";
-import { RegionSelect } from "../ui/RegionSelect/RegionSelect";
+
 import { getCountAllCars } from "@src/lib/api/carService";
+import dynamic from "next/dynamic";
+const RegionSelect = dynamic(() => import("../ui/RegionSelect/RegionSelect"), {
+    ssr: false,
+});
 
 export const HeaderDesktop = memo(() => {
     const [totalCars, setTotalCars] = useState<number | null>(null);

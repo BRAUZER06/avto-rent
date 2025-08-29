@@ -49,7 +49,7 @@ export default function CarCategories({
                 onClick={collapsible ? handleWrapClick : undefined}
             >
                 <div className={styles.grid}>
-                    {categoriesAuto.map(category => {
+                    {categoriesAuto.map((category, index) => {
                         const isActive = category.slug === currentCategory;
                         return (
                             <Link
@@ -60,7 +60,7 @@ export default function CarCategories({
                                 <span className={styles.label}>{category.title}</span>
                                 <Image
                                     src={category.imageSrc}
-                                    alt={category.title}
+                                    alt={category.slug || `${"avto" + index}`}
                                     width={100}
                                     height={75}
                                     unoptimized

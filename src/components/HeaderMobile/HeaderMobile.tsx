@@ -8,7 +8,11 @@ import { FullMobileScreenOverlay } from "@src/components/ui/FullMobileScreenOver
 import { HeaderNavPanel } from "./components/HeaderNavPanel/HeaderNavPanel";
 
 import style from "./HeaderMobile.module.scss";
-import RegionSelect from "../ui/RegionSelect/RegionSelect";
+import dynamic from "next/dynamic";
+
+const RegionSelect = dynamic(() => import("../ui/RegionSelect/RegionSelect"), {
+    ssr: false,
+});
 
 const regionsSKFO = [
     { id: 1, name: "chechnya", label: "Чеченская Республика" },

@@ -232,51 +232,75 @@ export const AdsCardScroll = memo(({ ads, isOwner = false, onDeleted }: Props) =
 
     return (
         <div className={style.container}>
-            <Swiper
-                spaceBetween={10}
-                slidesPerView="auto"
-                freeMode
-                watchSlidesProgress
-                modules={[Navigation, Scrollbar, Mousewheel]}
-                mousewheel={{ forceToAxis: true }}
-                className={style.swiper}
-            >
-                {images.map((src, index) => (
-                    <SwiperSlide className={style.swiperSlide} key={`${ads.id}-${index}`}>
-                        <img src={src} alt={`Фото ${index + 1}`} loading="lazy" />
-                    </SwiperSlide>
-                ))}
-            </Swiper>
-
+            <Link href={`/car/${ads.id}`}>
+                <Swiper
+                    spaceBetween={10}
+                    slidesPerView="auto"
+                    freeMode
+                    watchSlidesProgress
+                    modules={[Navigation, Scrollbar, Mousewheel]}
+                    mousewheel={{ forceToAxis: true }}
+                    className={style.swiper}
+                >
+                    {images.map((src, index) => (
+                        <SwiperSlide
+                            className={style.swiperSlide}
+                            key={`${ads.id}-${index}`}
+                        >
+                            <img src={src} alt={`Фото ${index + 1}`} loading="lazy" />
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
+            </Link>
             <div className={style.infoBlock}>
                 <div className={style.mainInfo}>
-                    <div className={style.headerLine}>
+                    <Link href={`/car/${ads.id}`} className={style.headerLine}>
                         {priceText && <span className={style.price}>{priceText}</span>}
                         {ads?.year ? (
                             <span className={style.chip}>{ads.year}</span>
                         ) : null}
-                    </div>
+                    </Link>
 
-                    <h3 className={style.title} title={ads?.title || "Автомобиль"}>
+                    <Link
+                        href={`/car/${ads.id}`}
+                        className={style.title}
+                        title={ads?.title || "Автомобиль"}
+                    >
                         {title}
-                    </h3>
+                    </Link>
 
-                    {specChips.length > 0 && (
-                        <div className={style.specs}>
-                            {specChips.map((t, i) => (
-                                <span key={i} className={style.specChip} title={t}>
-                                    {t}
-                                </span>
-                            ))}
-                        </div>
-                    )}
-
+                    <div className={style.containerSpecChip}>
+                        {specChips.length > 0 && (
+                            <Link href={`/car/${ads.id}`} className={style.specs}>
+                                {specChips.map((t, i) => (
+                                    <span key={i} className={style.specChip} title={t}>
+                                        {t}
+                                    </span>
+                                ))}
+                            </Link>
+                        )}
+                        {/* Избранное */}
+                        <button
+                            type="button"
+                            className={`${style.favBtn} ${isFav ? style.favActive : ""}`}
+                            aria-label={
+                                isFav ? "Убрать из избранного" : "Добавить в избранное"
+                            }
+                            aria-pressed={isFav}
+                            onClick={toggleFav}
+                        >
+                            <Heart className={style.favIcon} />
+                        </button>
+                    </div>
                     {companyName && (
                         <div className={style.company}>
                             {isOwner ? (
                                 ""
                             ) : (
-                                <div className={style.companyLeft}>
+                                <Link
+                                    href={`/brands/${companyName}`}
+                                    className={style.companyLeft}
+                                >
                                     <img
                                         className={style.avatar}
                                         src={
@@ -288,13 +312,12 @@ export const AdsCardScroll = memo(({ ads, isOwner = false, onDeleted }: Props) =
                                     />
                                     <div className={style.companyMeta}>
                                         {companyHref ? (
-                                            <Link
-                                                href={companyHref}
+                                            <div
                                                 className={style.companyName}
                                                 title={`Перейти в профиль ${companyName}`}
                                             >
                                                 {companyName}
-                                            </Link>
+                                            </div>
                                         ) : (
                                             <span className={style.companyName}>
                                                 {companyName}
@@ -306,25 +329,10 @@ export const AdsCardScroll = memo(({ ads, isOwner = false, onDeleted }: Props) =
                                             </div>
                                         )}
                                     </div>
-                                </div>
+                                </Link>
                             )}
 
                             <div className={style.companyRight}>
-                                {/* Избранное */}
-                                <button
-                                    type="button"
-                                    className={`${style.favBtn} ${isFav ? style.favActive : ""}`}
-                                    aria-label={
-                                        isFav
-                                            ? "Убрать из избранного"
-                                            : "Добавить в избранное"
-                                    }
-                                    aria-pressed={isFav}
-                                    onClick={toggleFav}
-                                >
-                                    <Heart className={style.favIcon} />
-                                </button>
-
                                 {/* Если владелец — показываем редактирование/удаление, иначе — «Позвонить» */}
                                 {isOwner ? (
                                     <>
@@ -353,6 +361,9 @@ export const AdsCardScroll = memo(({ ads, isOwner = false, onDeleted }: Props) =
                                             href={telHref}
                                             className={style.callBtn}
                                             aria-label={`Позвонить ${companyName}`}
+                                            onClick={e => {
+                                                e.stopPropagation();
+                                            }}
                                         >
                                             <svg
                                                 viewBox="0 0 24 24"

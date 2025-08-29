@@ -164,48 +164,47 @@ export const Ad = memo(({ ads, isOwner = false, onDeleted, isReact = false }: Pr
 
     return (
         <div className={style.container}>
-            <div
-                onClick={handleImageClick}
-                ref={containerRef}
-                onMouseMove={handleMouseMove}
-                className={style.swipeBlock}
-            >
-                <img src={currentSrc} alt={ads?.title || "car"} />
+            <Link href={`/car/${ads.id}`}>
+                <div
+                    onClick={handleImageClick}
+                    ref={containerRef}
+                    onMouseMove={handleMouseMove}
+                    className={style.swipeBlock}
+                >
+                    <img src={currentSrc} alt={ads?.title || "car"} />
 
-                <div className={style.carSpecsBlock}>
-                    {ads?.horsepower && (
-                        <div className={style.specItem}>
-                            <strong>Л.с.:</strong> {ads.horsepower}
-                        </div>
-                    )}
-                    {ads?.engine_capacity && (
-                        <div className={style.specItem}>
-                            <strong>Объём:</strong> {ads.engine_capacity} л
-                        </div>
-                    )}
-                    {ads?.year && (
-                        <div className={style.specItem}>
-                            <strong>Год:</strong> {ads.year}
-                        </div>
-                    )}
+                    <div className={style.carSpecsBlock}>
+                        {ads?.horsepower && (
+                            <div className={style.specItem}>
+                                <strong>Л.с.:</strong> {ads.horsepower}
+                            </div>
+                        )}
+                        {ads?.engine_capacity && (
+                            <div className={style.specItem}>
+                                <strong>Объём:</strong> {ads.engine_capacity} л
+                            </div>
+                        )}
+                        {ads?.year && (
+                            <div className={style.specItem}>
+                                <strong>Год:</strong> {ads.year}
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
-
+            </Link>
             <div className={style.infoBlock}>
-                <div className={style.containerPrice}>
-                    <span>{Number(ads?.price).toLocaleString()} ₽</span>
-                </div>
+                <Link href={`/car/${ads.id}`}>
+                    <div className={style.containerPrice}>
+                        <span>{Number(ads?.price).toLocaleString()} ₽</span>
+                    </div>
 
-                <h2 className={style.title}>{ads?.title}</h2>
+                    <h2 className={style.title}>{ads?.title}</h2>
+                </Link>
 
                 {mounted && !isOwner && ads?.owner?.company_name && (
-                    <div
+                    <Link
+                        href={`/brands/${ads?.owner?.company_name}`}
                         className={style.containerCompany}
-                        onClick={() =>
-                            router.push(
-                                `/brands/${encodeURIComponent(String(ads?.owner?.company_name ?? ""))}`
-                            )
-                        }
                     >
                         <span className={style.companyLogo}>
                             <img
@@ -224,7 +223,7 @@ export const Ad = memo(({ ads, isOwner = false, onDeleted, isReact = false }: Pr
                             <h2>{ads?.owner?.company_name || "Контакт"}</h2>
                             <h3>{ads?.owner?.address || "Адрес не указан"}</h3>
                         </div>
-                    </div>
+                    </Link>
                 )}
             </div>
 
@@ -254,9 +253,9 @@ export const Ad = memo(({ ads, isOwner = false, onDeleted, isReact = false }: Pr
                             </div>
                         )}
                     </div>
-
-                    <button className={style.buyButton}>Перейти</button>
-
+                    <Link href={`/car/${ads.id}`}>
+                        <button className={style.buyButton}>Перейти</button>
+                    </Link>
                     {ownerMode && (
                         <>
                             <button

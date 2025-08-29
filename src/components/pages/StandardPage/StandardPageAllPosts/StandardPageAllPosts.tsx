@@ -260,18 +260,12 @@ export default function StandardPageAllPosts({
 
                     {ads.map((item: Car) =>
                         screenWidth > 1024 ? (
-                            <Link
-                                href={`/car/${item.id}`}
-                                key={item.id}
-                                className={style.contentDesktop}
-                            >
+                            <div key={item.id} className={style.contentDesktop}>
                                 <Ad ads={item} />
-                            </Link>
+                            </div>
                         ) : (
                             <div key={item.id} className={style.contentMobile}>
-                                <Link href={`/car/${item.id}`}>
-                                    <AdsCardScroll ads={item} />
-                                </Link>
+                                <AdsCardScroll ads={item} />
                             </div>
                         )
                     )}

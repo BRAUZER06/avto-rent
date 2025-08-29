@@ -27,7 +27,7 @@
 }
 
 .customButton {
-    padding: 5px 0px;
+   
     display: flex;
     align-items: center;
 
@@ -55,10 +55,13 @@
     a {
         display: flex;
         align-items: center;
+      
+        padding: 2px 5px;
     }
 }
 
 .greenSpan {
+    min-width: 25px;
     margin-left: 4px;
     // color: var(--green-main);
     color: var(--blue-text--brightest);
@@ -91,7 +94,7 @@
     box-shadow: 2px 2px 12px 0px rgba(0, 0, 0, 0.15);
 }
 
-.customOptionsListPositions{
+.customOptionsListPositions {
     left: -550%;
     max-width: 1000px !important;
     width: 1000px !important;
@@ -162,7 +165,7 @@
 .optionListItem {
     display: flex !important;
     padding: 5px 0px;
-    align-items:center;
+    align-items: center;
     width: 24%;
     max-width: 244px;
     font-size: 14px;

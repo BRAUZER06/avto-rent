@@ -163,7 +163,7 @@ export const RightPriceBlock = ({
             <span className={style.price}>{priceText}</span>
 
             <div className={style.number}>
-                <p>Показать телефон</p>
+                {/* <p>Показать телефон</p> */}
                 {telHref ? (
                     <a href={telHref}>{phoneDisplay || "Телефон не указан"}</a>
                 ) : (

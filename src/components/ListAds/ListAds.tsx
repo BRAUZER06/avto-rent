@@ -21,21 +21,18 @@ export const ListAds = memo(function ListAds({ cars }: { cars?: Car[] | null }) 
             <div className={style.itemsList}>
                 {list.map((item: Car, i: number) =>
                     isDesktop ? (
-                        <Link
+                        <div
                             key={`${item?.id ?? "noid"}-${i}`}
-                            href={`/car/${item.id}`}
                             className={style.contentDesktop}
                         >
                             <Ad ads={item} />
-                        </Link>
+                        </div>
                     ) : (
                         <div
                             key={`${item?.id ?? "noid"}-${i}`}
                             className={style.contentMobile}
                         >
-                            <Link href={`/car/${item.id}`}>
-                                <AdsCardScroll ads={item} />
-                            </Link>
+                            <AdsCardScroll ads={item} />
                         </div>
                     )
                 )}
