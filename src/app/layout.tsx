@@ -1,4 +1,3 @@
-import Head from "next/head";
 import "./globals.scss";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -8,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import YandexMetrika from "./YandexMetrika";
 import GoogleAnalytics from "./GoogleAnalytics";
 import { Metadata } from "next";
+
 interface RootLayoutProps {
     children: React.ReactNode;
 }
@@ -26,7 +26,8 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
                 className="bg-backgroundBlack relative h-full w-full"
                 suppressHydrationWarning={true}
             >
-                <InitAuth /> {children}
+                <InitAuth />
+                {children}
                 <YandexMetrika />
                 <GoogleAnalytics />
             </body>
