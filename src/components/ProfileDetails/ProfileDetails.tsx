@@ -670,7 +670,7 @@ const ProfileDetails = () => {
                                                 key={img.id}
                                                 id={img.id}
                                                 url={img.preview}
-                                                onRemove={removeLogo}
+                                                onRemove={() => removeLogo(img.id)}
                                             />
                                         ))}
                                     </div>

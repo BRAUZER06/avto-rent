@@ -153,11 +153,9 @@ export const MobileContactPanel = ({
                 {canMessage && (
                     <button
                         className={`${style.pill} ${style.message}`}
-                        onClick={handleMessageClick}
+                        onClick={() => setOverlayType("message")}
                     >
-                        {hasWA && !hasTG && <FaWhatsapp className={style.icon} />}
-                        {!hasWA && hasTG && <FaTelegramPlane className={style.icon} />}
-                        {hasWA && hasTG && <FaTelegramPlane className={style.icon} />}
+                        <FaTelegramPlane className={style.icon} />
                         <span>Написать</span>
                     </button>
                 )}

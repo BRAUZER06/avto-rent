@@ -96,7 +96,7 @@ export const MobileContanctPanelContent = ({
             <div className={style.headerNav}>
                 <Image
                     className={style.logo}
-                    src="/images/logo.svg"
+                    src="/assets/header/logoCarText.png"
                     width={104}
                     height={32}
                     alt="Logo"
@@ -135,55 +135,63 @@ export const MobileContanctPanelContent = ({
 
             <div className={style.links}>
                 {waHref && (
-                    <div className={style.linkRow}>
+                    <a
+                        href={waHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`${style.pill} ${style.wa}`}
+                        aria-label="Написать в WhatsApp"
+                    >
                         <FaWhatsapp className={style.icon} />
-                        <a href={waHref} target="_blank" rel="noopener noreferrer">
-                            WhatsApp
-                        </a>
-                    </div>
+                        <span>WhatsApp</span>
+                    </a>
                 )}
 
                 {tg?.url && (
-                    <div className={style.linkRow}>
+                    <a
+                        href={tg.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`${style.pill} ${style.tg}`}
+                        aria-label="Написать в Telegram"
+                    >
                         <FaTelegramPlane className={style.icon} />
-                        <a href={tg.url} target="_blank" rel="noopener noreferrer">
-                            Telegram{tg.username ? `: @${tg.username}` : ""}
-                        </a>
-                    </div>
+                        <span>Telegram{tg.username ? `: @${tg.username}` : ""}</span>
+                    </a>
                 )}
 
                 {instagram && (
-                    <div className={style.linkRow}>
+                    <a
+                        href={
+                            /^https?:\/\//i.test(instagram)
+                                ? instagram
+                                : `https://instagram.com/${instagram.replace(/^@/, "")}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`${style.pill} ${style.ig}`}
+                        aria-label="Открыть Instagram"
+                    >
                         <FaInstagram className={style.icon} />
-                        <a
-                            href={
-                                /^https?:\/\//i.test(instagram)
-                                    ? instagram
-                                    : `https://instagram.com/${instagram.replace(/^@/, "")}`
-                            }
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
+                        <span>
                             Instagram{instagram.startsWith("@") ? "" : `: @${instagram}`}
-                        </a>
-                    </div>
+                        </span>
+                    </a>
                 )}
 
                 {website && (
-                    <div className={style.linkRow}>
+                    <a
+                        href={
+                            /^https?:\/\//i.test(website) ? website : `https://${website}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`${style.pill} ${style.site}`}
+                        aria-label="Открыть сайт"
+                    >
                         <FaGlobe className={style.icon} />
-                        <a
-                            href={
-                                /^https?:\/\//i.test(website)
-                                    ? website
-                                    : `https://${website}`
-                            }
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Сайт
-                        </a>
-                    </div>
+                        <span>Сайт</span>
+                    </a>
                 )}
             </div>
         </div>

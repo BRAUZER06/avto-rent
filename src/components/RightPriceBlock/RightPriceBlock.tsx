@@ -193,6 +193,11 @@ export const RightPriceBlock = ({
                         {phoneDisplay && (
                             <div className={style.phoneBlock}>
                                 <p className={style.phone}>{phoneDisplay}</p>
+                                {contacts?.phone_1?.label && (
+                                    <p className={style.phoneDescription}>
+                                        {contacts.phone_1.label}
+                                    </p>
+                                )}
                                 {telHref && (
                                     <a className={style.callButton} href={telHref}>
                                         Позвонить

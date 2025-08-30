@@ -13,7 +13,6 @@ export const ProfileNavigate = ({ rating = 4.3, reviews = 0, ads = 0 }) => {
     return (
         <div className={style.container}>
             <div className={style.profileBlock}>
-                +{" "}
                 <img
                     src={
                         formatImageUrl(profile?.company_avatar_url || "") ||

@@ -1,4 +1,3 @@
-import { formatDateForAds } from "@src/lib/helpers/formatters/formatDateForAds";
 import style from "./AdsHomeAdvertising.module.scss";
 import { memo, useRef, useState } from "react";
 import { ModalImage } from "../ui/ModalImage/ModalImage";

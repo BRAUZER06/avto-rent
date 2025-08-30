@@ -1,16 +1,18 @@
-// @src/components/BrandsInfoCompany/BrandsInfoCompany.tsx
 "use client";
 
-import { useMemo, useState } from "react";
-import Link from "next/link";
+import { useMemo, useState, useRef } from "react";
 import Image from "next/image";
 import styles from "./BrandsInfoCompany.module.scss";
-
 import { regionsFull } from "@src/data/regions";
-
-// иконки
-import { FaInstagram, FaTelegramPlane, FaWhatsapp, FaGlobe } from "react-icons/fa";
+import {
+    FaInstagram,
+    FaTelegramPlane,
+    FaWhatsapp,
+    FaGlobe,
+    FaPhone,
+} from "react-icons/fa";
 import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
+import useOutsideClick from "@src/utils/api/hooks/useOutsideClick";
 
 type LogoObj = { id: number; url: string; position?: number; raw_url?: string };
 type PhoneObj = { label?: string | null; number?: string | null };
@@ -32,13 +34,11 @@ type CompanyDTO = {
     region?: string | null;
     logo_urls?: LogoObj[];
     cars?: any[];
+    is_verified?: boolean;
+    is_phone_verified?: boolean;
 };
 
-type Props = {
-    company?: CompanyDTO;
-    // rating?: number;       // рейтинг оставляем на будущее
-    // reviewsCount?: number; // рейтинг оставляем на будущее
-};
+type Props = { company?: CompanyDTO };
 
 function normalizeDigits(raw?: string | null): string | null {
     if (!raw) return null;
@@ -50,14 +50,8 @@ function formatPhone(digits: string): string {
     return `+${digits}`;
 }
 
-export default function BrandsInfoCompany({
-    company,
-    // rating = 2.5,
-    // reviewsCount = 0,
-}: Props) {
-    // 1) Аватар приоритетно, иначе 1-я фотка из logo_urls
+export default function BrandsInfoCompany({ company }: Props) {
     const avatarPath = company?.company_avatar_url || null;
-
     const fallbackLogo = company?.logo_urls?.[0]?.url || null;
 
     const logoSrc = useMemo(() => {
@@ -65,13 +59,12 @@ export default function BrandsInfoCompany({
         const src = formatImageUrl(p || "");
         return src || "/images/default-company.jpg";
     }, [avatarPath, fallbackLogo]);
-    // регион (читаемый)
+
     const regionLabel = useMemo(
         () => regionsFull.find(r => r.name === company?.region)?.label ?? null,
         [company?.region]
     );
 
-    // 2) Номера: собираем с учётом label, дедуплируем по digits
     const phones = useMemo(() => {
         const candidates: Array<{ digits: string; label?: string | null }> = [];
 
@@ -90,7 +83,6 @@ export default function BrandsInfoCompany({
         const waDigits = normalizeDigits(company?.whatsapp);
         if (waDigits) candidates.push({ digits: waDigits, label: "WhatsApp" });
 
-        // Дедуп по digits, максимально сохраняем первый встретившийся label
         const map = new Map<string, { digits: string; label?: string | null }>();
         for (const c of candidates) {
             if (!map.has(c.digits)) map.set(c.digits, c);
@@ -98,7 +90,6 @@ export default function BrandsInfoCompany({
         return Array.from(map.values());
     }, [company]);
 
-    // 3) Соц. и сайт
     const socialLinks = useMemo(() => {
         const list: Array<{
             type: "whatsapp" | "telegram" | "instagram" | "website";
@@ -140,15 +131,26 @@ export default function BrandsInfoCompany({
     }, [company?.whatsapp, company?.telegram, company?.instagram, company?.website]);
 
     const [showPhones, setShowPhones] = useState(false);
+    const callRef = useRef<HTMLDivElement>(null);
+
+    useOutsideClick(callRef, () => setShowPhones(false));
 
     const handleCallClick = () => {
         if (phones.length === 0) return;
         if (phones.length === 1) {
             window.location.href = `tel:+${phones[0].digits}`;
         } else {
-            setShowPhones(v => !v);
+            setShowPhones(prev => !prev);
         }
     };
+
+    const preferredLink = useMemo(
+        () =>
+            socialLinks.find(s => s.type === "whatsapp") ??
+            socialLinks.find(s => s.type === "telegram") ??
+            socialLinks[0],
+        [socialLinks]
+    );
 
     return (
         <div className={styles.container}>
@@ -167,27 +169,6 @@ export default function BrandsInfoCompany({
                 {company?.company_name || "Название компании"}
             </h1>
 
-            {/*
-      // Блок рейтинга/отзывов — ЗАКОММЕНТИРОВАН (подключим позже)
-      const ratingPercentage = (rating / 5) * 100;
-      <div className={styles.ratingContainer}>
-        <div className={styles.rating}>
-          <span>{rating.toFixed(1)}</span>
-          <div className={styles.starsContainer}>
-            <div className={styles.starsFilled} style={{ width: `${ratingPercentage}%` }}>
-              ★★★★★
-            </div>
-            <div className={styles.starsEmpty}>★★★★★</div>
-          </div>
-          <Link href="/reviews">
-            <p className={styles.reviewsLink}>
-              {reviewsCount > 0 ? `${reviewsCount} отзывов` : "Нет отзывов"}
-            </p>
-          </Link>
-        </div>
-      </div>
-      */}
-
             {regionLabel && (
                 <div className={styles.subscribers}>
                     Регион: <span className={styles.muted}>{regionLabel}</span>
@@ -200,13 +181,31 @@ export default function BrandsInfoCompany({
             </div>
 
             <div className={styles.verification}>
-                <div className={styles.verifiedPartner}>Проверенный партнёр</div>
-                {phones.length > 0 && (
-                    <div className={styles.phoneVerified}>Телефон подтверждён</div>
-                )}
+                <div
+                    className={`${styles.statusBlock} ${company?.is_verified ? styles.true : styles.false}`}
+                    title={
+                        company?.is_verified
+                            ? "Компания проверена и одобрена администрацией сайта"
+                            : "Администрацией сайта не проверен этот партнёр"
+                    }
+                >
+                    {company?.is_verified ? "Проверенный партнёр" : "Не проверен"}
+                </div>
+
+                <div
+                    className={`${styles.statusBlock} ${company?.is_phone_verified ? styles.true : styles.false}`}
+                    title={
+                        company?.is_phone_verified
+                            ? "Телефон партнёра подтверждён администрацией сайта"
+                            : "Администрацией сайта не проверен телефон этого партнёра"
+                    }
+                >
+                    {company?.is_phone_verified
+                        ? "Телефон подтверждён"
+                        : "Телефон не подтверждён"}
+                </div>
             </div>
 
-            {/* Соц-иконки с цветами */}
             {socialLinks.length > 0 && (
                 <div className={styles.socials}>
                     {socialLinks.map((s, idx) => {
@@ -245,18 +244,14 @@ export default function BrandsInfoCompany({
             )}
 
             <div className={styles.btnContainer}>
-                {/* Позвонить: 1 номер — сразу, 2+ — список */}
-                <div
-                    className={styles.callWrapper}
-                    onMouseLeave={() => setShowPhones(false)}
-                >
+                <div className={styles.callWrapper} ref={callRef}>
                     <button
                         className={`${styles.button} ${styles.showNumber}`}
                         onClick={handleCallClick}
                         disabled={phones.length === 0}
                         title={phones.length === 0 ? "Номер не указан" : "Позвонить"}
                     >
-                        Позвонить
+                        <FaPhone style={{ marginRight: "6px" }} /> Позвонить
                     </button>
 
                     {showPhones && phones.length > 1 && (
@@ -269,26 +264,25 @@ export default function BrandsInfoCompany({
                                     onClick={() => setShowPhones(false)}
                                 >
                                     {formatPhone(p.digits)}
-                                    {p.label ? (
+                                    {p.label && (
                                         <span className={styles.callLabel}>
                                             {" "}
                                             — {p.label}
                                         </span>
-                                    ) : null}
+                                    )}
                                 </a>
                             ))}
                         </div>
                     )}
                 </div>
 
-                {/* Написать: берём первый доступный канал */}
-                {socialLinks.length > 0 ? (
+                {preferredLink ? (
                     <a
-                        href={socialLinks[0].href}
+                        href={preferredLink.href}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={`${styles.button} ${styles.writeMessage}`}
-                        title={socialLinks[0].title}
+                        title={preferredLink.title}
                     >
                         Написать
                     </a>
