@@ -190,21 +190,29 @@ export const RightPriceBlock = ({
             {showContactInfo && (
                 <>
                     <div className={style.contactBlock}>
-                        {phoneDisplay && (
-                            <div className={style.phoneBlock}>
-                                <p className={style.phone}>{phoneDisplay}</p>
-                                {contacts?.phone_1?.label && (
-                                    <p className={style.phoneDescription}>
-                                        {contacts.phone_1.label}
-                                    </p>
-                                )}
-                                {telHref && (
-                                    <a className={style.callButton} href={telHref}>
-                                        Позвонить
-                                    </a>
-                                )}
-                            </div>
-                        )}
+                        {[contacts?.phone_1, contacts?.phone_2]
+                            .filter(Boolean)
+                            .map((p, idx) => {
+                                const raw = p?.number;
+                                if (!raw) return null;
+                                const display = formatPhoneDisplay(raw);
+                                const href = buildTelHref(raw);
+                                return (
+                                    <div key={idx} className={style.phoneBlock}>
+                                        <p className={style.phone}>{display}</p>
+                                        {p?.label && (
+                                            <p className={style.phoneDescription}>
+                                                {p.label}
+                                            </p>
+                                        )}
+                                        {href && (
+                                            <a className={style.callButton} href={href}>
+                                                Позвонить
+                                            </a>
+                                        )}
+                                    </div>
+                                );
+                            })}
 
                         {/* Пилюли-иконки */}
                         <div className={style.links}>
