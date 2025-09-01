@@ -104,13 +104,13 @@ async function fetchPageOnServer({
 
     if (region) qs.set("region", region);
     if (search && search.trim()) qs.set("search", search.trim());
-
     const url =
         category === "all"
             ? `${base}/cars?${qs.toString()}`
-            : `${base}/cars/categories/${encodeURIComponent(category)}?${qs.toString()}`;
+            : `${base}/cars?category=${encodeURIComponent(category)}&${qs.toString()}`;
 
     const res = await fetch(url, { next: { revalidate } });
+
     if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
     return res.json();
 }

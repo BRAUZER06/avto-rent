@@ -108,7 +108,7 @@ async function fetchPageOnServer({
     const url =
         category === "all"
             ? `${base}/cars?${qs.toString()}`
-            : `${base}/cars/categories/${encodeURIComponent(category)}?${qs.toString()}`;
+            : `${base}/cars?category=${encodeURIComponent(category)}&${qs.toString()}`;
 
     const res = await fetch(url, { next: { revalidate } });
     if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);

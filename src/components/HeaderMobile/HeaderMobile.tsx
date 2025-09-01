@@ -34,15 +34,17 @@ export const HeaderMobile = () => {
 
     return (
         <div className={style.container}>
-            <Image
-                className={style.logo}
-                src="/assets/header/logoCarText.png"
-                width={104}
-                height={32}
-                alt="Logo"
-                unoptimized
-                priority
-            />
+            <Link href={`/avto/all`}>
+                <Image
+                    className={style.logo}
+                    src="/assets/header/logoCarText.png"
+                    width={104}
+                    height={32}
+                    alt="Logo"
+                    unoptimized
+                    priority
+                />
+            </Link>
 
             {/* 👇 селект региона */}
             <div className={style.regionSelectWrap}>
