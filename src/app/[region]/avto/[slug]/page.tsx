@@ -5,7 +5,7 @@ import { regionsFull } from "@src/data/regions";
 import { notFound, redirect } from "next/navigation";
 import Script from "next/script";
 
-export const revalidate = 300;
+export const revalidate = 60;
 
 type ServerPayload = {
     cars: any[];

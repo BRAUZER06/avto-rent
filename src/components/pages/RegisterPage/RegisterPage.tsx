@@ -93,7 +93,7 @@ export default function RegisterPage() {
             next.companyName = "Укажите название компании";
         } else if (letterCount < 5) {
             next.companyName = "Минимум 5 букв в названии";
-        } else if (!/^[\p{L}\d\s.\-,'&]+$/u.test(name)) {
+        } else if (!/^[\p{L}\d\s.\-,'&_]+$/u.test(name)) {
             next.companyName = "Допустимы буквы, цифры, пробелы и символы . , - ' &";
         }
 

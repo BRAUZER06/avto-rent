@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { apiUrlHelper } from "@src/lib/helpers/getApiUrl";
 import { CompanyDTO } from "@src/lib/api/companies";
 
-export const revalidate = 600; // ISR: 10 минут
+export const revalidate = 60; // ISR: 10 минут
 
 function absolutize(url?: string | null) {
     if (!url) return undefined;

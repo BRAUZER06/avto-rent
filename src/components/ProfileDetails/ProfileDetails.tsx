@@ -722,11 +722,13 @@ const ProfileDetails = () => {
                                         )
                                     }
                                 >
-                                    {regionsFull?.map(region => (
-                                        <option key={region.id} value={region.name}>
-                                            {region.label}
-                                        </option>
-                                    ))}
+                                    {regionsFull
+                                        ?.slice(1, regionsFull.length)
+                                        .map(region => (
+                                            <option key={region.id} value={region.name}>
+                                                {region.label}
+                                            </option>
+                                        ))}
                                 </select>
                             </div>
 

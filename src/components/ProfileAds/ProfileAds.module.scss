@@ -3,7 +3,7 @@
   padding: 20px;
   background-color: var(--background-black);
   border-radius: 10px;
-
+ overflow: hidden;
   @media screen and (max-width: 550px) {
     padding: 0;
     box-shadow: none;
@@ -51,15 +51,22 @@
 .itemsList {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 20px; overflow: hidden;
+
+  padding-bottom: 300px;
+   @media screen and (max-width: 768px) {
+    padding-bottom: 0px;
+  }
 }
 
 .contentDesktop {
   flex: 0 0 calc(50% - 10px); // 2 карточки в строку с отступом
   box-sizing: border-box;
+  
 
   @media screen and (max-width: 768px) {
     flex: 0 0 100%; // на мобилке одна в ряд
+    overflow: hidden;
   }
 }
 
