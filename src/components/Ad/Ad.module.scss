@@ -165,7 +165,7 @@
     cursor: pointer;
     padding: 4px;
     border: 1px solid var(--grey-light);
-    border-radius: 5px;
+    border-radius: 10px;
     margin: 12px 0px 0px;
     display: flex;
     align-items: center;
@@ -178,18 +178,18 @@
     }
 
     .companyLogo {
-        border-radius: 50%;
-        overflow: hidden;
+      
         margin-right: 10px;
-        width: 35px;
-        min-width: 35px;
-        height: 35px;
-        border: 1px solid #e5e5e5;
+       
+      
 
         img {
-            width: 100%;
-            height: 100%;
+           width: 45px;
+            height: 35px;
+            border-radius: 10px; // было 50%, стало прямоугольным с легким скруглением
             object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            flex: 0 0 auto;
         }
     }
 

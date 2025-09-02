@@ -3,6 +3,7 @@ import Image from "next/image";
 import style from "./MobileContanctPanelContent.module.scss";
 import { FaWhatsapp, FaTelegramPlane, FaInstagram, FaGlobe } from "react-icons/fa";
 import { OwnerInfoCard, type OwnerInfo } from "../ui/OwnerInfoCard/OwnerInfoCard";
+import { buildRentalMessage } from "@src/data/rental_message";
 
 /* helpers */
 const formatPhoneDisplay = (raw?: string) => {
@@ -88,8 +89,15 @@ export const MobileContanctPanelContent = ({
 }: MobileContanctPanelContentProps) => {
     if (!isOpen) return null;
 
-    const waHref = buildWhatsappHref(whatsapp);
-    const tg = parseTelegram(telegram);
+    const carLink = typeof window !== "undefined" ? window.location.href : "";
+    const message = encodeURIComponent(buildRentalMessage(carLink));
+
+    const waHref = whatsapp
+        ? `https://wa.me/${whatsapp.replace(/[^\d]/g, "")}?text=${message}`
+        : null;
+    const tgHref = telegram
+        ? `https://t.me/share/url?url=${encodeURIComponent(carLink)}&text=${message}`
+        : null;
 
     return (
         <div onClick={e => e.stopPropagation()} className={style.container}>
@@ -140,23 +148,21 @@ export const MobileContanctPanelContent = ({
                         target="_blank"
                         rel="noopener noreferrer"
                         className={`${style.pill} ${style.wa}`}
-                        aria-label="Написать в WhatsApp"
                     >
                         <FaWhatsapp className={style.icon} />
                         <span>WhatsApp</span>
                     </a>
                 )}
 
-                {tg?.url && (
+                {tgHref && (
                     <a
-                        href={tg.url}
+                        href={tgHref}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={`${style.pill} ${style.tg}`}
-                        aria-label="Написать в Telegram"
                     >
                         <FaTelegramPlane className={style.icon} />
-                        <span>Telegram{tg.username ? `: @${tg.username}` : ""}</span>
+                        <span>Telegram</span>
                     </a>
                 )}
 

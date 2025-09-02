@@ -7,6 +7,7 @@ import { FaWhatsapp, FaTelegramPlane, FaInstagram, FaGlobe } from "react-icons/f
 import style from "./RightPriceBlock.module.scss";
 import { CalendarRental } from "../ui/CalendarRental/CalendarRental";
 import { OwnerInfoCard } from "../ui/OwnerInfoCard/OwnerInfoCard";
+import { buildRentalMessage } from "@src/data/rental_message";
 
 interface ContactInfo {
     phone_1?: { label?: string; number?: string };
@@ -140,14 +141,22 @@ export const RightPriceBlock = ({
     const phoneDisplay = useMemo(() => formatPhoneDisplay(phoneRaw), [phoneRaw]);
     const telHref = useMemo(() => buildTelHref(phoneRaw), [phoneRaw]);
 
-    const waHref = useMemo(
-        () => buildWhatsappHref(contacts?.whatsapp),
-        [contacts?.whatsapp]
-    );
-    const tgParsed = useMemo(
-        () => parseTelegram(contacts?.telegram),
-        [contacts?.telegram]
-    );
+    const currentLink = typeof window !== "undefined" ? window.location.href : "";
+    const message = encodeURIComponent(buildRentalMessage(currentLink));
+
+    const waHref = useMemo(() => {
+        const base = buildWhatsappHref(contacts?.whatsapp);
+        return base ? `${base}?text=${message}` : null;
+    }, [contacts?.whatsapp, message]);
+
+    const tgParsed = useMemo(() => {
+        const parsed = parseTelegram(contacts?.telegram);
+        if (parsed.url) {
+            return { ...parsed, url: `${parsed.url}?text=${message}` };
+        }
+        return parsed;
+    }, [contacts?.telegram, message]);
+
     const igParsed = useMemo(
         () => parseInstagram(contacts?.instagram),
         [contacts?.instagram]
