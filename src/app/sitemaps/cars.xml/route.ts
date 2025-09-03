@@ -71,7 +71,7 @@ export async function GET() {
   <loc>${loc}</loc>
   <lastmod>${lastmod}</lastmod>
   <changefreq>monthly</changefreq>
-  <priority>0.7</priority>${imageXml}
+  <priority>0.9</priority>${imageXml}
 </url>`;
         })
         .join("\n");

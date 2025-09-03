@@ -1,4 +1,5 @@
-// src/app/sitemaps/static.xml/route.ts
+import { NextResponse } from "next/server";
+
 export const revalidate = 3600;
 
 const SITE =
@@ -6,25 +7,35 @@ const SITE =
 
 const now = new Date().toISOString();
 
-const STATIC = [
-    "/", // Главная
-    "/avto", // Лента/каталог (если есть отдельная)
-    "/about", // если есть
-].map(path => `${SITE}${path}`);
+const STATIC_PATHS = [
+    "/avto/all", // Главная «логическая» страница
+    "/avto",
+    "/about",
+    "/sdat",
+    // '/news'...
+    // '/blog'...
+];
 
 export async function GET() {
+    const urlsXml = STATIC_PATHS.map(u => {
+        const priority = u === "/avto/all" ? 1.0 : 0.9;
+        return `<url>
+  <loc>${SITE}${u}</loc>
+  <lastmod>${now}</lastmod>
+  <changefreq>daily</changefreq>
+  <priority>${priority}</priority>
+</url>`;
+    }).join("\n");
+
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${STATIC.map(
-    u => `  <url>
-    <loc>${u}</loc>
-    <lastmod>${now}</lastmod>
-    <changefreq>daily</changefreq>
-  </url>`
-).join("\n")}
+${urlsXml}
 </urlset>`;
 
-    return new Response(xml, {
-        headers: { "Content-Type": "application/xml; charset=utf-8" },
+    return new NextResponse(xml, {
+        headers: {
+            "content-type": "application/xml; charset=utf-8",
+            "Cache-Control": "public, s-maxage=3600, stale-while-revalidate",
+        },
     });
 }

@@ -1,41 +1,46 @@
 // src/app/sitemaps/categories.xml/route.ts
-export const revalidate = 3600;
+import { NextResponse } from "next/server";
+
+export const revalidate = 3600; // Актуальность кэша - 1 час
 
 const SITE =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") || "https://rentavtokavkaz.ru";
 
+// Определяем категории с их приоритетами
 const CATEGORIES = [
-    "all",
-    "mid",
-    "russian",
-    "suv",
-    "cabrio",
-    "sport",
-    "premium",
-    "electric",
-    "minivan",
-    "bike",
+    { slug: "all", name: "Все автомобили", priority: 0.8 },
+    { slug: "mid", name: "Средний класс", priority: 0.7 },
+    { slug: "russian", name: "Российские авто", priority: 0.7 },
+    { slug: "jeep", name: "Внедорожники", priority: 0.8 },
+    { slug: "cabrio", name: "Кабриолеты", priority: 0.7 },
+    { slug: "sport", name: "Спортивные авто", priority: 0.7 },
+    { slug: "premium", name: "Премиум класс", priority: 0.8 },
+    { slug: "electric", name: "Электромобили", priority: 0.7 },
+    { slug: "minivan", name: "Минивэны", priority: 0.7 },
+    { slug: "bike", name: "Мотоциклы", priority: 0.7 },
 ];
 
 export async function GET() {
     const now = new Date().toISOString();
 
-    const urls = CATEGORIES.map(c => `${SITE}/avto/${encodeURIComponent(c)}`);
-
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls
-    .map(
-        u => `  <url>
-    <loc>${u}</loc>
+${CATEGORIES.map(
+    category => `
+  <url>
+    <loc>${SITE}/avto/${encodeURIComponent(category.slug)}</loc>
     <lastmod>${now}</lastmod>
     <changefreq>daily</changefreq>
-  </url>`
-    )
-    .join("\n")}
+    <priority>${category.priority}</priority>
+  </url>
+`
+).join("")}
 </urlset>`;
 
-    return new Response(xml, {
-        headers: { "Content-Type": "application/xml; charset=utf-8" },
+    return new NextResponse(xml, {
+        headers: {
+            "Content-Type": "application/xml; charset=utf-8",
+            "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+        },
     });
 }
