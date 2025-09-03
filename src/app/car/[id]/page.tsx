@@ -4,28 +4,32 @@ import type { Metadata } from "next";
 import { cookies, headers } from "next/headers";
 import StandardPageID from "@src/components/pages/StandardPage/StandardPageID/StandardPageID";
 
+export const revalidate = 3600;
+
 const SITE_URL =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") || "https://rentavtokavkaz.ru";
-
 const API = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL;
 
 function absMedia(url?: string | null): string | null {
     if (!url) return null;
-    if (/^https?:\/\//i.test(url)) return url;
-    return `${API}${url}`;
+    return /^https?:\/\//i.test(url) ? url : `${API}${url}`;
 }
 
 function extractImages(car: any): string[] {
-    return (car?.car_images ?? [])
-        .slice()
-        .sort(
-            (a: any, b: any) =>
-                (a?.position ?? Number.MAX_SAFE_INTEGER) -
-                (b?.position ?? Number.MAX_SAFE_INTEGER)
+    const images = Array.from(
+        new Set(
+            (car?.car_images ?? [])
+                .slice()
+                .sort(
+                    (a: any, b: any) =>
+                        (a?.position ?? Number.MAX_SAFE_INTEGER) -
+                        (b?.position ?? Number.MAX_SAFE_INTEGER)
+                )
+                .map(i => absMedia(i?.url))
+                .filter(Boolean)
         )
-        .map(i => absMedia(i?.url))
-        .filter(Boolean)
-        .slice(0, 10) as string[];
+    );
+    return images.length > 0 ? images.slice(0, 10) : [`${SITE_URL}/og/default.jpeg`];
 }
 
 function priceText(car: any): string | null {
@@ -44,7 +48,7 @@ function priceText(car: any): string | null {
 
 function buildTitle(car: any): string {
     const city = car?.location ? ` — ${car.location}` : "";
-    return `${car?.title ?? "Авто"}${city} Аренда авто Кавказ`;
+    return `${car?.title ?? "Авто"}${city} | Аренда авто Кавказ`;
 }
 
 function buildDescription(car: any): string {
@@ -55,6 +59,7 @@ function buildDescription(car: any): string {
         price ? `Цена от ${price}/сутки` : null,
         car?.fuel_type ? `Топливо: ${car.fuel_type}` : null,
         car?.transmission ? `КПП: ${car.transmission}` : null,
+        `Онлайн-бронирование, доставка авто по региону.`,
     ].filter(Boolean);
     return bits.join(". ") || "Аренда автомобиля на Кавказе.";
 }
@@ -72,7 +77,7 @@ async function fetchCarById(id: string, opts: { redirectOn401?: boolean } = {}) 
             "X-Forwarded-For": h.get("x-forwarded-for") ?? "",
             "User-Agent": h.get("user-agent") ?? "",
         },
-        cache: "no-store",
+        next: { revalidate },
     });
 
     if (res.status === 404) return null;
@@ -81,7 +86,6 @@ async function fetchCarById(id: string, opts: { redirectOn401?: boolean } = {}) 
         return null;
     }
     if (!res.ok) throw new Error(`Ошибка загрузки: ${res.status}`);
-
     return res.json();
 }
 
@@ -91,21 +95,19 @@ export async function generateMetadata({
     params: { id: string };
 }): Promise<Metadata> {
     const id = params.id;
-    if (!id) {
+    if (!id)
         return {
             title: "Авто — Аренда авто Кавказ",
             robots: { index: false, follow: false },
         };
-    }
 
     const car = await fetchCarById(id, { redirectOn401: false });
-    if (!car) {
+    if (!car)
         return {
             title: "Объявление не найдено — Аренда авто Кавказ",
             description: "Объявление не найдено.",
             robots: { index: false, follow: false },
         };
-    }
 
     const title = buildTitle(car);
     const description = buildDescription(car);
@@ -129,7 +131,7 @@ export async function generateMetadata({
             card: "summary_large_image",
             title,
             description,
-            images: ogImages.length ? [ogImages[0]] : undefined,
+            images: ogImages.length ? [ogImages[0]] : [`${SITE_URL}/og/default.jpeg`],
         },
     };
 }
@@ -151,9 +153,12 @@ function vehicleJsonLd(car: any) {
         "@type": "Vehicle",
         name: car?.title ?? "Автомобиль",
         image: images,
+        url: `${SITE_URL}/car/${encodeURIComponent(String(car.id))}`,
         brand: car?.title?.split(" ")?.[0] ?? undefined,
         model: car?.title ?? undefined,
         vehicleModelDate: car?.year ?? undefined,
+        color: car?.color ?? undefined,
+        mileageFromOdometer: car?.mileage ?? undefined,
         fuelType: car?.fuel_type ?? undefined,
         vehicleTransmission: car?.transmission ?? undefined,
         driveWheelConfiguration: car?.drive ?? undefined,
@@ -163,7 +168,7 @@ function vehicleJsonLd(car: any) {
             priceCurrency: "RUB",
             availability: "https://schema.org/InStock",
             businessFunction: "http://purl.org/goodrelations/v1#LeaseOut",
-            url: `${SITE_URL}/car/${encodeURIComponent(String(car?.id))}`,
+            url: `${SITE_URL}/car/${encodeURIComponent(String(car.id))}`,
         },
         ...(car?.owner?.company_name && {
             seller: {
@@ -187,7 +192,7 @@ function breadcrumbsJsonLd(car: any) {
                 "@type": "ListItem",
                 position: 3,
                 name: car?.title ?? "Авто",
-                item: `${SITE_URL}/car/${encodeURIComponent(String(car?.id))}`,
+                item: `${SITE_URL}/car/${encodeURIComponent(String(car.id))}`,
             },
         ],
     };

@@ -31,7 +31,9 @@ export async function GET() {
         `${SITE}/sitemaps/categories.xml`,
         `${SITE}/sitemaps/regions.xml`,
         `${SITE}/sitemaps/brands.xml`,
-        ...Array.from({ length: chunks }, (_, i) => `${SITE}/sitemaps/cars/${i + 1}.xml`),
+        `${SITE}/sitemaps/cars.xml`,
+        // если будет 5к+ оавтомобилей разделить логику на chunk
+        // ...Array.from({ length: chunks }, (_, i) => `${SITE}/sitemaps/cars/${i + 1}.xml`),
     ];
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
