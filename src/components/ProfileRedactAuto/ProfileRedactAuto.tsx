@@ -28,6 +28,7 @@ import { FiTrash2, FiPlus, FiLoader } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import ImageTooltip from "../ui/ImageTooltip/ImageTooltip";
 import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
+import { forbiddenCharsRegex } from "@src/lib/hooks/forbiddenCharsRegex";
 
 const MAX_IMAGES = 25;
 
@@ -65,6 +66,8 @@ export const ProfileRedactAuto = ({ carId }: { carId: string }) => {
     const [year, setYear] = useState("");
     const [drive, setDrive] = useState("передний");
     const [hasAirConditioner, setHasAirConditioner] = useState(false);
+    const [driverOnly, setDriverOnly] = useState(false);
+
     const [category, setCategory] = useState("premium");
     const [images, setImages] = useState<ImageType[]>([]);
     const [customFields, setCustomFields] = useState<CustomFieldType[]>([
@@ -101,6 +104,7 @@ export const ProfileRedactAuto = ({ carId }: { carId: string }) => {
             setYear(carData.year?.toString() || "");
             setDrive(carData.drive || "передний");
             setHasAirConditioner(carData.has_air_conditioner || false);
+            setDriverOnly(carData.driver_only || false);
 
             // Обработка изображений
             const loadedImages = (carData.car_images || []).map(img => ({
@@ -307,6 +311,7 @@ export const ProfileRedactAuto = ({ carId }: { carId: string }) => {
             formData.append("year", year);
             formData.append("drive", drive);
             formData.append("has_air_conditioner", hasAirConditioner.toString());
+            formData.append("driver_only", driverOnly.toString());
 
             // Кастомные поля
             customFields.forEach(({ key, value }) => {
@@ -363,9 +368,16 @@ export const ProfileRedactAuto = ({ carId }: { carId: string }) => {
 
     // Обработка изменения чекбокса
     const handleCheckboxChange = (id: string) => {
-        if (id === "air_conditioner") {
-            setHasAirConditioner(prev => !prev);
-        }
+        if (id === "air_conditioner") setHasAirConditioner(prev => !prev);
+        if (id === "driver_only") setDriverOnly(prev => !prev);
+    };
+
+    const handleTitleChange = (value: string) => {
+        setTitle(value.replace(forbiddenCharsRegex, ""));
+    };
+
+    const handleLocationChange = (value: string) => {
+        setLocation(value.replace(forbiddenCharsRegex, ""));
     };
 
     // Отображение состояния загрузки
@@ -404,13 +416,14 @@ export const ProfileRedactAuto = ({ carId }: { carId: string }) => {
                     className="w-full border rounded px-4 py-2 bg-zinc-800 text-white border-zinc-600"
                     placeholder="Название"
                     value={title}
-                    onChange={e => setTitle(e.target.value)}
+                    onChange={e => handleTitleChange(e.target.value)}
                 />
+
                 <input
                     className="w-full border rounded px-4 py-2 bg-zinc-800 text-white border-zinc-600"
                     placeholder="Город"
                     value={location}
-                    onChange={e => setLocation(e.target.value)}
+                    onChange={e => handleLocationChange(e.target.value)}
                 />
                 <input
                     className="w-full border rounded px-4 py-2 bg-zinc-800 text-white border-zinc-600"
@@ -530,11 +543,18 @@ export const ProfileRedactAuto = ({ carId }: { carId: string }) => {
                     value={year}
                     onChange={e => setYear(e.target.value)}
                 />
-                <OptionCheckbox.MobileVersionTwo
+                <OptionCheckbox.MobileVersionOne
                     id="air_conditioner"
                     title="Есть кондиционер"
                     checked={hasAirConditioner}
                     handleCheckboxChange={handleCheckboxChange}
+                />
+                <OptionCheckbox.MobileVersionOne
+                    id="driver_only"
+                    title="Только с водителем"
+                    checked={driverOnly}
+                    handleCheckboxChange={handleCheckboxChange}
+                    tooltip="Сдается исключительно только с водителем"
                 />
             </div>
 

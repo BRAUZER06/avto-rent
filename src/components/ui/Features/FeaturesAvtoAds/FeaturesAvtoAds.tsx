@@ -7,6 +7,7 @@ interface FeaturesAvtoAdsProps {
     drive?: string;
     year?: number;
     horsepower?: number;
+    driverOnly?: boolean | null;
 }
 
 export const FeaturesAvtoAds = ({
@@ -16,6 +17,7 @@ export const FeaturesAvtoAds = ({
     drive,
     year,
     horsepower,
+    driverOnly,
 }: FeaturesAvtoAdsProps) => {
     return (
         <div className={style.container}>
@@ -84,6 +86,12 @@ export const FeaturesAvtoAds = ({
                         <span className={style.label}>Объём двигателя:</span>
                         <span className={style.value}>{engineCapacity} л</span>
                     </p>
+                )}{" "}
+                {horsepower && (
+                    <p className={style.feature}>
+                        <span className={style.label}>Лошадиные силы:</span>
+                        <span className={style.value}>{horsepower}</span>
+                    </p>
                 )}
                 {fuelType && (
                     <p className={style.feature}>
@@ -93,22 +101,25 @@ export const FeaturesAvtoAds = ({
                 )}
             </div>
             <div className={style.column}>
-                {transmission && (
-                    <p className={style.feature}>
-                        <span className={style.label}>Коробка передач:</span>
-                        <span className={style.value}>{transmission}</span>
-                    </p>
-                )}
+                {" "}
                 {drive && (
                     <p className={style.feature}>
                         <span className={style.label}>Привод:</span>
                         <span className={style.value}>{drive}</span>
                     </p>
                 )}
-                {horsepower && (
+                {transmission && (
                     <p className={style.feature}>
-                        <span className={style.label}>Лошадиные силы:</span>
-                        <span className={style.value}>{horsepower}</span>
+                        <span className={style.label}>Коробка передач:</span>
+                        <span className={style.value}>{transmission}</span>
+                    </p>
+                )}
+                {driverOnly && (
+                    <p className={style.feature}>
+                        <span className={style.label}>Сдается:</span>
+                        <span className={`${style.value} ${style.driverOnly}`}>
+                            Только с водителем
+                        </span>
                     </p>
                 )}
             </div>

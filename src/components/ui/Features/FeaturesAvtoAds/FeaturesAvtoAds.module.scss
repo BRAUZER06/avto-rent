@@ -34,10 +34,11 @@
         .label {
             color: var(--grey-text);
 
-            margin-right: 5px;
+           
         }
 
         .value {
+             margin-left: 5px;
         }
 
         .generation {
@@ -58,3 +59,13 @@
 
 
 
+
+
+.driverOnly {
+    color: #fff;
+    background-color: #A86500;
+   padding: 2px 4px;
+    border-radius: 6px;
+  
+    display: inline-block;
+}

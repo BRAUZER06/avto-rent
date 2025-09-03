@@ -25,6 +25,7 @@ import { Notification, useNotification } from "../ui/Notification/Notification";
 import OptionCheckbox from "../ui/OptionCheckbox/OptionCheckbox";
 import { FiTrash2, FiPlus } from "react-icons/fi";
 import ImageTooltip from "../ui/ImageTooltip/ImageTooltip";
+import { forbiddenCharsRegex } from "@src/lib/hooks/forbiddenCharsRegex";
 
 const MAX_IMAGES = 25;
 
@@ -32,7 +33,6 @@ export const ProfileCreateAuto = () => {
     const trimmedCategories: CategoryAutoItem[] = categoriesAuto.slice(1);
     const { notification, showNotification } = useNotification();
 
-    // ——— Пустые стартовые значения (без тестовых данных) ———
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [location, setLocation] = useState("");
@@ -44,14 +44,13 @@ export const ProfileCreateAuto = () => {
     const [year, setYear] = useState("");
     const [drive, setDrive] = useState("");
     const [hasAirConditioner, setHasAirConditioner] = useState(false);
-    const [category, setCategory] = useState("");
+    const [driverOnly, setDriverOnly] = useState(false);
 
+    const [category, setCategory] = useState("");
     const [images, setImages] = useState<any[]>([]);
-    // Оставляем только одно поле «Аренда авто на день» и его логику
     const [customFields, setCustomFields] = useState([
         { key: "Аренда авто на день", value: "" },
     ]);
-
     const [isLoading, setIsLoading] = useState(false);
 
     const { getRootProps, getInputProps } = useDropzone({
@@ -76,9 +75,7 @@ export const ProfileCreateAuto = () => {
     const sensors = useSensors(
         useSensor(PointerSensor),
         useSensor(TouchSensor),
-        useSensor(KeyboardSensor, {
-            coordinateGetter: sortableKeyboardCoordinates,
-        })
+        useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
     );
 
     const handleDragEnd = (event: any) => {
@@ -104,14 +101,12 @@ export const ProfileCreateAuto = () => {
         updated[index][field] = value;
         setCustomFields(updated);
     };
-
     useEffect(() => {
         return () => {
             images.forEach(img => URL.revokeObjectURL(img.preview));
         };
     }, [images]);
 
-    // Автозаполнение первого поля «Аренда авто на день» из цены
     useEffect(() => {
         setCustomFields(prev => {
             const updatedFields = [...prev];
@@ -126,7 +121,6 @@ export const ProfileCreateAuto = () => {
     }, [pricePerDay]);
 
     const handleSaveCar = async () => {
-        // Проверка обязательных полей
         const requiredFields = [
             { field: title, name: "Название" },
             { field: location, name: "Город" },
@@ -159,9 +153,9 @@ export const ProfileCreateAuto = () => {
         try {
             const formData = new FormData();
 
-            // Основные поля
-            formData.append("title", title);
-            formData.append("location", location);
+            // Основные поля с encodeURIComponent
+            formData.append("title", encodeURIComponent(title));
+            formData.append("location", encodeURIComponent(location));
             formData.append("price", pricePerDay);
             formData.append("category", category);
             formData.append("fuel_type", fuel);
@@ -171,32 +165,30 @@ export const ProfileCreateAuto = () => {
             formData.append("engine_capacity", engineCapacity);
             formData.append("year", year);
             formData.append("has_air_conditioner", hasAirConditioner.toString());
+            formData.append("driver_only", driverOnly.toString());
             formData.append("description", description);
 
-            // Кастомные поля (первое — «Аренда авто на день» — остаётся)
             customFields.forEach(({ key, value }) => {
                 if (key.trim() !== "" && value.trim() !== "") {
                     formData.append(`custom_fields[${key}]`, value);
                 }
             });
 
-            // Изображения + позиции
-            const sortedImages = [...images];
-            sortedImages.forEach(img => {
+            images.forEach(img => {
                 if (img.file) formData.append("car_images[]", img.file);
             });
 
             formData.append(
                 "image_positions",
                 JSON.stringify(
-                    sortedImages.map((_, index) => ({ id: null, position: index + 1 }))
+                    images.map((_, index) => ({ id: null, position: index + 1 }))
                 )
             );
 
             await createCar(formData);
             showNotification("Автомобиль успешно добавлен!", "success");
 
-            // Сброс формы к пустым значениям (кроме ключа первого поля)
+            // Сброс формы
             setTitle("");
             setLocation("");
             setPricePerDay("");
@@ -229,6 +221,14 @@ export const ProfileCreateAuto = () => {
             setCustomFields(prev => prev.filter((_, i) => i !== index));
         }
     };
+    // --- Безопасное обновление title/location ---
+    const handleTitleChange = (value: string) => {
+        setTitle(value.replace(forbiddenCharsRegex, ""));
+    };
+
+    const handleLocationChange = (value: string) => {
+        setLocation(value.replace(forbiddenCharsRegex, ""));
+    };
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
@@ -239,13 +239,13 @@ export const ProfileCreateAuto = () => {
                     className="w-full border rounded px-4 py-2 bg-zinc-800 text-white border-zinc-600"
                     placeholder="Название (например: Mercedes-Benz E-Class 2023)"
                     value={title}
-                    onChange={e => setTitle(e.target.value)}
+                    onChange={e => handleTitleChange(e.target.value)}
                 />
                 <input
                     className="w-full border rounded px-4 py-2 bg-zinc-800 text-white border-zinc-600"
                     placeholder="Город (например: Грозный)"
                     value={location}
-                    onChange={e => setLocation(e.target.value)}
+                    onChange={e => handleLocationChange(e.target.value)}
                 />
                 <input
                     className="w-full border rounded px-4 py-2 bg-zinc-800 text-white border-zinc-600"
@@ -380,11 +380,18 @@ export const ProfileCreateAuto = () => {
                     onChange={e => setYear(e.target.value)}
                 />
 
-                <OptionCheckbox.MobileVersionTwo
+                <OptionCheckbox.MobileVersionOne
                     id="air_conditioner"
                     title="Есть кондиционер"
                     checked={hasAirConditioner}
                     handleCheckboxChange={handleCheckboxChange}
+                />
+                <OptionCheckbox.MobileVersionOne
+                    id="driver_only"
+                    title="Только с водителем"
+                    checked={driverOnly}
+                    handleCheckboxChange={() => setDriverOnly(prev => !prev)}
+                    tooltip="Сдается исключительно только с водителем"
                 />
             </div>
 

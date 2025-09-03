@@ -8,6 +8,8 @@ import style from "./Ad.module.scss";
 import { HeartIcon } from "@public/images/icons";
 import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 import { deleteCar } from "@src/lib/api/carService";
+import { generateSlug } from "@src/lib/hooks/generateSlug";
+import WithDriverBadge from "../ui/WithDriverBadge/WithDriverBadge";
 
 const FAV_KEY = "favorite_car_ids";
 
@@ -162,9 +164,11 @@ export const Ad = memo(({ ads, isOwner = false, onDeleted, isReact = false }: Pr
         ? formatImageUrl(images[currentIndex].url) || "/images/default-car.jpg"
         : "/images/default-car.jpg";
 
+    const slug = generateSlug(adId, ads.title, ads.location);
+
     return (
         <div className={style.container}>
-            <Link href={`/car/${ads.id}`}>
+            <Link href={`/car/${slug}`}>
                 <div
                     onClick={handleImageClick}
                     ref={containerRef}
@@ -189,11 +193,17 @@ export const Ad = memo(({ ads, isOwner = false, onDeleted, isReact = false }: Pr
                                 <strong>Год:</strong> {ads.year}
                             </div>
                         )}
+
+                        {ads?.driver_only && (
+                            <div className={style.specItem}>
+                                <WithDriverBadge />
+                            </div>
+                        )}
                     </div>
                 </div>
             </Link>
             <div className={style.infoBlock}>
-                <Link href={`/car/${ads.id}`}>
+                <Link href={`/car/${slug}`}>
                     <div className={style.containerPrice}>
                         <span>{Number(ads?.price).toLocaleString()} ₽</span>
                     </div>
@@ -253,7 +263,7 @@ export const Ad = memo(({ ads, isOwner = false, onDeleted, isReact = false }: Pr
                             </div>
                         )}
                     </div>
-                    <Link href={`/car/${ads.id}`}>
+                    <Link href={`/car/${slug}`}>
                         <button className={style.buyButton}>Перейти</button>
                     </Link>
                     {ownerMode && (

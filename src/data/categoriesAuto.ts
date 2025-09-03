@@ -27,8 +27,8 @@ export const categoriesAuto: CategoryAutoItem[] = [
     {
         id: 4,
         title: "Внедорожники",
-        slug: "suv",
-        imageSrc: "/images/CATEGORIESAVTO/suv.png",
+        slug: "jeep",
+        imageSrc: "/images/CATEGORIESAVTO/jeep.png",
     },
     {
         id: 5,

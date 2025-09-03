@@ -10,6 +10,7 @@ const SITE_URL =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") || "https://rentavtokavkaz.ru";
 const API = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL;
 
+// -------------------- HELPERS --------------------
 function absMedia(url?: string | null): string | null {
     if (!url) return null;
     return /^https?:\/\//i.test(url) ? url : `${API}${url}`;
@@ -64,6 +65,13 @@ function buildDescription(car: any): string {
     return bits.join(". ") || "Аренда автомобиля на Кавказе.";
 }
 
+// извлекаем id из конца slug
+function extractIdFromSlug(slug: string): string | null {
+    const match = slug.match(/-(\d+)$/); // цифры после последнего дефиса
+    return match ? match[1] : null;
+}
+
+// -------------------- API --------------------
 async function fetchCarById(id: string, opts: { redirectOn401?: boolean } = {}) {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("access_token")?.value;
@@ -89,15 +97,23 @@ async function fetchCarById(id: string, opts: { redirectOn401?: boolean } = {}) 
     return res.json();
 }
 
+// -------------------- METADATA --------------------
 export async function generateMetadata({
     params,
 }: {
     params: { id: string };
 }): Promise<Metadata> {
-    const id = params.id;
-    if (!id)
+    if (!params?.id)
         return {
             title: "Авто — Аренда авто Кавказ",
+            robots: { index: false, follow: false },
+        };
+
+    const id = extractIdFromSlug(params.id);
+    if (!id)
+        return {
+            title: "Объявление не найдено — Аренда авто Кавказ",
+            description: "Объявление не найдено.",
             robots: { index: false, follow: false },
         };
 
@@ -136,7 +152,7 @@ export async function generateMetadata({
     };
 }
 
-// ---------- JSON-LD ----------
+// -------------------- JSON-LD --------------------
 function vehicleJsonLd(car: any) {
     const images = extractImages(car);
     const priceNum = Number(
@@ -198,11 +214,14 @@ function breadcrumbsJsonLd(car: any) {
     };
 }
 
-// ---------- Page ----------
+// -------------------- PAGE --------------------
 export default async function Page({ params }: { params: { id: string } }) {
     if (!params?.id) return notFound();
 
-    const car = await fetchCarById(params.id, { redirectOn401: false });
+    const id = extractIdFromSlug(params.id);
+    if (!id) return notFound();
+
+    const car = await fetchCarById(id, { redirectOn401: false });
     if (!car) return notFound();
 
     const ldVehicle = vehicleJsonLd(car);

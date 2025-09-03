@@ -34,7 +34,7 @@ export async function GET() {
 
     try {
         // !!! ЗАМЕНИТЕ ЭТОТ URL НА СПЕЦИАЛЬНЫЙ ЛЕГКИЙ ЭНДПОИНТ ДЛЯ SITEMAP !!!
-        const res = await fetch(`${API_URL}/cars_for_sitemap`, {
+        const res = await fetch(`${API_URL}/cars/cars_for_sitemap`, {
             headers,
             next: { revalidate: 3600 },
         });

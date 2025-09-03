@@ -57,7 +57,7 @@
             margin: 0;
             padding: 2px 8px;
             color: #fff;
-            background-color: var(--blue-text);
+            background-color: #0079C2;
             font-size: 18px;
             font-weight: 600;
             border-radius: 6px;
@@ -76,6 +76,12 @@
             padding: 4px 6px;
             border-radius: 999px;
             white-space: nowrap;
+        }
+        .driver {
+            color: #fff;
+            background-color: #A86500;
+            border-color: #A86500;
+            margin-left: auto;
         }
 
         .title {

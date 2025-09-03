@@ -11,6 +11,9 @@ import style from "./AdsCardScroll.module.scss";
 import { Heart } from "@public/images/floatingMenu";
 import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 import { deleteCar } from "@src/lib/api/carService";
+import { generateSlug } from "@src/lib/hooks/generateSlug";
+import { SpecChip } from "../ui/SpecChip/SpecChip";
+import { FaUserTie } from "react-icons/fa";
 
 type CarImage = { id: number; url: string; position?: number };
 type Owner = {
@@ -23,7 +26,7 @@ type Contacts = {
 };
 type Car = {
     id: number;
-    title?: string | null;
+    title: string | null;
     location?: string | null;
     price?: string | number | null;
     year?: number | null;
@@ -36,6 +39,7 @@ type Car = {
     transmission?: string | null;
     drive?: string | null;
     has_air_conditioner?: boolean | null;
+    driver_only?: boolean | null;
 };
 
 type Props = {
@@ -230,9 +234,10 @@ export const AdsCardScroll = memo(({ ads, isOwner = false, onDeleted }: Props) =
         }
     }, [ads.id, onDeleted, router]);
 
+    const slug = generateSlug(ads.id, ads.title, ads.location);
     return (
         <div className={style.container}>
-            <Link href={`/car/${ads.id}`}>
+            <Link href={`/car/${slug}`}>
                 <Swiper
                     spaceBetween={10}
                     slidesPerView="auto"
@@ -254,15 +259,24 @@ export const AdsCardScroll = memo(({ ads, isOwner = false, onDeleted }: Props) =
             </Link>
             <div className={style.infoBlock}>
                 <div className={style.mainInfo}>
-                    <Link href={`/car/${ads.id}`} className={style.headerLine}>
+                    <Link href={`/car/${slug}`} className={style.headerLine}>
                         {priceText && <span className={style.price}>{priceText}</span>}
                         {ads?.year ? (
                             <span className={style.chip}>{ads.year}</span>
                         ) : null}
+                        {ads?.driver_only && (
+                            <SpecChip
+                                className={style.driver}
+                                icon={<FaUserTie />}
+                                title="Сдается только с водителем"
+                            >
+                                С водителем
+                            </SpecChip>
+                        )}
                     </Link>
 
                     <Link
-                        href={`/car/${ads.id}`}
+                        href={`/car/${slug}`}
                         className={style.title}
                         title={ads?.title || "Автомобиль"}
                     >
@@ -270,15 +284,14 @@ export const AdsCardScroll = memo(({ ads, isOwner = false, onDeleted }: Props) =
                     </Link>
 
                     <div className={style.containerSpecChip}>
-                        {specChips.length > 0 && (
-                            <Link href={`/car/${ads.id}`} className={style.specs}>
-                                {specChips.map((t, i) => (
-                                    <span key={i} className={style.specChip} title={t}>
-                                        {t}
-                                    </span>
-                                ))}
-                            </Link>
-                        )}
+                        <div className={style.specs}>
+                            {specChips.map((t, i) => (
+                                <SpecChip key={i} title={t}>
+                                    {t}
+                                </SpecChip>
+                            ))}
+                        </div>
+
                         {/* Избранное */}
                         <button
                             type="button"
@@ -292,6 +305,7 @@ export const AdsCardScroll = memo(({ ads, isOwner = false, onDeleted }: Props) =
                             <Heart className={style.favIcon} />
                         </button>
                     </div>
+
                     {companyName && (
                         <div className={style.company}>
                             {isOwner ? (

@@ -51,7 +51,7 @@ export default function StandardPageID({ car, region }: { car: Car; region?: str
         <div className={style.container}>
             <div className={style.leftBlock}>
                 <div className={style.margin}>
-                    <TitleAds title={car?.title} />
+                    <TitleAds driverOnly={car?.driver_only} title={car?.title} />
                 </div>
 
                 <div className={style.margin}>
@@ -82,6 +82,7 @@ export default function StandardPageID({ car, region }: { car: Car; region?: str
                         drive={car?.drive}
                         year={car?.year}
                         horsepower={car?.horsepower}
+                        driverOnly={car?.driver_only}
                     />
                 </div>
 

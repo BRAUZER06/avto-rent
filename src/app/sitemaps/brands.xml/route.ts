@@ -8,6 +8,7 @@ type CompanyDTO = {
     id: number;
     company_name: string;
     company_avatar_url?: string | null;
+    updated_at?: string | null;
 };
 
 type ApiResponse = { companies: CompanyDTO[] };
@@ -48,14 +49,16 @@ export async function GET() {
             const rawName = (c.company_name || "").trim();
             if (!rawName) return null;
 
+            // Делаем уникальное имя для URL, если совпадения
             let uniqueName = rawName;
             if (used.has(uniqueName)) uniqueName = `${rawName}-${c.id}`;
             used.add(uniqueName);
 
             const loc = `${SITE_URL}/brands/${encodeURIComponent(uniqueName)}`;
-            const lastmod = new Date().toISOString();
+            const lastmod = c.updated_at
+                ? new Date(c.updated_at).toISOString()
+                : new Date().toISOString();
 
-            // Используем formatImageUrl для company_avatar_url, иначе дефолт
             const imageUrl = c.company_avatar_url
                 ? formatImageUrl(c.company_avatar_url)
                 : `${SITE_URL}/og/default.jpeg`;

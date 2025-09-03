@@ -1,7 +1,43 @@
-.container{
-    
+.container {
+    margin-bottom: 12px;
+
+    @media screen and (max-width: 767px) {
+        margin-bottom: 0px;
+    }
+
+    @media screen and (max-width: 500px) {
+        margin-bottom: 0px;
+    }
 }
 
-.title{
+.title {
     font-size: 32px;
+    font-weight: 600;
+    color: #fff; // основной текст белый
+    line-height: 1.2;
+
+    .driverOnly {
+        font-size: 26px;
+        color: rgba(255, 255, 255, 0.6); // чуть серее
+        margin-left: 10px;
+        font-weight: 400;
+    }
+
+    @media screen and (max-width: 767px) {
+        font-size: 28px;
+
+        .driverOnly {
+            font-size: 20px;
+            margin-left: 6px;
+        }
+    }
+
+    @media screen and (max-width: 500px) {
+        font-size: 24px;
+
+        .driverOnly {
+            font-size: 18px;
+            // margin-left: 4px;
+        }
+    }
 }
