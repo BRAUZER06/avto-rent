@@ -1,18 +1,19 @@
 // src/app/sitemaps/brands.xml/route.ts
+import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 import { NextResponse } from "next/server";
 
-export const revalidate = 3600;
+export const revalidate = 3600; // 1 час
 
-type CompanyNameDTO = { id: number; company_name: string };
-type ApiResponse = { companies: CompanyNameDTO[] };
+type CompanyDTO = {
+    id: number;
+    company_name: string;
+    company_avatar_url?: string | null;
+};
+
+type ApiResponse = { companies: CompanyDTO[] };
 
 function trimTrailingSlash(s: string) {
     return s.replace(/\/+$/, "");
-}
-
-function slugFromCompanyName(name: string) {
-    const cleaned = name.trim().replace(/\s+/g, "-");
-    return encodeURIComponent(cleaned);
 }
 
 export async function GET() {
@@ -20,20 +21,20 @@ export async function GET() {
         process.env.NEXT_PUBLIC_SITE_URL || "https://rentavtokavkaz.ru"
     );
     const API_URL = trimTrailingSlash(
-        process.env.NEXT_PUBLIC_API_URL ||
-            process.env.API_URL ||
-            "https://rentavtokavkaz.ru/api"
+        process.env.NEXT_PUBLIC_API_URL || "https://rentavtokavkaz.ru/api"
     );
 
     const AUTH = process.env.SITEMAP_BEARER;
     const headers: HeadersInit = AUTH ? { Authorization: AUTH } : {};
 
-    const res = await fetch(`${API_URL}/company_names`, {
-        headers,
-    });
+    let companies: CompanyDTO[] = [];
 
-    if (!res.ok) {
-        // отдаём пустую карту, чтобы не падать
+    try {
+        const res = await fetch(`${API_URL}/company_names`, { headers });
+        if (!res.ok) throw new Error("Failed to fetch companies");
+        const data = (await res.json()) as ApiResponse;
+        companies = Array.isArray(data?.companies) ? data.companies : [];
+    } catch {
         const empty = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>`;
         return new NextResponse(empty, {
@@ -41,32 +42,42 @@ export async function GET() {
         });
     }
 
-    const data = (await res.json()) as ApiResponse;
-    const companies = Array.isArray(data?.companies) ? data.companies : [];
-
     const used = new Set<string>();
-    const urls = companies
+    const urlsXml = companies
         .map(c => {
-            const raw = (c.company_name || "").trim();
-            if (!raw) return null;
+            const rawName = (c.company_name || "").trim();
+            if (!rawName) return null;
 
-            let slug = slugFromCompanyName(raw);
+            let uniqueName = rawName;
+            if (used.has(uniqueName)) uniqueName = `${rawName}-${c.id}`;
+            used.add(uniqueName);
 
-            // если такой slug уже был (дубли имён), добавим -id
-            if (used.has(slug)) slug = `${slug}-${c.id}`;
-            used.add(slug);
+            const loc = `${SITE_URL}/brands/${encodeURIComponent(uniqueName)}`;
+            const lastmod = new Date().toISOString();
 
-            const loc = `${SITE_URL}/brands/${slug}`;
-            return `<url><loc>${loc}</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>`;
+            // Используем formatImageUrl для company_avatar_url, иначе дефолт
+            const imageUrl = c.company_avatar_url
+                ? formatImageUrl(c.company_avatar_url)
+                : `${SITE_URL}/og/default.jpeg`;
+
+            return `<url>
+  <loc>${loc}</loc>
+  <lastmod>${lastmod}</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+  <image:image>
+    <image:loc>${imageUrl}</image:loc>
+    <image:caption>Аренда авто у ${rawName}</image:caption>
+  </image:image>
+</url>`;
         })
         .filter(Boolean)
-        .join("");
+        .join("\n");
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset
-  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
->
-${urls}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+${urlsXml}
 </urlset>`;
 
     return new NextResponse(xml, { headers: { "content-type": "application/xml" } });
