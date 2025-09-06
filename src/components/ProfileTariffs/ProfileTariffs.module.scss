@@ -1,0 +1,159 @@
+.container {
+    flex: 1;
+    padding: 20px;
+    background-color: var(--background-black);
+    border-radius: 10px;
+
+    @media screen and (max-width: 768px) {
+    }
+    @media screen and (max-width: 550px) {
+        padding: 0;
+        box-shadow: none;
+    }
+    @media screen and (max-width: 400px) {
+        padding: 0;
+    }
+}
+
+.title {
+    font-size: 24px;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--grey-text-dark);
+
+    button {
+        background: none;
+        border: none;
+        font-size: 18px;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        color: var(--grey-text);
+        transition: all 0.3s ease;
+
+        @media screen and (max-width: 550px) {
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        &:hover {
+            border-bottom: 2px solid var(--red-text--link);
+            color: var(--red-text--link);
+        }
+
+        &.active {
+            border-bottom: 2px solid var(--red-text--link);
+            color: var(--red-text--link);
+        }
+    }
+}
+
+.tabContent {
+    margin-top: 20px;
+}
+
+.personalDetails {
+    margin-top: 20px;
+    background-color: var(--background-black);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow:
+        rgba(0, 0, 0, 0.07) 0px -9px 11px,
+        rgba(0, 0, 0, 0.6) 0px 2px 4px,
+        rgba(0, 0, 0, 0.07) 0px 4px 8px,
+        rgba(0, 0, 0, 0.07) 0px 8px 16px,
+        rgba(0, 0, 0, 0.07) 0px 16px 32px,
+        rgba(0, 0, 0, 0.07) 0px 32px 64px;
+
+    @media screen and (max-width: 550px) {
+        padding: 15px;
+        border: 1px solid var(--grey-text-dark);
+        box-shadow: none;
+    }
+
+    h3 {
+        color: #fff;
+        margin-bottom: 20px;
+        font-size: 20px;
+    }
+}
+
+.noTariffs {
+    color: var(--grey-text);
+    text-align: center;
+    padding: 40px;
+    font-style: italic;
+}
+
+/* Стили для табов услуг */
+.servicesTabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--grey-text-dark);
+    padding-bottom: 10px;
+
+    button {
+        background: none;
+        border: none;
+        font-size: 16px;
+        padding: 8px 16px;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        color: var(--grey-text);
+        transition: all 0.3s ease;
+        margin-right: 10px;
+
+        @media screen and (max-width: 550px) {
+            padding: 6px 12px;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+
+        &:hover {
+            border-bottom: 2px solid var(--red-text--link);
+            color: var(--red-text--link);
+        }
+
+        &.servicesActive {
+            border-bottom: 2px solid var(--red-text--link);
+            color: var(--red-text--link);
+            background: rgba(255, 0, 0, 0.1);
+            border-radius: 4px 4px 0 0;
+        }
+    }
+}
+
+.servicesContent {
+    margin-top: 20px;
+    min-height: 520px;
+}
+
+.tariffCard {
+    background: var(--background-dark);
+    border-radius: 8px;
+    
+   
+    
+  
+}
+
+.otherServices {
+    text-align: center;
+    padding: 40px;
+
+    h4 {
+        color: #fff;
+        margin-bottom: 15px;
+        font-size: 18px;
+    }
+}
+
+.noServices {
+    color: var(--grey-text);
+    font-style: italic;
+}

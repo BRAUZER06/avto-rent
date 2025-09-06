@@ -1,0 +1,55 @@
+@import "../../../lib/assets/styles/_media.scss";
+
+/* Липкая полоса на всю ширину */
+.header {
+  position: sticky;
+  top: 0;                  /* прилипает к верху */
+  z-index: 1000;
+  width: 100%;
+
+  background: var(--background-black);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+/* Универсальная внутренняя обёртка как .wrapper */
+.inner {
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;           /* как в твоём .wrapper */
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @include vw-md {
+    padding: 20px 10px;
+  }
+ 
+  @include  vw-lgx {
+    padding: 10px ;
+  }
+}
+
+/* Показываем нужную версию хедера */
+.desktopContainer {
+  display: block;
+  width: 100%;
+
+  @media screen and (max-width: 1024px) {
+    display: none;
+  }
+}
+
+.mobileContainer {
+  display: none;
+  width: 100%;
+
+  @media screen and (max-width: 1024px) {
+    display: flex;
+  }
+
+  @include vw-md {
+    display: flex;
+  }
+}

@@ -1,0 +1,54 @@
+.container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px; /* зазор между логотипом, селектом и бургером */
+}
+
+/* Лого */
+.logo {
+  width: 104px;
+  height: 48px;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+/* Селект по центру */
+.regionSelectWrap {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  z-index: 5;
+  overflow: visible;
+}
+
+/* Контейнер под бургер справа */
+.containerBurger {
+  flex: 0 0 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  width: 48px;
+  border-radius: 33px;
+}
+
+/* Кнопка-иконка бургера */
+.imagesContainer {
+  background-color: var(--grey-bg);
+  border-radius: 33px;
+  height: 48px;
+  width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 6;
+}
+
+.burgerIcon,
+.searchIcon {
+  cursor: pointer;
+}
+

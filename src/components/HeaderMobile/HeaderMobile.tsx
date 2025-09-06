@@ -9,6 +9,7 @@ import { HeaderNavPanel } from "./components/HeaderNavPanel/HeaderNavPanel";
 
 import style from "./HeaderMobile.module.scss";
 import dynamic from "next/dynamic";
+import { Icon2 } from "../icons/logos/Icon2";
 
 const RegionSelect = dynamic(() => import("../ui/RegionSelect/RegionSelect"), {
     ssr: false,
@@ -35,7 +36,7 @@ export const HeaderMobile = () => {
     return (
         <div className={style.container}>
             <Link href={`/avto/all`}>
-                <Image
+                {/* <Image
                     className={style.logo}
                     src="/assets/header/logoCarText.png"
                     width={104}
@@ -43,7 +44,8 @@ export const HeaderMobile = () => {
                     alt="Logo"
                     unoptimized
                     priority
-                />
+                /> */}
+                <Icon2 className={style.logo} />
             </Link>
 
             {/* 👇 селект региона */}

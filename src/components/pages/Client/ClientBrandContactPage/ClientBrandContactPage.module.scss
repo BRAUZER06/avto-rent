@@ -1,0 +1,380 @@
+.contactPage {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  color: var(--text-primary);
+}
+
+// Hero Section
+.heroSection {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+  border-radius: 16px;
+  color: white;
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
+  }
+}
+
+.heroSubtitle {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+// Content Grid
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Contact Section
+.contactSection {
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--brand-primary);
+    padding-bottom: 0.5rem;
+  }
+}
+
+.contactCards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contactCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--background-card);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.cardIcon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.cardContent {
+  flex: 1;
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem 0;
+    color: var(--text-primary);
+  }
+
+  p {
+    margin: 0.25rem 0;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+}
+
+.region {
+  display: inline-block;
+  background: var(--brand-primary);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.phoneItem,
+.messengerItem {
+  margin-bottom: 0.75rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.phoneLink,
+.messengerLink,
+.socialLink {
+  color: var(--brand-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--brand-secondary);
+    text-decoration: underline;
+  }
+}
+
+.phoneLabel {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+// Map Section
+.mapSection {
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--brand-primary);
+    padding-bottom: 0.5rem;
+  }
+}
+
+.mapContainer {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 1rem;
+}
+
+.mapAddress {
+  background: var(--background-light);
+  padding: 1rem;
+  border-radius: 8px;
+
+  strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+
+  p {
+    margin: 0;
+    color: var(--text-secondary);
+  }
+}
+
+// Info Section
+.infoSection {
+  background: var(--background-card);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--text-primary);
+  }
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.infoItem {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--background-light);
+  border-radius: 12px;
+
+  h3 {
+    font-size: 1.2rem;
+    margin: 0 0 1rem 0;
+    color: var(--text-primary);
+  }
+
+  p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+}
+
+// Loading & Not Found
+.loading,
+.notFound {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+.notFound {
+  color: var(--error-color);
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .contactPage {
+    padding: 1rem;
+  }
+
+  .heroSection {
+    padding: 1.5rem;
+    
+    h1 {
+      font-size: 2rem;
+    }
+  }
+
+  .contactCard {
+    padding: 1rem;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+}.socials {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0 0;
+}
+
+.socialIcon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease;
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+        filter: brightness(1.02);
+    }
+}
+
+/* Брендовые цвета */
+.wa {
+    background: #25d366;
+} /* WhatsApp */
+.tg {
+    background: #229ed9;
+} /* Telegram */
+.web {
+    background: #5e5e5e;
+} /* Website нейтральный */
+
+/* Instagram — градиент */
+.ig {
+    background: linear-gradient(
+        45deg,
+        #f09433 0%,
+        #e6683c 25%,
+        #dc2743 50%,
+        #cc2366 75%,
+        #bc1888 100%
+    );
+}
+
+/* Звонки */
+.callWrapper {
+    position: relative;
+    margin-top: 10px;
+}
+
+.callButton {
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background: #3d8b40;
+    }
+}
+
+.callDropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    width: auto;
+    max-width: 400px;
+    background: #111;
+    border: 1px solid #2c2c2c;
+    border-radius: 8px;
+    padding: 6px;
+    z-index: 50;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+}
+
+.callItem {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: 6px;
+    color: #eaeaea;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.15s ease;
+
+    &:hover {
+        background: #1d1d1d;
+    }
+}
+
+.callLabel {
+    margin-left: 6px;
+    color: #a5a5a5;
+    font-size: 13px;
+}
+
+// Адаптивность для мобильных
+@media (max-width: 768px) {
+    .socials {
+        justify-content: center;
+    }
+    
+    .callWrapper {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .callDropdown {
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+    }
+}

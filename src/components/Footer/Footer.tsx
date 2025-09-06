@@ -2,9 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 import FOOTER_ITEMS from "@src/data/footer-nav";
-import { SubscribeGreenBlock } from "../ui/SubscribeGreenBlock/SubscribeGreenBlock";
 
 import style from "./Footer.module.scss";
+import { Icon2 } from "../icons/logos/Icon2";
 
 export const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -18,7 +18,7 @@ export const Footer = () => {
 
                 <div className={style.footerContent}>
                     <Link className={style.logoContainer} href="/">
-                        <Image
+                        {/* <Image
                             className={style.logo}
                             src="/assets/header/logoCarText.png"
                             width={128}
@@ -26,7 +26,8 @@ export const Footer = () => {
                             alt="Logo"
                             unoptimized
                             priority
-                        />
+                        /> */}
+                        <Icon2 className={style.logo} />
                     </Link>
 
                     <div className={style.nav}>

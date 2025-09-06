@@ -1,0 +1,271 @@
+.container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    min-width: 200px;
+    min-height: 278px;
+    max-height: 600px;
+
+    background-color: var(--grey-bg);
+    border-radius: 2px;
+    // transition:
+    //     box-shadow 0.3s ease,
+    //     height 0.3s ease;
+
+    @media (max-width: 580px) {
+        min-width: 150px;
+        min-height: 150px;
+    }
+
+    @media (max-width: 450px) {
+        min-width: 100px;
+        min-height: 100px;
+    }
+}
+
+.swipeBlock {
+    position: relative;
+    background-color: var(--grey-bg);
+    overflow: hidden;
+    width: 100%;
+    // height: 270px;
+    height: 350px;
+    user-select: none;
+    padding: 0px 0px 0px;
+    cursor: pointer;
+
+    @media screen and (max-width: 767px) {
+        height: 275px;
+    }
+
+    @media (max-width: 580px) {
+        height: 250px;
+    }
+
+    @media (max-width: 470px) {
+        height: 150px;
+        height: 250px;
+    }
+
+    @media (max-width: 375px) {
+        height: 130px;
+        height: 250px;
+    }
+
+    > span {
+        position: relative;
+        object-fit: contain;
+        height: 100%;
+        width: 100%;
+    }
+}
+
+.infoBlock {
+    position: relative;
+    padding: 0px 10px 10px;
+    color: var(--grey-text);
+}
+
+.containerPrice {
+    height: 25px;
+    display: block;
+    position: relative;
+    width: 70%;
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 22px;
+    margin-bottom: 2px;
+    color: var(--blue-text);
+    margin-top: 9px;
+    background-color: gray;
+    border-radius: 8px;
+}
+
+.containerCompany {
+    cursor: pointer;
+    padding: 4px;
+
+    border-radius: 10px;
+    margin: 12px 0px 0px;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+    background-color: gray;
+
+    .companyLogo {
+        background-color: var(--grey-bg);
+        margin-right: 10px;
+        border-radius: 12px;
+        overflow: hidden;
+        span {
+            display: block;
+            width: 45px;
+            height: 35px;
+            border-radius: 10px; // было 50%, стало прямоугольным с легким скруглением
+            object-fit: cover;
+
+            flex: 0 0 auto;
+        }
+    }
+
+    .companyInfo {
+        width: 100%;
+        > h2 {
+            height: 11px;
+            margin-bottom: 5px;
+            font-size: 11px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            background-color: var(--grey-bg);
+            width: 70%;
+            border-radius: 4px;
+            display: block;
+        }
+        > h3 {
+            font-size: 12px;
+            height: 12px;
+            background-color: var(--grey-bg);
+            width: 70%;
+            border-radius: 4px;
+            display: block;
+        }
+
+        .starsContainer {
+            position: relative;
+            display: inline-block;
+            font-size: 20px;
+            color: #ccc;
+            font-size: 1rem;
+
+            .starsFilled {
+                position: absolute;
+                top: 0;
+                left: 0;
+                overflow: hidden;
+                white-space: nowrap;
+                color: #ff5515;
+            }
+
+            .starsEmpty {
+                color: #ccc;
+            }
+        }
+    }
+}
+
+.container {
+    &:hover .hiddenBlock {
+        display: block;
+
+        border-top: none;
+    }
+}
+
+.hiddenBlock {
+    border-top: none;
+    position: absolute;
+    left: -1px;
+    right: -1px;
+    top: 99%;
+    z-index: 111;
+    display: none;
+    padding: 0px 10px 5px;
+    background-color: var(--grey-bg);
+    // box-shadow: 0 8px 8px rgba(0,0,0,.1);
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
+
+    display: none;
+    // display: block;
+    // margin: 7px 0px 0px;
+
+    .additionalInfo {
+        margin-bottom: 5px;
+
+        .colors {
+            flex-wrap: wrap;
+            display: flex;
+            margin-bottom: 5px;
+
+            .color {
+                cursor: pointer;
+                width: 24px;
+                height: 24px;
+                border-radius: 10%;
+                margin-right: 5px;
+                margin-bottom: 5px;
+            }
+        }
+    }
+
+    .dimensions {
+        .dimensionsBlocks {
+            display: flex;
+            margin-top: 6px;
+            flex-direction: column;
+            color: #999;
+            font-size: 13px;
+            line-height: 100%;
+            height: 17px;
+            width: 60%;
+            background-color: rgb(95, 95, 95);
+            border-radius: 4px;
+
+            .dimensionsText {
+                color: var(--white-color);
+                font-style: normal;
+                font-weight: 500;
+                font-size: 13px;
+                line-height: 14px;
+                margin-bottom: 2px;
+            }
+
+            .dimensionsSubText {
+            }
+        }
+    }
+
+    .buyButton {
+        font-size: 14px;
+        flex-shrink: 0;
+        width: 100%;
+        height: 37px;
+        border-radius: 4px;
+        background-color: gray;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        margin-top: 10px;
+        color: #fff;
+        transition: background-color 0.2s ease;
+    }
+}
+
+.carSpecsBlock {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+
+    display: flex;
+    justify-content: center; // центрирует контент по горизонтали
+    align-items: center;
+    flex-wrap: wrap;
+
+    padding: 10px;
+    // background: rgba(255, 255, 255, 0.9); // светлая подложка
+    z-index: 100;
+
+    .specItem {
+        height: 18px;
+        width: 40px;
+        margin: 0 6px;
+        background: gray;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: 500;
+        font-size: 13px;
+        color: #444;
+    }
+}

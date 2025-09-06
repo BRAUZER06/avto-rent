@@ -16,6 +16,10 @@ import { MobileSelectCheckboxGroup } from "../ui/MobileSelectCheckboxGroup/Mobil
 
 import { getCountAllCars } from "@src/lib/api/carService";
 import dynamic from "next/dynamic";
+import { Icon1 } from "../icons/logos/Icon1";
+import { Icon2 } from "../icons/logos/Icon2";
+import { Icon3 } from "../icons/logos/Icon3";
+
 const RegionSelect = dynamic(() => import("../ui/RegionSelect/RegionSelect"), {
     ssr: false,
 });
@@ -40,7 +44,7 @@ export const HeaderDesktop = memo(() => {
         <div className={style.container}>
             {/* <Link href="/home"> */}
             <Link href="/avto/all">
-                <Image
+                {/* <Image
                     className={style.logo}
                     src="/assets/header/logoCarText.png"
                     width={128}
@@ -48,13 +52,12 @@ export const HeaderDesktop = memo(() => {
                     unoptimized
                     priority
                     alt="Logo"
-                />
-            </Link>
-
+                /> */}
+                <Icon2 className={style.logo} />
+            </Link>{" "}
             <div className={style.regionSelectWrap}>
                 <RegionSelect placeholder="Выберите регион" />
             </div>
-
             <nav className={style.menu}>
                 <div className={style.menuItem}>
                     {/* <HeaderMultiSelect.SelectList

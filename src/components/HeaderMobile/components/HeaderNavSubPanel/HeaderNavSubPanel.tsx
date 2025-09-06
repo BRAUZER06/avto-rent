@@ -3,6 +3,7 @@ import Image from "next/image";
 import HeaderNavPanelItem from "../HeaderNavPanelItem/HeaderNavPanelItem";
 
 import style from "./HeaderNavSubPanel.module.scss";
+import { Icon2 } from "@src/components/icons/logos/Icon2";
 
 interface HeaderNavSubPanel {
     isOpen: boolean;
@@ -22,7 +23,7 @@ export const HeaderNavSubPanel = ({
     return (
         <div onClick={e => e.stopPropagation()} className={style.container}>
             <div className={style.headerNav}>
-                <Image
+                {/* <Image
                     className={style.logo}
                     src="/assets/header/logoCarText.png"
                     width={128}
@@ -30,7 +31,8 @@ export const HeaderNavSubPanel = ({
                     alt="Logo"
                     unoptimized
                     priority
-                />
+                /> */}
+                <Icon2 className={style.logo} />
 
                 <Image
                     className={style.closeIcon}

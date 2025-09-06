@@ -4,6 +4,7 @@ import style from "./MobileContanctPanelContent.module.scss";
 import { FaWhatsapp, FaTelegramPlane, FaInstagram, FaGlobe } from "react-icons/fa";
 import { OwnerInfoCard, type OwnerInfo } from "../ui/OwnerInfoCard/OwnerInfoCard";
 import { buildRentalMessage } from "@src/data/rental_message";
+import { Icon2 } from "../icons/logos/Icon2";
 
 /* helpers */
 const formatPhoneDisplay = (raw?: string) => {
@@ -102,13 +103,14 @@ export const MobileContanctPanelContent = ({
     return (
         <div onClick={e => e.stopPropagation()} className={style.container}>
             <div className={style.headerNav}>
-                <Image
+                {/* <Image
                     className={style.logo}
                     src="/assets/header/logoCarText.png"
                     width={104}
                     height={32}
                     alt="Logo"
-                />
+                /> */}
+                <Icon2 className={style.logo} />
                 <Image
                     className={style.closeIcon}
                     src="/images/closeMenuIcon.svg"

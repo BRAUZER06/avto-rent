@@ -1,0 +1,249 @@
+@import "../../../lib/assets/styles/_media.scss";
+
+.footer {
+    width: 100%;
+    font-family: "Reggular";
+    background-color: var(--background-black);
+    display: flex;
+    flex-direction: column;
+    margin-top: 100px;
+    margin-bottom: 15px;
+
+    @include vw-md {
+        margin-top: 79px;
+    }
+}
+
+/* узкая обёртка (как MaxWidthWrapper / headerInner) */
+.inner {
+    max-width: 1440px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+
+    @media screen and (max-width: 1000px) {
+        padding: 10px; /* как просил для 1000px */
+    }
+}
+
+/* дальше — твои существующие стили, но они теперь применяются ВНУТРИ .inner */
+.detailSharing {
+    width: 907px;
+    height: 112px;
+    align-self: center;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 32px;
+    background-color: var(--grey-bg);
+    border-radius: 12px;
+    margin-bottom: 72px;
+
+    @include vw-lg {
+        border-radius: 16px;
+        width: 100%;
+        height: 100px;
+        padding: 20px 32px;
+        margin-bottom: 36px;
+    }
+
+    @include vw-mob {
+        border-radius: 12px;
+        flex-direction: column;
+        align-self: flex-start;
+        padding: 16px 34px 24px;
+        max-width: 375px;
+        height: auto;
+    }
+}
+
+.detailText {
+    margin-right: 10px;
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 120%;
+
+    @include vw-mob {
+        margin-bottom: 20px;
+    }
+
+    > span {
+        display: block;
+        font-size: 24px;
+        color: var(--green-main);
+
+        @include vw-md {
+            font-size: 20px;
+        }
+        @include vw-mob {
+            font-size: 20px;
+        }
+    }
+}
+
+.variantFirst {
+    display: block;
+    @include vw-lg {
+        display: none;
+    }
+    @include vw-mob {
+        font-size: 24px;
+        display: block;
+    }
+}
+
+.variantSecond {
+    display: none;
+    @include vw-lg {
+        display: flex;
+        font-size: 27px;
+        font-weight: 500;
+        line-height: 120%;
+    }
+    @include vw-lgx {
+        font-size: 24px;
+    }
+    @include vw_md {
+        font-size: 20px;
+    } /* если есть такой миксин */
+    @include vw-mob {
+        display: none;
+    }
+}
+
+.footerContent {
+    min-height: 58px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    @include vw-md {
+        flex-direction: column;
+    }
+}
+
+.logoContainer {
+    align-self: flex-start;
+    margin-right: 20px;
+}
+
+.logo {
+    min-width: 128px;
+    cursor: pointer;
+
+    @include vw-md {
+        min-width: 104px;
+        max-width: 104px;
+    }
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 1036px;
+
+    @include vw-md {
+        flex-direction: column-reverse;
+        width: 100%;
+        align-items: flex-start;
+        justify-content: flex-start;
+    }
+}
+
+.navLinks {
+    display: flex;
+    flex-basis: 900px;
+    justify-content: space-between;
+    margin-right: 20px;
+
+    @include vw-md {
+        margin-top: 24px;
+        flex-basis: auto;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 0 16px;
+    }
+}
+
+.navItem {
+    white-space: nowrap;
+    color: var(--white-color);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 140%;
+    margin-right: 20px;
+
+    @include vw-md {
+        margin-bottom: 16px;
+    }
+}
+
+.footerText {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-right: 10px;
+
+    @include vw-md {
+        margin-top: 5px;
+        flex-direction: column;
+        padding: 0 16px;
+    }
+}
+
+.copyRight,
+.legalNotice {
+    opacity: 0.2;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 140%;
+    min-width: 128px;
+}
+
+.copyRight {
+    width: 128px;
+    margin-right: 20px;
+
+    @include vw-md {
+        width: 100%;
+        margin-bottom: 16px;
+    }
+}
+
+.legalNotice {
+    max-width: 1027px;
+}
+
+.technologiesAndSolutions {
+    display: block;
+    @include vw-lgx {
+        display: none;
+    }
+    @include vw-md {
+        display: block;
+    }
+}
+
+.footerConditions {
+    margin-top: 20px;
+    padding-right: 30px;
+    margin-left: auto;
+
+    @media screen and (max-width: 1023px) {
+        padding-left: 16px;
+        margin-left: 0;
+        margin-bottom: 16px;
+    }
+
+    .conditionsLink {
+        opacity: 0.2;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 140%;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}

@@ -1,0 +1,67 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    width: 100%;
+
+}
+
+.containerLogo{
+    display: block;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.logoClient{
+     width: 80px;
+    display: block;
+    border-radius: 8px;
+}
+
+.logo {
+    width: 128px;
+    height: 60px;
+    // min-width: unset;
+    min-width: 128px;
+    display: block;
+    color: #0AF;
+}
+.logoText{
+    font-size: 18px;
+    color: #0AF;
+    // color: #95ff43;
+    margin-left: 8px;
+    font-weight: 500;
+}
+
+.menu {
+    color: var(--white-color);
+    display: flex;
+    align-items: center;
+
+    font-family: "Reggular";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+}
+
+.menuItem {
+    background-color: var(--grey-bg);
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+    height: 48px;
+    padding: 0px 24px;
+    border-radius: 33px;
+
+    @media screen and (max-width: 1190px) {
+        padding: 0px 20px;
+    }
+
+    @media screen and (max-width: 1090px) {
+        padding: 0px 15px;
+    }
+}
