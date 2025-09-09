@@ -11,6 +11,7 @@ import "swiper/css/scrollbar";
 
 import styles from "./BrandsInfo.module.scss";
 import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
+import YandexAddressMap from "../YandexAddressMap/YandexAddressMap";
 
 type LogoObj = { id?: number; url?: string; position?: number };
 type CompanyDTO = {
@@ -151,28 +152,7 @@ export const BrandsInfo = ({ company }: { company?: CompanyDTO }) => {
 
             {/* Адрес */}
             {activeTab === "address" && showAddressTab && (
-                <div className={styles.addressContainer}>
-                    <div className={styles.mapContainer}>
-                        <iframe
-                            src={`https://yandex.ru/map-widget/v1/?text=${encodeURIComponent(address)}`}
-                            width="100%"
-                            height="400"
-                            frameBorder="0"
-                            className={styles.map}
-                        />
-                    </div>
-                    <div className={styles.addressInfo}>
-                        <p>{address}</p>
-                        <a
-                            href={`https://yandex.ru/maps/?text=${encodeURIComponent(address)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={styles.openInMaps}
-                        >
-                            Открыть в Яндекс.Картах
-                        </a>
-                    </div>
-                </div>
+                <YandexAddressMap address={address} height={400} />
             )}
         </div>
     );

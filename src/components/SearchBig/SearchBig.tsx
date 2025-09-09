@@ -37,23 +37,29 @@ export const SearchBig = memo(({ value, handleOnChange, handleOnSubmit }: Props)
                     placeholder="Поиск по всему сайту"
                     type="text"
                     value={value}
-                    onChange={event => handleOnChange(event)}
+                    onChange={handleOnChange}
                     onKeyDown={e => {
                         if (e.key === "Enter") {
                             e.preventDefault();
-                            handleOnSubmit();
+                            if (value.trim()) handleOnSubmit();
                         }
                     }}
                 />
-
-                <Image
-                    className={style.searchImg}
-                    src="/images/searchIconGreenBlue.svg"
-                    width={44}
-                    height={44}
-                    alt="Logo"
-                    onClick={handleOnSubmit}
-                />
+                <button
+                    type="button"
+                    className={style.searchImgBtn}
+                    onClick={() => value.trim() && handleOnSubmit()}
+                    aria-label="Искать"
+                >
+                    <Image
+                        className={style.searchImg}
+                        src="/images/searchIconGreenBlue.svg"
+                        width={44}
+                        height={44}
+                        alt=""
+                        priority
+                    />
+                </button>
             </div>
         </>
     );

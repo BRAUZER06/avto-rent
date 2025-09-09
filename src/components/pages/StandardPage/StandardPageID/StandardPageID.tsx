@@ -14,6 +14,7 @@ import { MapBlockAds } from "@src/components/ui/MapBlockAds/MapBlockAds";
 import { PhotoViewerMobile } from "@src/components/ui/PhotoViewerMobile/PhotoViewerMobile";
 import { useMemo } from "react";
 import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
+import SimilarCategoryCtaAds from "@src/components/ui/SimilarCategoryCtaAds/SimilarCategoryCtaAds";
 
 type Car = {
     id: number | string;
@@ -71,7 +72,8 @@ export default function StandardPageID({ car, region }: { car: Car; region?: str
                 </div>
 
                 <div className={style.margin}>
-                    <MapBlockAds location={car?.location} />
+                    {/* <MapBlockAds location={car?.location} /> */}
+                    <MapBlockAds location={car?.owner?.address} />
                 </div>
 
                 <div className={style.margin}>
@@ -92,6 +94,12 @@ export default function StandardPageID({ car, region }: { car: Car; region?: str
 
                 <div className={style.margin}>
                     <DescriptionAds description={car?.description} />
+                </div>
+                <div className={style.margin}>
+                    <SimilarCategoryCtaAds
+                        region={region || car?.owner?.region}
+                        category={(car as any)?.category}
+                    />
                 </div>
             </div>
 

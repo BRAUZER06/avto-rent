@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { cookies, headers } from "next/headers";
 import StandardPageID from "@src/components/pages/StandardPage/StandardPageID/StandardPageID";
 
-export const revalidate = 3600;
+export const revalidate = 20;
 
 const SITE_URL =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") || "https://rentavtokavkaz.ru";

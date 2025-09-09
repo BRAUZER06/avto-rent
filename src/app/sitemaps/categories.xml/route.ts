@@ -1,7 +1,7 @@
 // src/app/sitemaps/categories.xml/route.ts
 import { NextResponse } from "next/server";
 
-export const revalidate = 3600; // Актуальность кэша - 1 час
+export const revalidate = 20; // Актуальность кэша - 1 час
 
 const SITE =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") || "https://rentavtokavkaz.ru";
@@ -40,7 +40,7 @@ ${CATEGORIES.map(
     return new NextResponse(xml, {
         headers: {
             "Content-Type": "application/xml; charset=utf-8",
-            "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+            "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=400",
         },
     });
 }

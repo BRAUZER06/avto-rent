@@ -1,0 +1,58 @@
+.addressContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.mapContainer {
+  margin-bottom: 20px;
+  border: 1px solid #929292;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--background-light);
+}
+
+.map {
+  display: block;
+  width: 100%;
+  border: 0;
+}
+
+.addressInfo {
+  font-size: 16px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.openInMaps {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: #196dff;
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: opacity .18s ease;
+
+  &:hover {
+    opacity: .9;
+  }
+}
+
+/* если потребуется кнопка телефона — уже есть стиль */
+.phoneButton {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* мобилки */
+@media (max-width: 640px) {
+  .mapContainer { border-radius: 10px; }
+  .openInMaps, .phoneButton { text-align: center; }
+}

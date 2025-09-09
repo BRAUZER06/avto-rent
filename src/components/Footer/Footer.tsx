@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import FOOTER_ITEMS from "@src/data/footer-nav";
+import { FOOTER_ITEMS } from "@src/data/footer-nav";
 
 import style from "./Footer.module.scss";
 import { Icon2 } from "../icons/logos/Icon2";

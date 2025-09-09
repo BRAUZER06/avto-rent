@@ -43,7 +43,7 @@ export default function RootLayout({
         return () => {
             active = false;
         };
-    }, [name, setCompany]);
+    }, [setCompany]);
     return (
         <div className="flex min-h-screen flex-col">
             {/* Хедер на всю ширину */}

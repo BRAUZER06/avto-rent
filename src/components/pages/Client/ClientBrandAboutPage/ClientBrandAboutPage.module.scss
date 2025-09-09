@@ -1,20 +1,18 @@
 .aboutPage {
   max-width: 1200px;
   margin: 0 auto;
-  // padding: 2rem 1rem;
   color: var(--text-primary);
 }
 
-// Hero Section
+/* ===== Hero ===== */
 .heroSection {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  // margin-bottom: 3rem;
   padding: 2rem;
   background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
   border-radius: 16px;
-  color: white;
+  color: #fff;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -59,7 +57,7 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
-// Content Grid
+/* ===== Grid ===== */
 .contentGrid {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -70,7 +68,7 @@
   }
 }
 
-// Sections
+/* ===== Section base ===== */
 .section {
   background: var(--background-card);
   padding: 1rem;
@@ -87,22 +85,19 @@
   }
 }
 
-// About Content
-.aboutContent {
-  line-height: 1.6;
+/* ===========================
+   Контакты (секция + элементы)
+   =========================== */
+.contactsSection {
+  background: var(--background-card);
+  border-left: 4px solid var(--brand-primary);
 
-  .paragraph {
-    margin-bottom: 1rem;
-    font-size: 1rem;
-    color: var(--text-secondary);
-
-    &:last-child {
-      margin-bottom: 0;
-    }
+  h2 {
+    color: var(--text-primary);
+    border-bottom-color: var(--brand-primary);
   }
 }
 
-// Contacts Grid
 .contactsGrid {
   display: flex;
   flex-direction: column;
@@ -110,22 +105,40 @@
 }
 
 .contactItem {
+  /* Пер-типовые переменные (по умолчанию) */
+  --c-icon: var(--brand-primary);
+  --c-link: var(--brand-primary);
+  --c-bg: color-mix(in srgb, var(--c-icon) 6%, var(--background-light));
+  --c-border: color-mix(in srgb, var(--c-icon) 30%, var(--border-color));
+
   display: flex;
   align-items: flex-start;
   gap: 1rem;
   padding: 1rem;
-  background: var(--background-light);
-  border-radius: 8px;
-  transition: transform 0.2s ease;
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: 10px;
+  transition: transform .18s ease, box-shadow .18s ease;
 
   &:hover {
     transform: translateX(4px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   }
 }
 
 .contactIcon {
+  color: var(--c-icon);
   font-size: 1.2rem;
-  flex-shrink: 0;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    display: block;
+  }
 }
 
 .contactInfo {
@@ -138,18 +151,20 @@
     color: var(--text-primary);
   }
 
-  span, a {
+  span,
+  a {
     color: var(--text-secondary);
     text-decoration: none;
+    word-break: break-word;
   }
 }
 
 .contactLink {
-  color: var(--brand-primary) !important;
-  transition: color 0.2s ease;
+  color: var(--c-link) !important;
+  transition: color .18s ease;
 
   &:hover {
-    color: var(--brand-secondary) !important;
+    color: color-mix(in srgb, var(--c-link) 85%, #ffffff 15%) !important;
   }
 }
 
@@ -159,35 +174,150 @@
   margin-top: 0.25rem;
 }
 
-// Stats Grid
+/* Палитры по типу контакта */
+.contactItem[data-type="phone"] {
+  --c-icon: #34a853;
+  --c-link: #34a853;
+}
+
+.contactItem[data-type="whatsapp"] {
+  --c-icon: #25d366;
+  --c-link: #25d366;
+}
+
+.contactItem[data-type="telegram"] {
+  --c-icon: #229ed9;
+  --c-link: #229ed9;
+}
+
+.contactItem[data-type="instagram"] {
+  --c-icon: #e4405f;
+  --c-link: #e4405f;
+}
+
+.contactItem[data-type="website"] {
+  --c-icon: #1e88e5;
+  --c-link: #1e88e5;
+}
+
+.contactItem[data-type="email"] {
+  --c-icon: #ea4335;
+  --c-link: #ea4335;
+}
+
+.contactItem[data-type="address"] {
+  --c-icon: #f4b400;
+  --c-link: #f4b400;
+}
+
+.contactItem[data-type="region"] {
+  --c-icon: #7b61ff;
+  --c-link: #7b61ff;
+}
+
+/* ===========================
+   About
+   =========================== */
+.aboutContent {
+  line-height: 1.6;
+}
+
+.paragraph {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: var(--text-secondary);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* ===========================
+   Статистика (адаптив)
+   =========================== */
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 1rem;
 }
 
 .statCard {
   text-align: center;
-  padding: 1.5rem 1rem;
+  padding: 1.25rem 1rem;
   background: var(--background-light);
-  border-radius: 8px;
   border: 1px solid var(--border-color);
+  border-radius: 10px;
 }
 
 .statNumber {
-  font-size: 2rem;
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  font-size: clamp(1.2rem, 6vw, 2rem);
+  font-weight: 800;
   color: var(--brand-primary);
-  margin-bottom: 0.5rem;
+  margin-bottom: .5rem;
+}
+
+.statIcon {
+  display: inline-flex;
+  width: 1.25rem;
+  height: 1.25rem;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .statLabel {
-  font-size: 0.875rem;
+  font-size: clamp(.8rem, 3.2vw, .95rem);
   color: var(--text-secondary);
   line-height: 1.4;
 }
 
-// Loading & Not Found
+@media (max-width: 640px) {
+  .statsGrid {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: .75rem;
+  }
+
+  .statCard {
+    padding: 1rem .875rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .statsGrid {
+    display: grid;
+  
+    overflow-x: auto;
+    gap: .75rem;
+    padding-bottom: .5rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .statCard {
+    scroll-snap-align: start;
+    min-height: 110px;
+  }
+
+  .statsGrid::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .statsGrid::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 999px;
+  }
+}
+
+
+/* ===========================
+   Служебные состояния
+   =========================== */
 .loading,
 .notFound {
   display: flex;

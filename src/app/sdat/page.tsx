@@ -5,7 +5,7 @@ import { notFound, redirect } from "next/navigation";
 import { regionsFull } from "@src/data/regions";
 
 // --- Настройки ISR (обновление метаданных/OG раз в N сек) ---
-export const revalidate = 60;
+export const revalidate = 20;
 
 // Валидные регионы из твоего справочника
 const VALID_REGIONS = new Set(

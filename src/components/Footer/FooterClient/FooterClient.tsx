@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import FOOTER_ITEMS from "@src/data/footer-nav";
+import { FOOTER_ITEMS_CLIENT } from "@src/data/footer-nav";
 
 import style from "./FooterClient.module.scss";
 import { Icon2 } from "../../icons/logos/Icon2";
@@ -32,7 +32,7 @@ export const FooterClient = () => {
 
                     <div className={style.nav}>
                         <div className={style.navLinks}>
-                            {FOOTER_ITEMS?.map((item: any) => (
+                            {FOOTER_ITEMS_CLIENT?.map((item: any) => (
                                 <Link
                                     key={item.path || item.name} // ✅ добавил key
                                     className={`${style[item.class]} ${style.navItem}`}

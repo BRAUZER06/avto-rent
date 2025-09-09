@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
@@ -11,7 +10,6 @@ import useWindowWidth from "@src/utils/api/hooks/useWindowWidth";
 import { getAllCars, getCarsCategory } from "@src/lib/api/carService";
 
 import style from "./StandardPageAllPosts.module.scss";
-import { useDebounce } from "@src/utils/api/hooks/useDebounce";
 
 type Car = any;
 
@@ -20,7 +18,6 @@ type ServerPayload = {
     meta: { page: number; per_page: number; total: number; pages: number };
 };
 
-// Родительный падеж категорий
 const CATEGORY_GENITIVE: Record<string, string> = {
     all: "автомобилей",
     mid: "автомобилей среднего класса",
@@ -34,7 +31,6 @@ const CATEGORY_GENITIVE: Record<string, string> = {
     bike: "мотоциклов",
 };
 
-// Родительный падеж регионов
 const REGION_GENITIVE: Record<string, string> = {
     ingushetia: "Ингушетии",
     chechnya: "Чечне",
@@ -52,52 +48,55 @@ export default function StandardPageAllPosts({
 }: {
     category: string;
     region?: string;
-    initial?: ServerPayload; // <-- SSR/SSG первый пакет
+    initial?: ServerPayload;
 }) {
     const screenWidth = useWindowWidth();
 
-    // ---------- URL <-> state синхронизация для поиска ----------
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const router = useRouter();
 
     const qFromUrl = (searchParams.get("search") ?? "").trim();
-    const pageFromUrl = Number(searchParams.get("page") ?? 1) || 1;
 
     const [inputSearch, setInputSearch] = useState(qFromUrl);
     const [search, setSearch] = useState(qFromUrl);
 
+    const prevQueryRef = useRef(qFromUrl);
+
     useEffect(() => {
-        const next = (searchParams.get("search") ?? "").trim();
-        if (next !== inputSearch) setInputSearch(next);
-        if (next !== search) setSearch(next);
+        const nextQ = (searchParams.get("search") ?? "").trim();
+
+        setInputSearch(prev => (prev !== nextQ ? nextQ : prev));
+        setSearch(prev => (prev !== nextQ ? nextQ : prev));
+
+        if (nextQ !== prevQueryRef.current) {
+            setAds([]);
+            setPage(1);
+            setTotalPages(0);
+            setTotalAds(0);
+            setReachedEnd(false);
+            setError(null);
+            fetchPage(1, false, nextQ);
+            prevQueryRef.current = nextQ;
+        } else if (!initial && ads.length === 0 && !isInitialLoading && !isAppending) {
+            fetchPage(1, false, nextQ);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchParams]);
+    }, [searchParams]); // единственный «источник правды»
 
-    useEffect(() => {
-        const trimmed = search.trim();
-
+    const handleSearchSubmit = useCallback(() => {
+        const trimmed = inputSearch.trim();
         const sp = new URLSearchParams(searchParams.toString());
         if (trimmed) sp.set("search", trimmed);
         else sp.delete("search");
-
-        sp.delete("page"); // сброс страницы на 1
+        // страницу в URL не ведём — внутри управляем стейтом
         const qs = sp.toString();
         const nextUrl = qs ? `${pathname}?${qs}` : pathname;
+        router.replace(nextUrl, { scroll: false });
+    }, [inputSearch, pathname, router, searchParams]);
 
-        const currentUrl =
-            pathname + (searchParams.toString() ? `?${searchParams.toString()}` : "");
-        if (nextUrl !== currentUrl) {
-            router.replace(nextUrl, { scroll: false });
-        }
-    }, [search, pathname, router, searchParams]);
-    const handleSearchSubmit = useCallback(() => {
-        setSearch(inputSearch);
-    }, [inputSearch]);
-
-    // ---------- Данные и пагинация ----------
     const [ads, setAds] = useState<Car[]>(initial?.cars ?? []);
-    const [page, setPage] = useState<number>(initial?.meta?.page ?? pageFromUrl ?? 1);
+    const [page, setPage] = useState<number>(initial?.meta?.page ?? 1);
     const [perPage] = useState<number>(initial?.meta?.per_page ?? 12);
     const [totalPages, setTotalPages] = useState<number>(initial?.meta?.pages ?? 0);
     const [totalAds, setTotalAds] = useState<number>(initial?.meta?.total ?? 0);
@@ -111,8 +110,6 @@ export default function StandardPageAllPosts({
 
     const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-    // Когда приходят новые initial (например, при изменении search или page через URL),
-    // мы полностью переинициализируем состояние.
     useEffect(() => {
         if (initial) {
             setAds(initial.cars ?? []);
@@ -123,7 +120,6 @@ export default function StandardPageAllPosts({
             setIsInitialLoading(false);
             setError(null);
         } else {
-            // если initial нет — дальше сработает клиентская загрузка
             setAds([]);
             setPage(1);
             setTotalPages(0);
@@ -135,22 +131,15 @@ export default function StandardPageAllPosts({
     }, [initial]);
 
     const fetchPage = useCallback(
-        async (targetPage: number, append: boolean) => {
-            // защита от параллельных запросов
-            if (isInitialLoading || isAppending) return;
+        async (targetPage: number, append: boolean, q: string = search) => {
+            if ((append && isAppending) || (!append && isInitialLoading)) return;
             if (reachedEnd) return;
 
             append ? setIsAppending(true) : setIsInitialLoading(true);
             setError(null);
 
             try {
-                const params = {
-                    page: targetPage,
-                    per_page: perPage,
-                    search,
-                    region,
-                };
-
+                const params = { page: targetPage, per_page: perPage, search: q, region };
                 const res =
                     category === "all"
                         ? await getAllCars(params)
@@ -169,8 +158,7 @@ export default function StandardPageAllPosts({
                 setTotalPages(meta.pages ?? 1);
                 setTotalAds(meta.total ?? 0);
                 if (meta.page >= (meta.pages ?? 1)) setReachedEnd(true);
-            } catch (e) {
-                console.error(e);
+            } catch {
                 setError("Не удалось загрузить данные");
             } finally {
                 append ? setIsAppending(false) : setIsInitialLoading(false);
@@ -178,39 +166,6 @@ export default function StandardPageAllPosts({
         },
         [category, region, perPage, search, isInitialLoading, isAppending, reachedEnd]
     );
-
-    // Если initial отсутствует (например, сервер не смог отдать) — пробуем забрать первую страницу на клиенте
-    useEffect(() => {
-        if (!initial && ads.length === 0 && !isInitialLoading && !isAppending) {
-            fetchPage(1, false);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [initial]);
-
-    // Бесконечная прокрутка
-    useEffect(() => {
-        if (!sentinelRef.current) return;
-        const el = sentinelRef.current;
-
-        const observer = new IntersectionObserver(
-            entries => {
-                const first = entries[0];
-                if (
-                    first.isIntersecting &&
-                    !isAppending &&
-                    !isInitialLoading &&
-                    !reachedEnd &&
-                    page < totalPages
-                ) {
-                    fetchPage(page + 1, true);
-                }
-            },
-            { root: null, rootMargin: "600px 0px 600px 0px", threshold: 0.01 }
-        );
-
-        observer.observe(el);
-        return () => observer.disconnect();
-    }, [fetchPage, isAppending, isInitialLoading, page, totalPages, reachedEnd]);
 
     const canShowMore = useMemo(
         () => page < totalPages && !reachedEnd && !isAppending && !isInitialLoading,
@@ -221,14 +176,10 @@ export default function StandardPageAllPosts({
         setInputSearch(e.target.value);
     }, []);
 
-    // Ссылка для прогрессивного улучшения SEO (на случай, если JS не выполнится)
     const nextHref = useMemo(() => {
         if (!canShowMore) return null;
-        const sp = new URLSearchParams(searchParams.toString());
-        sp.set("page", String(page + 1));
-        const qs = sp.toString();
-        return qs ? `${pathname}?${qs}` : pathname;
-    }, [canShowMore, pathname, searchParams, page]);
+        return "#"; // SEO можно оставить старую логику, если нужно — но без изменения URL по клику
+    }, [canShowMore]);
 
     return (
         <>
@@ -252,7 +203,6 @@ export default function StandardPageAllPosts({
                                     region && REGION_GENITIVE[region]
                                         ? ` в ${REGION_GENITIVE[region]}`
                                         : "";
-
                                 return `Нет ${categoryText}${regionText}`;
                             })()}
                         </div>
@@ -279,8 +229,6 @@ export default function StandardPageAllPosts({
                     )}
 
                     {canShowMore && (
-                        // Прогрессивное улучшение: <a> с href на следующую страницу,
-                        // но кликом перехватываем и грузим через fetchPage
                         <a
                             href={nextHref || "#"}
                             className={style.loadMoreBtn}

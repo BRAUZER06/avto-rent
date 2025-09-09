@@ -1,5 +1,5 @@
 // src/app/sitemap.xml/route.ts
-export const revalidate = 3600; // 1 час
+export const revalidate = 20; // 1 час
 
 const SITE =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") || "https://rentavtokavkaz.ru";

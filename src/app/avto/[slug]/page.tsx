@@ -5,7 +5,7 @@ import { regionsFull } from "@src/data/regions";
 import { notFound, redirect } from "next/navigation";
 import Script from "next/script";
 
-export const revalidate = 60; // ISR: обновлять каждые 5 минут
+export const revalidate = 20; // ISR: обновлять каждые 5 минут
 
 type ServerPayload = {
     cars: any[];

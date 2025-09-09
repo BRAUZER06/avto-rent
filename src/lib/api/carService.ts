@@ -21,6 +21,7 @@ const qs = (params?: ListParams) => {
 export const getAllCars = async (params?: ListParams) => {
     const response = await fetchWithAuth(`${baseUrl}/cars${qs(params)}`);
     if (!response.ok) throw new Error("Не удалось загрузить список машин");
+
     return response.json(); // { cars: [...], meta: { page, per_page, total, pages } }
 };
 

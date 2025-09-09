@@ -2,7 +2,7 @@
 import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 import { NextResponse } from "next/server";
 
-export const revalidate = 3600; // 1 час
+export const revalidate = 20; // 1 час
 
 type CompanyDTO = {
     id: number;

@@ -1,0 +1,196 @@
+@import "@src/lib/assets/styles/_width.scss";
+
+.container {
+  min-width: 100%;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 729px;
+  margin: 0 auto;
+  padding-top: 120px;
+  padding-bottom: 88px;
+
+  @include vw-mobile {
+    padding-top: 160px;
+    padding-bottom: 0;
+  }
+}
+
+.messageContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 48px;
+
+  @include vw-mobile {
+    margin-bottom: 36px;
+  }
+}
+
+.figure {
+  color: var(--grey-text-dark);
+  font-size: 300px;
+  font-weight: 500;
+  line-height: 120%;
+
+  @include vw-mobile {
+    font-size: 140px;
+  }
+
+  @media screen and (max-width: 345px) {
+    font-size: 100px;
+  }
+}
+
+.imageWrap {
+  position: relative;
+  margin: 0 32px;
+
+  @include vw-mobile {
+    margin: 0 12px;
+  }
+
+  @media screen and (max-width: 345px) {
+    margin: 0 10px;
+  }
+}
+
+.image {
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
+
+  @include vw-mobile {
+    width: 110px;
+    height: 110px;
+  }
+
+  @media screen and (max-width: 345px) {
+    width: 84px;
+    height: 84px;
+  }
+}
+
+.badge {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+  color: #fff;
+  font-size: 12px;
+  line-height: 1;
+  padding: 8px 10px;
+  border-radius: 999px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .18);
+
+  @include vw-mobile {
+    font-size: 10px;
+    padding: 6px 8px;
+  }
+}
+
+.title {
+  margin: 0 0 12px;
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text-primary);
+
+  @include vw-mobile {
+    font-size: 20px;
+    max-width: 92%;
+  }
+}
+
+.description {
+  margin-bottom: 40px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 140%;
+  color: var(--text-secondary);
+
+  @include vw-mobile {
+    margin-bottom: 200px;
+    max-width: 260px;
+    font-size: 16px;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  @include vw-mobile {
+    position: sticky;
+    inset: 0;
+    padding: 0 12px 12px;
+  }
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 225px;
+  height: 56px;
+  padding: 0 24px;
+  border-radius: 14px;
+  font-size: 16px;
+  line-height: 140%;
+  text-decoration: none;
+  transition: transform .12s ease, opacity .12s ease, background .12s ease, color .12s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  @include vw-mobile {
+    flex: 1 1 auto;
+    min-width: unset;
+    width: 100%;
+    height: 52px;
+    border-radius: 12px;
+    font-size: 14px;
+  }
+}
+
+.primary {
+  background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,.2);
+
+  &:hover {
+    opacity: .96;
+  }
+}
+
+.secondary {
+  background: var(--green-main);
+  color: #000;
+
+  &:hover {
+    opacity: .92;
+  }
+}
+
+.ghost {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+
+  &:hover {
+    background: var(--background-light);
+  }
+}

@@ -1,11 +1,8 @@
 "use client";
 
 import { CompanyDTO, getCompanyByName } from "@src/lib/api/companies";
-import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 import { useCompanyStore } from "@src/store/useCompanyStore";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
+import { useEffect, useMemo, useState } from "react";
 import {
     FaWhatsapp,
     FaTelegramPlane,
@@ -14,12 +11,12 @@ import {
     FaPhone,
 } from "react-icons/fa";
 import styles from "./ClientBrandContactPage.module.scss";
+import YandexAddressMap from "@src/components/YandexAddressMap/YandexAddressMap";
 
 export default function ClientBrandContactPage({ name }: { name: string }) {
     const setCompany = useCompanyStore(state => state.setCompany);
     const company: CompanyDTO | null = useCompanyStore(state => state.company);
     const [loading, setLoading] = useState(true);
-    const [mapState, setMapState] = useState({ center: [43.3186, 45.1597], zoom: 10 });
     const [showPhones, setShowPhones] = useState(false);
 
     useEffect(() => {
@@ -27,161 +24,178 @@ export default function ClientBrandContactPage({ name }: { name: string }) {
         (async () => {
             try {
                 const res = await getCompanyByName(name);
-                if (active && res) {
-                    setCompany(res);
-                }
+                if (active && res) setCompany(res);
             } catch (e) {
                 console.error("Ошибка загрузки компании:", e);
             } finally {
                 if (active) setLoading(false);
             }
         })();
-
         return () => {
             active = false;
         };
     }, [name, setCompany]);
 
-    // Подготовка данных для социальных сетей
-    const socialLinks = [
-        company?.whatsapp
-            ? {
-                  type: "whatsapp" as const,
-                  href: `https://wa.me/${company.whatsapp.replace(/\D/g, "")}`,
-                  title: "Написать в WhatsApp",
-              }
-            : null,
-        company?.telegram
-            ? {
-                  type: "telegram" as const,
-                  href: `https://t.me/${company.telegram}`,
-                  title: "Написать в Telegram",
-              }
-            : null,
-        company?.instagram
-            ? {
-                  type: "instagram" as const,
-                  href: `https://instagram.com/${company.instagram.replace("@", "")}`,
-                  title: "Подписаться в Instagram",
-              }
-            : null,
-        company?.website
-            ? {
-                  type: "website" as const,
-                  href: company.website,
-                  title: "Посетить сайт",
-              }
-            : null,
-    ].filter(Boolean);
+    const regionName = useMemo(() => getRegionName(company?.region), [company?.region]);
 
-    // Подготовка телефонов
-    const phones = [
-        company?.phone_1?.number
-            ? {
-                  digits: company.phone_1.number.replace(/\D/g, ""),
-                  label: company.phone_1.label,
-              }
-            : null,
-        company?.phone_2?.number
-            ? {
-                  digits: company.phone_2.number.replace(/\D/g, ""),
-                  label: company.phone_2.label,
-              }
-            : null,
-    ].filter(Boolean);
+    const normTelegram = (value?: string) => {
+        if (!value) return "";
+        const v = value.trim();
+        if (!v) return "";
+        if (/^https?:\/\//i.test(v)) return v;
+        return `https://t.me/${v.replace(/^@/, "")}`;
+    };
+    const normInstagram = (value?: string) => {
+        if (!value) return "";
+        const h = value.trim().replace(/^@/, "");
+        return h ? `https://instagram.com/${h}` : "";
+    };
+    const normWebsite = (value?: string) => {
+        if (!value) return "";
+        const v = value.trim();
+        if (!v) return "";
+        return /^https?:\/\//i.test(v) ? v : `https://${v}`;
+    };
+    const digits = (v?: string) => (v ? v.replace(/\D/g, "") : "");
+
+    const socialLinks = useMemo(
+        () =>
+            [
+                company?.whatsapp && digits(company.whatsapp)
+                    ? {
+                          type: "whatsapp" as const,
+                          href: `https://wa.me/${digits(company.whatsapp)}`,
+                          title: "Написать в WhatsApp",
+                          Icon: FaWhatsapp,
+                          className: styles.wa,
+                      }
+                    : null,
+                company?.telegram && normTelegram(company.telegram)
+                    ? {
+                          type: "telegram" as const,
+                          href: normTelegram(company.telegram),
+                          title: "Написать в Telegram",
+                          Icon: FaTelegramPlane,
+                          className: styles.tg,
+                      }
+                    : null,
+                company?.instagram && normInstagram(company.instagram)
+                    ? {
+                          type: "instagram" as const,
+                          href: normInstagram(company.instagram),
+                          title: "Перейти в Instagram",
+                          Icon: FaInstagram,
+                          className: styles.ig,
+                      }
+                    : null,
+                company?.website && normWebsite(company.website)
+                    ? {
+                          type: "website" as const,
+                          href: normWebsite(company.website),
+                          title: "Посетить сайт",
+                          Icon: FaGlobe,
+                          className: styles.web,
+                      }
+                    : null,
+            ].filter(Boolean) as Array<{
+                type: "whatsapp" | "telegram" | "instagram" | "website";
+                href: string;
+                title: string;
+                Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+                className: string;
+            }>,
+        [company?.whatsapp, company?.telegram, company?.instagram, company?.website]
+    );
+
+    const phones = useMemo(
+        () =>
+            [
+                company?.phone_1?.number
+                    ? {
+                          digits: digits(company.phone_1.number),
+                          label: company.phone_1.label,
+                      }
+                    : null,
+                company?.phone_2?.number
+                    ? {
+                          digits: digits(company.phone_2.number),
+                          label: company.phone_2.label,
+                      }
+                    : null,
+            ].filter(Boolean) as Array<{ digits: string; label?: string }>,
+        [
+            company?.phone_1?.number,
+            company?.phone_1?.label,
+            company?.phone_2?.number,
+            company?.phone_2?.label,
+        ]
+    );
 
     const handleCallClick = () => {
         if (phones.length === 1) {
             window.location.href = `tel:${phones[0].digits}`;
         } else if (phones.length > 1) {
-            setShowPhones(prev => !prev);
+            setShowPhones(p => !p);
         }
     };
 
-    if (loading) {
-        return <div className={styles.loading}>Загрузка данных компании...</div>;
-    }
-
-    if (!company) {
-        return <div className={styles.notFound}>Компания не найдена</div>;
-    }
+    if (loading) return <div className={styles.loading}>Загрузка данных компании...</div>;
+    if (!company) return <div className={styles.notFound}>Компания не найдена</div>;
 
     return (
         <div className={styles.contactPage}>
-            {/* Hero Section */}
             <div className={styles.heroSection}>
                 <h1>Контакты</h1>
                 <p className={styles.heroSubtitle}>Свяжитесь с {company.company_name}</p>
             </div>
 
             <div className={styles.contentGrid}>
-                {/* Контактная информация */}
                 <section className={styles.contactSection}>
                     <h2>Контактная информация</h2>
 
                     <div className={styles.contactCards}>
-                        {/* Адрес */}
-                        {company.address && (
+                        {company.address ? (
                             <div className={styles.contactCard}>
                                 <div className={styles.cardIcon}>📍</div>
                                 <div className={styles.cardContent}>
                                     <h3>Адрес</h3>
                                     <p>{company.address}</p>
-                                    {company.region && (
+                                    {company.region ? (
                                         <span className={styles.region}>
-                                            {getRegionName(company.region)}
+                                            {regionName}
                                         </span>
-                                    )}
+                                    ) : null}
                                 </div>
                             </div>
-                        )}
+                        ) : null}
 
-                        {/* Социальные сети */}
-                        {socialLinks.length > 0 && (
+                        {socialLinks.length > 0 ? (
                             <div className={styles.contactCard}>
                                 <div className={styles.cardIcon}>🌐</div>
                                 <div className={styles.cardContent}>
                                     <h3>Социальные сети</h3>
                                     <div className={styles.socials}>
-                                        {socialLinks.map((s, idx) => {
-                                            const Icon =
-                                                s.type === "whatsapp"
-                                                    ? FaWhatsapp
-                                                    : s.type === "telegram"
-                                                      ? FaTelegramPlane
-                                                      : s.type === "instagram"
-                                                        ? FaInstagram
-                                                        : FaGlobe;
-
-                                            return (
+                                        {socialLinks.map(
+                                            ({ href, title, Icon, className }, idx) => (
                                                 <a
                                                     key={idx}
-                                                    href={s.href}
+                                                    href={href}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className={`${styles.socialIcon} ${
-                                                        s.type === "whatsapp"
-                                                            ? styles.wa
-                                                            : s.type === "telegram"
-                                                              ? styles.tg
-                                                              : s.type === "instagram"
-                                                                ? styles.ig
-                                                                : styles.web
-                                                    }`}
-                                                    aria-label={s.title}
-                                                    title={s.title}
+                                                    className={`${styles.socialIcon} ${className}`}
+                                                    aria-label={title}
+                                                    title={title}
                                                 >
                                                     <Icon />
                                                 </a>
-                                            );
-                                        })}
+                                            )
+                                        )}
                                     </div>
                                 </div>
                             </div>
-                        )}
+                        ) : null}
 
-                        {/* Телефоны */}
-                        {phones.length > 0 && (
+                        {phones.length > 0 ? (
                             <div className={styles.contactCard}>
                                 <div className={styles.cardIcon}>📞</div>
                                 <div className={styles.cardContent}>
@@ -191,11 +205,11 @@ export default function ClientBrandContactPage({ name }: { name: string }) {
                                             className={styles.callButton}
                                             onClick={handleCallClick}
                                         >
-                                            <FaPhone style={{ marginRight: "6px" }} />
+                                            <FaPhone style={{ marginRight: 6 }} />
                                             Позвонить
                                         </button>
 
-                                        {showPhones && phones.length > 1 && (
+                                        {showPhones && phones.length > 1 ? (
                                             <div className={styles.callDropdown}>
                                                 {phones.map((p, i) => (
                                                     <a
@@ -207,7 +221,7 @@ export default function ClientBrandContactPage({ name }: { name: string }) {
                                                         }
                                                     >
                                                         {formatPhone(p.digits)}
-                                                        {p.label && (
+                                                        {p.label ? (
                                                             <span
                                                                 className={
                                                                     styles.callLabel
@@ -216,91 +230,60 @@ export default function ClientBrandContactPage({ name }: { name: string }) {
                                                                 {" "}
                                                                 — {p.label}
                                                             </span>
-                                                        )}
+                                                        ) : null}
                                                     </a>
                                                 ))}
                                             </div>
-                                        )}
+                                        ) : null}
                                     </div>
                                 </div>
                             </div>
-                        )}
-
-                        {/* Режим работы */}
-                        <div className={styles.contactCard}>
-                            <div className={styles.cardIcon}>🕒</div>
-                            <div className={styles.cardContent}>
-                                <h3>Режим работы</h3>
-                                <p>Ежедневно: 10:00 - 22:00</p>
-                                <p>Круглосуточная поддержка по телефону</p>
-                            </div>
-                        </div>
+                        ) : null}
                     </div>
                 </section>
 
-                {/* Яндекс Карта */}
-                <section className={styles.mapSection}>
-                    <h2>Мы на карте</h2>
-                    <div className={styles.mapContainer}>
-                        {/* <YMaps>
-                            <Map
-                                state={mapState}
-                                width="100%"
-                                height="400px"
-                                options={{
-                                    suppressMapOpenBlock: true,
-                                    yandexMapDisablePoiInteractivity: true,
-                                }}
-                            >
-                                <Placemark
-                                    geometry={mapState.center}
-                                    options={{
-                                        preset: "islands#blueAutoIcon",
-                                        iconColor: "#ff0000",
-                                    }}
-                                    properties={{
-                                        balloonContent: `
-                                            <strong>${company.company_name}</strong><br/>
-                                            ${company.address}<br/>
-                                            ${company.phone_1?.number || ""}
-                                        `,
-                                    }}
-                                />
-                            </Map>
-                        </YMaps> */}
-                    </div>
+                {company.address ? (
+                    <section className={styles.mapSection}>
+                        <h2>Мы на карте</h2>
+                        <div className={styles.mapContainer}>
+                            <YandexAddressMap address={company.address} height={400} />
+                        </div>
 
-                    {company.address && (
                         <div className={styles.mapAddress}>
                             <strong>Адрес для навигатора:</strong>
                             <p>
-                                {company.address}, {getRegionName(company.region)}
+                                {company.address}
+                                {company.region ? `, ${regionName}` : ""}
                             </p>
                         </div>
-                    )}
-                </section>
+                    </section>
+                ) : null}
             </div>
         </div>
     );
 }
 
-// Вспомогательные функции
-function getRegionName(region: string) {
-    const regions: Record<string, string> = {
+function getRegionName(region?: string) {
+    if (!region) return "";
+    const map: Record<string, string> = {
         ingushetia: "Ингушетия",
         chechnya: "Чечня",
         dagestan: "Дагестан",
+        "north-ossetia": "Северная Осетия",
         north_ossetia: "Северная Осетия",
+        "kabardino-balkaria": "Кабардино-Балкария",
         kabardino_balkaria: "Кабардино-Балкария",
+        "karachay-cherkessia": "Карачаево-Черкесия",
         karachay_cherkessia: "Карачаево-Черкесия",
         stavropol: "Ставропольский край",
     };
-    return regions[region] || region;
+    return map[region] || region;
 }
 
-function formatPhone(digits: string): string {
-    if (digits.length === 11) {
-        return `+7 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7, 9)}-${digits.slice(9)}`;
-    }
-    return `+${digits}`;
+function formatPhone(d: string) {
+    if (!d) return "";
+    // ожидаем 11 цифр для РФ
+    if (d.length === 11)
+        return `+7 (${d.slice(1, 4)}) ${d.slice(4, 7)}-${d.slice(7, 9)}-${d.slice(9)}`;
+    return `+${d}`;
 }

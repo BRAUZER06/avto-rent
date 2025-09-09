@@ -4,7 +4,6 @@ import ClientBrandAboutPage from "@src/components/pages/Client/ClientBrandAboutP
 
 export default function Page({ params }: { params: { brand: string } }) {
     const brandName = params.brand;
-    console.log("----render");
 
     return <BrandPage name={brandName} />;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useRef } from "react";
+import { useMemo, useState, useRef, MouseEvent } from "react";
 import Image from "next/image";
 import styles from "./BrandsInfoCompany.module.scss";
 import { regionsFull } from "@src/data/regions";
@@ -13,6 +13,7 @@ import {
 } from "react-icons/fa";
 import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 import useOutsideClick from "@src/utils/api/hooks/useOutsideClick";
+import { buildBrandMessage } from "@src/data/rental_message";
 
 type LogoObj = { id: number; url: string; position?: number; raw_url?: string };
 type PhoneObj = { label?: string | null; number?: string | null };
@@ -45,9 +46,13 @@ function normalizeDigits(raw?: string | null): string | null {
     const digits = raw.replace(/\D/g, "");
     return digits.length ? digits : null;
 }
-
 function formatPhone(digits: string): string {
     return `+${digits}`;
+}
+
+function isMobileUA() {
+    if (typeof navigator === "undefined") return false;
+    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 }
 
 export default function BrandsInfoCompany({ company }: Props) {
@@ -57,7 +62,7 @@ export default function BrandsInfoCompany({ company }: Props) {
     const logoSrc = useMemo(() => {
         const p = avatarPath ?? fallbackLogo;
         const src = formatImageUrl(p || "");
-        return src || "/images/default-company.jpg";
+        return src || "/og/default.jpeg";
     }, [avatarPath, fallbackLogo]);
 
     const regionLabel = useMemo(
@@ -84,43 +89,96 @@ export default function BrandsInfoCompany({ company }: Props) {
         if (waDigits) candidates.push({ digits: waDigits, label: "WhatsApp" });
 
         const map = new Map<string, { digits: string; label?: string | null }>();
-        for (const c of candidates) {
-            if (!map.has(c.digits)) map.set(c.digits, c);
-        }
+        for (const c of candidates) if (!map.has(c.digits)) map.set(c.digits, c);
         return Array.from(map.values());
     }, [company]);
 
+    // текущий URL для сообщения (SSR-safe)
+    const currentLink = useMemo(
+        () => (typeof window !== "undefined" ? window.location.href : ""),
+        []
+    );
+    const messageText = useMemo(() => buildBrandMessage(currentLink), [currentLink]);
+    const message = useMemo(() => encodeURIComponent(messageText), [messageText]);
+
+    // соцсети с автотекстом
     const socialLinks = useMemo(() => {
-        const list: Array<{
+        type Item = {
             type: "whatsapp" | "telegram" | "instagram" | "website";
             href: string;
             title: string;
-        }> = [];
+            onClick?: (e: MouseEvent<HTMLAnchorElement>) => void;
+        };
+        const list: Item[] = [];
 
+        // WhatsApp
         const waDigits = normalizeDigits(company?.whatsapp);
-        if (waDigits)
+        if (waDigits) {
             list.push({
                 type: "whatsapp",
-                href: `https://wa.me/${waDigits}`,
+                href: `https://wa.me/${waDigits}?text=${message}`,
                 title: "Написать в WhatsApp",
             });
+        }
 
-        const tg = (company?.telegram || "").replace(/^@/, "");
-        if (tg)
+        // Telegram
+        const rawTg = (company?.telegram || "").trim();
+        const tgUsername =
+            rawTg && /^https?:\/\//i.test(rawTg)
+                ? (() => {
+                      try {
+                          const u = new URL(rawTg);
+                          const part = u.pathname.split("/").filter(Boolean)[0];
+                          return part?.replace(/^@/, "") || "";
+                      } catch {
+                          return "";
+                      }
+                  })()
+                : rawTg.replace(/^@/, "");
+
+        if (tgUsername) {
+            const tgWeb = `https://t.me/${tgUsername}`;
+            const tgDeep = `tg://resolve?domain=${encodeURIComponent(tgUsername)}&text=${message}`;
+
+            const onClick = (e: MouseEvent<HTMLAnchorElement>) => {
+                if (!isMobileUA()) return; // на десктопе пусть идёт по веб-ссылке
+                e.preventDefault();
+                const timer = setTimeout(() => {
+                    window.open(tgWeb, "_blank");
+                }, 1200);
+                try {
+                    window.location.href = tgDeep;
+                } finally {
+                    setTimeout(() => clearTimeout(timer), 2000);
+                }
+            };
+
             list.push({
                 type: "telegram",
-                href: `https://t.me/${tg}`,
+                href: tgWeb, // fallback
+                title: "Написать в Telegram",
+                onClick,
+            });
+        } else if (company?.telegram) {
+            // нет username — общий share
+            list.push({
+                type: "telegram",
+                href: `https://t.me/share/url?url=${encodeURIComponent(currentLink)}&text=${message}`,
                 title: "Написать в Telegram",
             });
+        }
 
+        // Instagram
         const ig = (company?.instagram || "").replace(/^@/, "");
-        if (ig)
+        if (ig) {
             list.push({
                 type: "instagram",
                 href: `https://instagram.com/${ig}`,
                 title: "Открыть Instagram",
             });
+        }
 
+        // Website
         let site = company?.website || null;
         if (site) {
             if (!/^https?:\/\//i.test(site)) site = "https://" + site;
@@ -128,11 +186,17 @@ export default function BrandsInfoCompany({ company }: Props) {
         }
 
         return list;
-    }, [company?.whatsapp, company?.telegram, company?.instagram, company?.website]);
+    }, [
+        company?.whatsapp,
+        company?.telegram,
+        company?.instagram,
+        company?.website,
+        message,
+        currentLink,
+    ]);
 
     const [showPhones, setShowPhones] = useState(false);
     const callRef = useRef<HTMLDivElement>(null);
-
     useOutsideClick(callRef, () => setShowPhones(false));
 
     const handleCallClick = () => {
@@ -224,6 +288,7 @@ export default function BrandsInfoCompany({ company }: Props) {
                                 href={s.href}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                onClick={s.onClick}
                                 className={`${styles.socialIcon} ${
                                     s.type === "whatsapp"
                                         ? styles.wa
@@ -281,6 +346,7 @@ export default function BrandsInfoCompany({ company }: Props) {
                         href={preferredLink.href}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={preferredLink.onClick}
                         className={`${styles.button} ${styles.writeMessage}`}
                         title={preferredLink.title}
                     >

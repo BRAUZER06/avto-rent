@@ -9,4 +9,13 @@ const FOOTER_ITEMS = [
     { name: "Блог", path: "/blog", class: "blog" },
 ];
 
-export default FOOTER_ITEMS;
+const FOOTER_ITEMS_CLIENT = [
+    { name: "О нас", path: "/about", class: "about" },
+    { name: "Взять авто", path: "/rent", class: "rentCar" },
+    { name: "Сдать авто", path: "/sdat", class: "giveCar" },
+    { name: "Регистрация", path: "/register", class: "register" },
+    { name: "Новости", path: "/news", class: "news" },
+    { name: "Блог", path: "/blog", class: "blog" },
+];
+
+export { FOOTER_ITEMS, FOOTER_ITEMS_CLIENT };
