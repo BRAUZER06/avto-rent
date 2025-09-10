@@ -7,6 +7,8 @@ import styles from "./ProfileTariffs.module.scss";
 import SingleCarCalculator from "../Promo/SingleCarCalculator/SingleCarCalculator";
 import DedicatedServerTariff from "../Promo/DedicatedServerTariff/DedicatedServerTariff";
 import PurchasedServices from "../Promo/PurchasedServices/PurchasedServices";
+import PromoCodeTariff from "../Promo/PromoCodeTariff/PromoCodeTariff";
+import PartnerProgramTariff from "../Promo/PartnerProgramTariff/PartnerProgramTariff";
 
 // mock данных для тестирования
 const mockServices: any[] = [
@@ -48,7 +50,13 @@ const mockServices: any[] = [
 
 const ProfileTariffs = () => {
     const [activeTab, setActiveTab] = useState("main");
-    const [servicesTab, setServicesTab] = useState("calculator"); // Новое состояние для табов услуг
+    const [servicesTab, setServicesTab] = useState<
+        "calculator" | "server" | "partner" | "other"
+    >("calculator");
+
+    // эти данные возьмите из своего стора/профиля
+    const companySlug = "my-brand-slug"; // TODO: заменить на реальный slug
+    const companyName = "Моя компания"; // TODO: заменить на реальное имя
 
     return (
         <div className={styles.container}>
@@ -72,6 +80,7 @@ const ProfileTariffs = () => {
                     </div>
                 </div>
             )}
+
             {activeTab === "view" && (
                 <div className={styles.tabContent}>
                     <div className={styles.personalDetails}>
@@ -81,17 +90,18 @@ const ProfileTariffs = () => {
                         <div className={styles.servicesTabs}>
                             {[
                                 { id: "calculator", label: "Калькулятор" },
-                                { id: "server", label: "Выделенный сервер" },
+                                { id: "server", label: "Выделенный сайт" },
+                                { id: "partner", label: "Партнёрка" },
                                 { id: "other", label: "Другие услуги" },
                             ].map(tab => (
                                 <button
                                     key={tab.id}
                                     className={
-                                        servicesTab === tab.id
+                                        servicesTab === (tab.id as any)
                                             ? styles.servicesActive
                                             : ""
                                     }
-                                    onClick={() => setServicesTab(tab.id)}
+                                    onClick={() => setServicesTab(tab.id as any)}
                                 >
                                     {tab.label}
                                 </button>
@@ -115,9 +125,19 @@ const ProfileTariffs = () => {
                                 <div className={styles.tariffCard}>
                                     <DedicatedServerTariff
                                         promo={{
-                                            freePeriod: "первый месяц бесплатно",
-                                            buttonText: "получить бесплатно",
+                                            freePeriod: "первые 2 недели бесплатно",
+                                            buttonText: "попробовать бесплатно",
                                         }}
+                                    />
+                                </div>
+                            )}
+
+                            {servicesTab === "partner" && (
+                                <div className={styles.tariffCard}>
+                                    <PartnerProgramTariff
+                                        companySlug={companySlug}
+                                        companyName={companyName}
+                                        hasDedicatedActive={true}
                                     />
                                 </div>
                             )}

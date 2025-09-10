@@ -1,0 +1,24 @@
+.container {
+    display: flex;
+    gap: 40px;
+    padding: 24px 0px;
+    margin: 0px auto 0px;
+
+    @media screen and (max-width: 1200px) {
+        padding: 18px 0px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    @media screen and (max-width: 1024px) {
+        padding: 15px 0px;
+        flex-direction: column;
+        gap: 0px;
+    }
+}
+.containerInfo{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+

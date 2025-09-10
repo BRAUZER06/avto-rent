@@ -11,6 +11,9 @@ import style from "./HeaderMobileClient.module.scss";
 import dynamic from "next/dynamic";
 import { Icon2 } from "../../icons/logos/Icon2";
 import { useCompanyStore } from "@src/store/useCompanyStore";
+import RegionSelectClient from "@src/components/ui/RegionSelect/RegionSelectClient/RegionSelectClient";
+import HeaderNavPanelClient from "../components/HeaderNavPanelClient/HeaderNavPanelClient";
+import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 
 const RegionSelect = dynamic(() => import("../../ui/RegionSelect/RegionSelect"), {
     ssr: false,
@@ -39,24 +42,28 @@ export const HeaderMobileClient = () => {
     return (
         <div className={style.container}>
             <Link href={`/avto/all`}>
-                {/* <Image
-                    className={style.logo}
-                    src="/assets/header/logoCarText.png"
-                    width={104}
-                    height={32}
-                    alt="Logo"
-                    unoptimized
-                    priority
-                /> */}
-                <Icon2 className={style.logo} />
+                {company?.company_avatar_url ? (
+                    <Image
+                        className={style.logo}
+                        src={`${formatImageUrl(company.company_avatar_url)}`}
+                        width={128}
+                        height={60}
+                        unoptimized
+                        priority
+                        alt="Logo"
+                    />
+                ) : (
+                    <div className={style.logoPlaceholder}>
+                        Компания: {company?.company_name}
+                    </div>
+                )}
             </Link>
 
             {/* 👇 селект региона */}
             <div className={style.regionSelectWrap}>
-                <RegionSelect
-                    value={selectedRegion}
-                    onChange={setSelectedRegion}
-                    placeholder="Регион"
+                <RegionSelectClient
+                    region={company?.region}
+                    placeholder="загрузка региона..."
                 />
             </div>
 
@@ -73,7 +80,7 @@ export const HeaderMobileClient = () => {
             </nav>
 
             <FullMobileScreenOverlay isOpen={isOpen}>
-                <HeaderNavPanel isOpen={isOpen} toggleNavPanel={toggleNavPanel} />
+                <HeaderNavPanelClient isOpen={isOpen} toggleNavPanel={toggleNavPanel} />
             </FullMobileScreenOverlay>
         </div>
     );

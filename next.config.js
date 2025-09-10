@@ -26,4 +26,20 @@ module.exports = {
     },
 
     metadataBase: new URL("https://rentavtokavkaz.ru"),
+
+    async redirects() {
+        return [
+            {
+                source: "/:path*",
+                has: [
+                    {
+                        type: "host",
+                        value: "www.rentavtokavkaz.ru",
+                    },
+                ],
+                destination: "https://rentavtokavkaz.ru/:path*",
+                permanent: true,
+            },
+        ];
+    },
 };

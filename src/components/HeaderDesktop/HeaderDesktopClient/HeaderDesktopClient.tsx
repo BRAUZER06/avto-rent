@@ -11,6 +11,7 @@ import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 import { useParams, usePathname } from "next/navigation"; // Добавляем useParams и usePathname
 import { log } from "node:console";
 import RegionSelectClient from "@src/components/ui/RegionSelect/RegionSelectClient/RegionSelectClient";
+import { HeaderRightBlockClient } from "../components/HeaderRightBlockClient/HeaderRightBlockClient";
 
 export const HeaderDesktopClient = memo(() => {
     const company = useCompanyStore(state => state.company);
@@ -94,7 +95,7 @@ export const HeaderDesktopClient = memo(() => {
                     />
                 </div>
 
-                <HeaderRightBlock />
+                <HeaderRightBlockClient />
             </nav>
         </div>
     );

@@ -1,4 +1,4 @@
-// @src/components/BrandsInfo/BrandsInfo.tsx
+// @src/components/BrandsInfoClient/BrandsInfoClient.tsx
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -9,9 +9,9 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 
-import styles from "./BrandsInfo.module.scss";
+import styles from "./BrandsInfoClient.module.scss";
 import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
-import YandexAddressMap from "../YandexAddressMap/YandexAddressMap";
+import YandexAddressMap from "../../YandexAddressMap/YandexAddressMap";
 import {
     FaWhatsapp,
     FaTelegramPlane,
@@ -104,11 +104,12 @@ function ensureHttp(raw?: string | null): string | null {
     return `https://${s}`;
 }
 
-export const BrandsInfo = ({ company }: { company?: CompanyDTO }) => {
+export const BrandsInfoClient = ({ company }: { company?: CompanyDTO }) => {
     if (!company) return null;
 
     const aboutText = (company.about ?? "").trim();
     const address = (company.address ?? "").trim();
+    const [refCode, setRefCode] = useState<string | null>(null);
 
     const images = useMemo(() => {
         let list: string[] = [];
@@ -131,6 +132,24 @@ export const BrandsInfo = ({ company }: { company?: CompanyDTO }) => {
     const hasImages = images.length > 0;
     const hasAbout = aboutText.length > 0;
     const hasAddress = address.length > 0;
+
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+
+        const params = new URLSearchParams(window.location.search);
+        const ref = params.get("ref")?.trim();
+        if (ref) {
+            try {
+                localStorage.setItem("partner_ref", ref);
+            } catch {}
+            setRefCode(ref);
+            return;
+        }
+        try {
+            const stored = localStorage.getItem("partner_ref");
+            if (stored) setRefCode(stored);
+        } catch {}
+    }, []);
 
     const phones = useMemo(
         () =>
@@ -157,9 +176,13 @@ export const BrandsInfo = ({ company }: { company?: CompanyDTO }) => {
         [company?.phone_1, company?.phone_2]
     );
 
-    const presetMessage = "Здравствуйте! Хочу уточнить условия аренды автомобиля.";
+    const presetMessage =
+        `Здравствуйте! Хочу взять авто в аренду.` +
+        (refCode ? ` Присутствует промо-код с сайта: "${refCode}", для скидки: ` : "");
+
     const waHref = buildWhatsappHref(company?.whatsapp, presetMessage);
     const tgHref = buildTelegramHref(company?.telegram, presetMessage);
+
     const igHref = buildInstagramHref(company?.instagram);
     const siteHref = ensureHttp(company?.website);
 
