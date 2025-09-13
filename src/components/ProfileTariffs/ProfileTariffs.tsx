@@ -9,44 +9,9 @@ import DedicatedServerTariff from "../Promo/DedicatedServerTariff/DedicatedServe
 import PurchasedServices from "../Promo/PurchasedServices/PurchasedServices";
 import PromoCodeTariff from "../Promo/PromoCodeTariff/PromoCodeTariff";
 import PartnerProgramTariff from "../Promo/PartnerProgramTariff/PartnerProgramTariff";
+import { useAuthStore } from "@src/store/useAuthStore";
 
-// mock данных для тестирования
-const mockServices: any[] = [
-    {
-        id: 1,
-        name: "Тариф 'Автопарк'",
-        type: "calculator",
-        price: 1140,
-        purchaseDate: "2024-01-15",
-        endDate: "2024-02-15",
-        status: "active",
-        details: {
-            carsCount: 3,
-            features: [
-                "Размещение 3 автомобилей",
-                "Приоритет в поиске",
-                "Статистика просмотров",
-            ],
-        },
-    },
-    {
-        id: 2,
-        name: "Выделенный сайт",
-        type: "server",
-        price: 899,
-        purchaseDate: "2024-01-10",
-        endDate: "2024-01-25",
-        status: "active",
-        details: {
-            dedicatedLink: "https://rentavtokavkaz.ru/client-123",
-            features: [
-                "Индивидуальный домен",
-                "Эксклюзивное отображение",
-                "Прямые заявки от клиентов",
-            ],
-        },
-    },
-];
+
 
 const ProfileTariffs = () => {
     const [activeTab, setActiveTab] = useState("main");
@@ -55,9 +20,11 @@ const ProfileTariffs = () => {
     >("calculator");
 
     // эти данные возьмите из своего стора/профиля
-    const companySlug = "my-brand-slug"; // TODO: заменить на реальный slug
-    const companyName = "Моя компания"; // TODO: заменить на реальное имя
+     const profile = useAuthStore(s => s.profile);
 
+
+     console.log("profile", profile);
+     
     return (
         <div className={styles.container}>
             <h2 className={styles.title}>Управление профилем</h2>
@@ -76,7 +43,56 @@ const ProfileTariffs = () => {
             {activeTab === "main" && (
                 <div className={styles.tabContent}>
                     <div className={styles.personalDetails}>
-                        <PurchasedServices services={mockServices} />
+                        <div className={styles.tariffGrid}>
+                            <div className={styles.tariffCard}>
+                                <span className={styles.freeRibbon}>
+                                    Для вас бесплатно
+                                </span>
+                                <h3 className={styles.tariffTitle}>
+                                    Калькулятор Автомобилей
+                                </h3>
+                                <p className={styles.tariffMeta}>100+ машин</p>
+                                <div className={styles.priceRow}>
+                                    <span className={styles.oldPrice}>1 140 ₽/мес</span>
+                                    <span className={styles.newPrice}>0 ₽</span>
+                                    {/* <span className={styles.freeNote}>
+                                        сейчас бесплатно
+                                    </span> */}
+                                </div>
+                                {/* <ul className={styles.features}><li>…</li></ul> */}
+                                {/* <button className={styles.cta}>Открыть</button> */}
+                            </div>
+
+                            <div className={styles.tariffCard}>
+                                <span className={styles.freeRibbon}>
+                                    Для вас бесплатно
+                                </span>
+                                <h3 className={styles.tariffTitle}>Выделенный Сайт</h3>
+                                <p className={styles.tariffMeta}>Срок: бесконечный</p>
+                                <div className={styles.priceRow}>
+                                    <span className={styles.oldPrice}>899 ₽/мес</span>
+                                    <span className={styles.newPrice}>0 ₽</span>
+                                    <span className={styles.freeNote}>
+                                        В процессе разработки..
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className={styles.tariffCard}>
+                                <span className={styles.freeRibbon}>
+                                    Для вас бесплатно
+                                </span>
+                                <h3 className={styles.tariffTitle}>Партнёрка</h3>
+                                <p className={styles.tariffMeta}>Доступна всегда</p>
+                                <div className={styles.priceRow}>
+                                    <span className={styles.oldPrice}>15% комиссия</span>
+                                    <span className={styles.newPrice}>0 ₽</span>
+                                    {/* <span className={styles.freeNote}>
+                                        сейчас бесплатно
+                                    </span> */}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
@@ -135,8 +151,7 @@ const ProfileTariffs = () => {
                             {servicesTab === "partner" && (
                                 <div className={styles.tariffCard}>
                                     <PartnerProgramTariff
-                                        companySlug={companySlug}
-                                        companyName={companyName}
+                                        companyName={profile.company_name}
                                         hasDedicatedActive={true}
                                     />
                                 </div>

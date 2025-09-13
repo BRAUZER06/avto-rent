@@ -86,7 +86,7 @@ export const HeaderRightBlockClient = () => {
     // 2) базовое сообщение + хвост с ref (если есть)
     const baseMessage = "Здравствуйте! Хочу взять авто в аренду.";
     const messageText = useMemo(
-        () => (refCode ? `${baseMessage} Метка партнёра: "${refCode}".` : baseMessage),
+        () => (refCode ? `${baseMessage} Промо-код с сайта: "${refCode}".` : baseMessage),
         [refCode]
     );
     const encodedMessage = useMemo(() => encodeURIComponent(messageText), [messageText]);

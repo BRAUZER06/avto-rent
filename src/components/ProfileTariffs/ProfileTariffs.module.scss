@@ -1,159 +1,253 @@
 .container {
-    flex: 1;
-    padding: 20px;
-    background-color: var(--background-black);
-    border-radius: 10px;
+  flex: 1;
+  padding: 20px;
+  background-color: var(--background-black);
+  border-radius: 10px;
 
-    @media screen and (max-width: 768px) {
-    }
-    @media screen and (max-width: 550px) {
-        padding: 0;
-        box-shadow: none;
-    }
-    @media screen and (max-width: 400px) {
-        padding: 0;
-    }
+  @media screen and (max-width: 768px) {
+  }
+  @media screen and (max-width: 550px) {
+    padding: 0;
+    box-shadow: none;
+  }
+  @media screen and (max-width: 400px) {
+    padding: 0;
+  }
 }
 
 .title {
-    font-size: 24px;
-    color: #fff;
-    margin-bottom: 20px;
+  font-size: 24px;
+  color: #fff;
+  margin-bottom: 20px;
 }
 
 .tabs {
-    display: flex;
-    margin-bottom: 20px;
-    border-bottom: 1px solid var(--grey-text-dark);
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--grey-text-dark);
 
-    button {
-        background: none;
-        border: none;
-        font-size: 18px;
-        padding: 10px 20px;
-        cursor: pointer;
-        border-bottom: 2px solid transparent;
-        color: var(--grey-text);
-        transition: all 0.3s ease;
+  button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    color: var(--grey-text);
+    transition: all 0.3s ease;
 
-        @media screen and (max-width: 550px) {
-            padding: 10px;
-            font-size: 16px;
-        }
-
-        &:hover {
-            border-bottom: 2px solid var(--red-text--link);
-            color: var(--red-text--link);
-        }
-
-        &.active {
-            border-bottom: 2px solid var(--red-text--link);
-            color: var(--red-text--link);
-        }
+    @media screen and (max-width: 550px) {
+      padding: 10px;
+      font-size: 16px;
     }
+
+    &:hover {
+      border-bottom: 2px solid var(--red-text--link);
+      color: var(--red-text--link);
+    }
+
+    &.active {
+      border-bottom: 2px solid var(--red-text--link);
+      color: var(--red-text--link);
+    }
+  }
 }
 
 .tabContent {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .personalDetails {
+  margin-top: 20px;
+  background-color: var(--background-black);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow:
+    rgba(0, 0, 0, 0.07) 0px -9px 11px,
+    rgba(0, 0, 0, 0.6) 0px 2px 4px,
+    rgba(0, 0, 0, 0.07) 0px 4px 8px,
+    rgba(0, 0, 0, 0.07) 0px 8px 16px,
+    rgba(0, 0, 0, 0.07) 0px 16px 32px,
+    rgba(0, 0, 0, 0.07) 0px 32px 64px;
+
+  @media screen and (max-width: 550px) {
+    padding: 15px;
+    border: 1px solid var(--grey-text-dark);
+    box-shadow: none;
+  }
+
+  h3 {
+    color: #fff;
+    margin-bottom: 20px;
+    font-size: 20px;
     margin-top: 20px;
-    background-color: var(--background-black);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow:
-        rgba(0, 0, 0, 0.07) 0px -9px 11px,
-        rgba(0, 0, 0, 0.6) 0px 2px 4px,
-        rgba(0, 0, 0, 0.07) 0px 4px 8px,
-        rgba(0, 0, 0, 0.07) 0px 8px 16px,
-        rgba(0, 0, 0, 0.07) 0px 16px 32px,
-        rgba(0, 0, 0, 0.07) 0px 32px 64px;
+  }
 
-    @media screen and (max-width: 550px) {
-        padding: 15px;
-        border: 1px solid var(--grey-text-dark);
-        box-shadow: none;
-    }
+  /* сетка тарифов */
 
-    h3 {
-        color: #fff;
-        margin-bottom: 20px;
-        font-size: 20px;
-    }
 }
 
 .noTariffs {
-    color: var(--grey-text);
-    text-align: center;
-    padding: 40px;
-    font-style: italic;
+  color: var(--grey-text);
+  text-align: center;
+  padding: 40px;
+  font-style: italic;
 }
 
 /* Стили для табов услуг */
 .servicesTabs {
-    display: flex;
-    margin-bottom: 20px;
-    border-bottom: 1px solid var(--grey-text-dark);
-    padding-bottom: 10px;
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--grey-text-dark);
+  padding-bottom: 10px;
 
-    button {
-        background: none;
-        border: none;
-        font-size: 16px;
-        padding: 8px 16px;
-        cursor: pointer;
-        border-bottom: 2px solid transparent;
-        color: var(--grey-text);
-        transition: all 0.3s ease;
-        margin-right: 10px;
+  button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    color: var(--grey-text);
+    transition: all 0.3s ease;
+    margin-right: 10px;
 
-        @media screen and (max-width: 550px) {
-            padding: 6px 12px;
-            font-size: 14px;
-            margin-right: 5px;
-        }
-
-        &:hover {
-            border-bottom: 2px solid var(--red-text--link);
-            color: var(--red-text--link);
-        }
-
-        &.servicesActive {
-            border-bottom: 2px solid var(--red-text--link);
-            color: var(--red-text--link);
-            background: rgba(255, 0, 0, 0.1);
-            border-radius: 4px 4px 0 0;
-        }
+    @media screen and (max-width: 550px) {
+      padding: 6px 12px;
+      font-size: 14px;
+      margin-right: 5px;
     }
+
+    &:hover {
+      border-bottom: 2px solid var(--red-text--link);
+      color: var(--red-text--link);
+    }
+
+    &.servicesActive {
+      border-bottom: 2px solid var(--red-text--link);
+      color: var(--red-text--link);
+      background: rgba(255, 0, 0, 0.1);
+      border-radius: 4px 4px 0 0;
+    }
+  }
 }
 
 .servicesContent {
-    margin-top: 20px;
-    min-height: 520px;
+  margin-top: 20px;
+  min-height: 520px;
 }
 
+/* --- Карточки тарифов --- */
 .tariffCard {
-    background: var(--background-dark);
-    border-radius: 8px;
-    
-   
-    
-  
+  position: relative;
+  background: var(--background-dark);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 24px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: var(--red-text--link);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  }
+}
+
+/* Лента "Для вас бесплатно" */
+.freeRibbon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px 12px;
+  background: rgba(255, 0, 0, 0.14);
+  color: var(--red-text--link);
+  border: 1px solid var(--red-text--link);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.tariffTitle {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.tariffMeta {
+  color: var(--grey-text);
+  font-size: 15px;
+}
+
+/* Цена */
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 6px;
+
+  .oldPrice {
+    color: var(--grey-text);
+    text-decoration: line-through;
+    font-size: 14px;
+  }
+
+  .newPrice {
+    color: #ff0000;
+    font-weight: 800;
+    font-size: 22px;
+
+  }
+
+  .freeNote {
+    color: var(--red-text--link);
+    font-size: 13px;
+    font-weight: 700;
+  }
+}
+
+/* Кнопка действия (если понадобится) */
+.cta {
+  margin-top: auto;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+
+  background: var(--red-text--link);
+  color: #000;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.08s ease;
+
+  &:hover {
+    filter: brightness(1.05);
+  }
+  &:active {
+    transform: translateY(1px);
+  }
 }
 
 .otherServices {
-    text-align: center;
-    padding: 40px;
+  text-align: center;
+  padding: 40px;
 
-    h4 {
-        color: #fff;
-        margin-bottom: 15px;
-        font-size: 18px;
-    }
+  h4 {
+    color: #fff;
+    margin-bottom: 15px;
+    font-size: 18px;
+  }
 }
 
 .noServices {
-    color: var(--grey-text);
-    font-style: italic;
+  color: var(--grey-text);
+  font-style: italic;
 }

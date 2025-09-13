@@ -12,7 +12,6 @@ type Props = {
 };
 
 export function RegionSelectClient({ className, placeholder = "Регион", region }: Props) {
-    console.log("reg,", region);
 
     const isCompact =
         typeof window !== "undefined"

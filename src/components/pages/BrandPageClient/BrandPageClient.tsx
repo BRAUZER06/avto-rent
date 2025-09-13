@@ -12,6 +12,7 @@ import { CompanyDTO, getCompanyByName } from "@src/lib/api/companies";
 import { formatImageUrl } from "@src/lib/helpers/formatImageUrl";
 import { BrandsInfoClient } from "@src/components/BrandsInfo/BrandsInfoClient/BrandsInfoClient";
 import BrandsInfoCompanyClient from "@src/components/BrandsInfoCompany/BrandsInfoCompanyClient/BrandsInfoCompanyClient";
+import { ListAdsClient } from "@src/components/ListAdsClient/ListAdsClient";
 
 type Props = {
     name: string;
@@ -62,6 +63,8 @@ export default function BrandPageClient({ name, initial }: Props) {
     }, [name, initial]);
 
     const images = company?.logo_url?.map(p => formatImageUrl(p)).filter(Boolean) ?? [];
+   
+    
 
     return (
         <div>
@@ -75,7 +78,7 @@ export default function BrandPageClient({ name, initial }: Props) {
                     <BrandsInfoCompanyClient company={company || undefined} />
 
                     <div className={style.containerInfo}>
-                        <ListAds cars={company?.cars ?? []} />
+                        <ListAdsClient company={company?.company_name} cars={company?.cars ?? []} />
                         <BrandsInfoClient company={company} />
                     </div>
                 </div>

@@ -4,28 +4,37 @@
 import { useEffect, useMemo, useState } from "react";
 
 type Props = {
-    companySlug: string; // /client/<slug>
-    companyName?: string | null; // для отображения
+    companyName: string; // название компании (обязательное)
     hasDedicatedActive: boolean; // есть ли активный "Выделенный сайт"
 };
 
-const BASE = process.env.NEXT_PUBLIC_SITE_URL || "";
+// Берём из env; если не задан, используем фолбэк на window.location.origin (ниже в useMemo)
+const BASE = (process.env.NEXT_PUBLIC_SITE_URL ?? "").trim();
 
+/** разрешены буквы/цифры/-/_; 3–32 символа */
 function sanitizeId(input: string) {
-    // допускаем буквы/цифры/-/_, 3–32 символа
     return input.replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 32);
 }
 
-export default function PartnerProgramTariff({
-    companySlug,
-    companyName,
-    hasDedicatedActive,
-}: Props) {
+/** slugify из companyName */
+function slugifyName(name: string) {
+    return name
+        .trim()
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}]+/gu, "_") // всё, кроме букв/цифр -> "_"
+        .replace(/^_+|_+$/g, "") // убираем подчёркивания по краям
+        .slice(0, 64);
+}
+
+export default function PartnerProgramTariff({ companyName, hasDedicatedActive }: Props) {
     const [raw, setRaw] = useState("");
     const [partnerId, setPartnerId] = useState("");
     const [copied, setCopied] = useState(false);
 
-    // восстанавливаем ввод
+    // slug компании из имени
+    const companySlug = useMemo(() => slugifyName(companyName), [companyName]);
+
+    // восстановление сохранённого id
     useEffect(() => {
         if (typeof window === "undefined") return;
         const saved = localStorage.getItem("partner_program_id") || "";
@@ -35,17 +44,107 @@ export default function PartnerProgramTariff({
         }
     }, []);
 
+    // сохранение в localStorage
     useEffect(() => {
         if (typeof window === "undefined") return;
         localStorage.setItem("partner_program_id", partnerId);
     }, [partnerId]);
 
-    const link = useMemo(() => {
-        if (!BASE || !companySlug || !partnerId) return "";
-        return `${BASE.replace(/\/+$/, "")}/client/${encodeURIComponent(
-            companySlug
-        )}?ref=${encodeURIComponent(partnerId)}`;
-    }, [companySlug, partnerId]);
+
+function transliterate(text: string) {
+    const map: Record<string, string> = {
+        А: "A",
+        а: "a",
+        Б: "B",
+        б: "b",
+        В: "V",
+        в: "v",
+        Г: "G",
+        г: "g",
+        Д: "D",
+        д: "d",
+        Е: "E",
+        е: "e",
+        Ё: "E",
+        ё: "e",
+        Ж: "Zh",
+        ж: "zh",
+        З: "Z",
+        з: "z",
+        И: "I",
+        и: "i",
+        Й: "Y",
+        й: "y",
+        К: "K",
+        к: "k",
+        Л: "L",
+        л: "l",
+        М: "M",
+        м: "m",
+        Н: "N",
+        н: "n",
+        О: "O",
+        о: "o",
+        П: "P",
+        п: "p",
+        Р: "R",
+        р: "r",
+        С: "S",
+        с: "s",
+        Т: "T",
+        т: "t",
+        У: "U",
+        у: "u",
+        Ф: "F",
+        ф: "f",
+        Х: "Kh",
+        х: "kh",
+        Ц: "Ts",
+        ц: "ts",
+        Ч: "Ch",
+        ч: "ch",
+        Ш: "Sh",
+        ш: "sh",
+        Щ: "Shch",
+        щ: "shch",
+        Ы: "Y",
+        ы: "y",
+        Э: "E",
+        э: "e",
+        Ю: "Yu",
+        ю: "yu",
+        Я: "Ya",
+        я: "ya",
+    };
+    return text
+        .split("")
+        .map(ch => map[ch] ?? ch)
+        .join("");
+}
+
+
+    // ссылка: BASE/client/<slug>?ref=<код>, с фолбэком на window.location.origin
+const link = useMemo(() => {
+    if (!companyName || !partnerId) return "";
+    try {
+        let base = BASE;
+        if (!base && typeof window !== "undefined") {
+            base = window.location.origin;
+        }
+        if (!base) return "";
+        // оставляем русское имя, просто кодируем для URL
+        const url = new URL(
+            `${base.replace(/\/+$/, "")}/client/${encodeURIComponent(companyName)}`
+        );
+        url.searchParams.set("ref", partnerId);
+        return url.toString();
+    } catch {
+        return "";
+    }
+}, [companyName, partnerId]);
+
+
+
 
     const valid = partnerId.length >= 3;
 
@@ -64,14 +163,14 @@ export default function PartnerProgramTariff({
                 <div className="absolute -top-3 -right-3 bg-emerald-500 text-white px-3 py-1 rounded-full text-sm font-bold">
                     Бесплатно
                 </div>
+
                 <h1 className="text-2xl font-extrabold text-[var(--green-main)] mb-2 text-center">
                     Партнёрская программа
                 </h1>
-                {companyName && (
-                    <p className="text-center text-[var(--grey-text)] mb-4">
-                        Для компании <strong>{companyName}</strong>
-                    </p>
-                )}
+
+                <p className="text-center text-[var(--grey-text)] mb-4">
+                    Для компании <strong>{companyName}</strong>
+                </p>
 
                 <div className="mb-4 space-y-3 text-[var(--grey-text)] leading-relaxed">
                     <p>
@@ -116,6 +215,7 @@ export default function PartnerProgramTariff({
                         </p>
                     </div>
                 </div>
+
                 {!hasDedicatedActive && (
                     <div className="mb-4 p-3 rounded-xl bg-[var(--grey-bg-hover-dark)] border border-yellow-400">
                         <p className="text-yellow-300 font-semibold">
@@ -127,6 +227,7 @@ export default function PartnerProgramTariff({
                         </p>
                     </div>
                 )}
+
                 <label className="block mb-2 font-semibold text-[var(--grey-text-new)]">
                     Название партнёра (например: друг, блогер или менеджер)
                 </label>
@@ -143,6 +244,7 @@ export default function PartnerProgramTariff({
                 <p className="text-xs text-[var(--grey-text)] mb-4">
                     Разрешены буквы, цифры, <code>-</code>, <code>_</code>. От 3 символов.
                 </p>
+
                 <div className="mb-4 p-3 rounded-xl bg-[var(--grey-bg-hover-dark)]">
                     <p className="text-[var(--grey-text-new)] mb-1">
                         Партнёрская ссылка:
@@ -154,6 +256,7 @@ export default function PartnerProgramTariff({
                                 : "— недоступно —")}
                     </p>
                 </div>
+
                 <div className="grid grid-cols-2 gap-3">
                     <button
                         disabled={!hasDedicatedActive || !valid}
@@ -201,6 +304,7 @@ export default function PartnerProgramTariff({
                         </button>
                     )}
                 </div>
+
                 <p className="text-xs text-[var(--grey-text)] text-center mt-3">
                     Скопируйте и отдайте ссылку партнёру. Когда по ней зайдёт клиент —
                     система запомнит, что он пришёл именно от этого партнёра, и эта

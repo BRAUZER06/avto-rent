@@ -1,0 +1,433 @@
+.container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    min-width: 200px;
+    min-height: 278px;
+    max-height: 600px;
+
+    background-color: var(--grey-bg);
+    border-radius: 2px;
+    // transition:
+    //     box-shadow 0.3s ease,
+    //     height 0.3s ease;
+    border: 1px solid transparent;
+    &:hover {
+        box-shadow: 0 5px 12px rgba(255, 255, 255, 0.2);
+        height: auto;
+        border: 1px solid var(--white-color);
+       
+    }
+
+    @media (max-width: 580px) {
+        min-width: 150px;
+        min-height: 150px;
+    }
+
+    @media (max-width: 450px) {
+        min-width: 100px;
+        min-height: 100px;
+    }
+}
+
+.swipeBlock {
+    position: relative;
+    background-color: var(--grey-bg);
+    overflow: hidden;
+    width: 100%;
+    // height: 270px;
+    height: 350px;
+    user-select: none;
+    padding: 0px 0px 0px;
+    cursor: pointer;
+
+    @media screen and (max-width: 767px) {
+        height: 275px;
+    }
+
+    @media (max-width: 580px) {
+        height: 250px;
+    }
+
+    @media (max-width: 470px) {
+        height: 150px;
+          height: 250px;
+    }
+
+    @media (max-width: 375px) {
+        height: 130px;
+          height: 250px;
+    }
+
+    > img {
+        position: relative;
+        object-fit: contain;
+        height: 100%;
+        width: 100%;
+    }
+}
+
+.infoBlock {
+    position: relative;
+    padding: 0px 10px 10px;
+    color: var(--grey-text);
+}
+
+.containerDiscount {
+    display: none !important;
+    height: 18px;
+    margin-top: 5px;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    -webkit-align-items: center;
+    -moz-box-align: center;
+    align-items: center;
+    height: 18px;
+    text-transform: uppercase;
+
+    .blockDiscountNumber {
+        background: #e41f25;
+        border-radius: 4px;
+        margin-right: 6px;
+        height: 18px;
+        .numberDiscount {
+            color: var(--grey-text);
+            font-style: normal;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 11px;
+            height: 10px;
+            margin: 4px;
+            display: block;
+        }
+    }
+
+    .blockTextDiscount {
+        color: #f6652f;
+        .textDiscount {
+            display: -webkit-flex;
+            display: -moz-box;
+            display: flex;
+            font-weight: 600;
+            font-size: 10px;
+            -webkit-align-items: center;
+            -moz-box-align: center;
+            align-items: center;
+            border-radius: 4px 4px 0 0;
+            padding: 4px 0;
+            background-color: var(--grey-bg);
+        }
+    }
+}
+
+.containerPrice {
+    position: relative;
+    width: 100%;
+    font-weight: 700;
+    font-size: 19px;
+    line-height: 22px;
+    margin-bottom: 2px;
+    color: var(--blue-text);
+    margin-top: 9px;
+
+    .blockPriceOldNumber {
+        text-decoration: line-through;
+        color: var(--red-text--link);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 17px;
+        margin-left: 8px;
+        display: initial;
+    }
+}
+
+.title {
+    cursor: pointer;
+    margin-bottom: 2px;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    color: var(--grey-text);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 18px;
+    // min-height: 36px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    text-overflow: ellipsis;
+}
+
+.containerCompany {
+    cursor: pointer;
+    padding: 4px;
+    border: 1px solid var(--grey-light);
+    border-radius: 10px;
+    margin: 12px 0px 0px;
+    display: flex;
+    min-height: 45px;
+    align-items: center;
+    transition: all 0.2s;
+
+    &:hover {
+        background-color: var(--background-black);
+        border: 1px solid #e5e5e5;
+        
+    }
+
+    .companyLogo {
+      
+        margin-right: 10px;
+       
+      
+
+        img {
+           width: 45px;
+            height: 35px;
+            border-radius: 10px; // было 50%, стало прямоугольным с легким скруглением
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            flex: 0 0 auto;
+        }
+    }
+
+    .companyInfo {
+      
+        > h2 {
+        margin-bottom: 5px;
+            font-size: 11px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+       > h3{
+         font-size: 12px;
+       }
+
+        .starsContainer {
+            position: relative;
+            display: inline-block;
+            font-size: 20px;
+            color: #ccc;
+            font-size: 1rem;
+
+            .starsFilled {
+                position: absolute;
+                top: 0;
+                left: 0;
+                overflow: hidden;
+                white-space: nowrap;
+                color: #ff5515;
+            }
+
+            .starsEmpty {
+                color: #ccc;
+            }
+        }
+    }
+}
+
+.delivery {
+    user-select: none;
+    display: flex;
+    align-items: center;
+
+    .deliveryIcon {
+        margin-right: 7px;
+        color: #28a745;
+    }
+    .deliveryText {
+        padding: inherit;
+        text-transform: inherit;
+        font-size: 11px;
+        color: #4d4d4d;
+
+        > span {
+            font-weight: 500;
+        }
+    }
+}
+
+.container {
+    &:hover .hiddenBlock {
+        display: block;
+        box-shadow: 0 5px 12px rgba(255, 255, 255, 0.2);
+        border: 1px solid var(--white-color);
+        border-top: none;
+    }
+}
+
+.hiddenBlock {
+    border: 1px solid transparent;
+    border-top: none;
+    position: absolute;
+    left: -1px;
+    right: -1px;
+    top: 99%;
+    z-index: 111;
+    display: none;
+    padding: 0px 10px 5px;
+    background-color: var(--grey-bg);
+    // box-shadow: 0 8px 8px rgba(0,0,0,.1);
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
+
+    display: none;
+    // display: block;
+    // margin: 7px 0px 0px;
+
+    .additionalInfo {
+        margin-bottom: 5px;
+
+        .colors {
+            flex-wrap: wrap;
+            display: flex;
+            margin-bottom: 5px;
+
+            .color {
+                cursor: pointer;
+                width: 24px;
+                height: 24px;
+                border-radius: 10%;
+                margin-right: 5px;
+                margin-bottom: 5px;
+                border: 1px solid #ccc;
+                &:hover {
+                    border: 1px solid #585858;
+                }
+            }
+        }
+    }
+
+    .dimensions {
+        .dimensionsBlocks {
+            display: flex;
+            margin-top: 9px;
+            flex-direction: column;
+            color: #999;
+            font-size: 13px;
+            line-height: 100%;
+
+            .dimensionsText {
+                color: var(--white-color);
+                font-style: normal;
+                font-weight: 500;
+                font-size: 13px;
+                line-height: 14px;
+                margin-bottom: 2px;
+            }
+
+            .dimensionsSubText {
+            }
+        }
+    }
+
+    .buyButton {
+        font-size: 14px;
+        flex-shrink: 0;
+        width: 100%;
+        height: 37px;
+        border-radius: 4px;
+        background-color: #f63;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        margin-top: 10px;
+        color: #fff;
+        transition: background-color 0.2s ease;
+      
+        &:hover {
+          background-color: #0079c2;
+        }
+      }
+      
+      .editButton {
+        @extend .buyButton;
+        background-color: #2e8b57;
+      
+        &:hover {
+          background-color: #246b45;
+        }
+      }
+      
+      .deleteButton {
+        @extend .buyButton;
+        background-color: #cc3333;
+      
+        &:hover {
+          background-color: #a40000;
+        }
+      }
+}
+
+
+/* базовое состояние: скрыто, цвет почти белый */
+.heartIconContainer {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  opacity: 0;
+  color: #eaeaea;
+  cursor: pointer;
+  filter: drop-shadow(0 0.2rem 0.25rem rgba(0,0,0,.6));
+  transition: color .15s ease, opacity .15s ease, transform .05s ease;
+}
+
+/* показать иконку при ховере карточки */
+.container:hover .heartIconContainer { opacity: 1; }
+
+/* ховер по самой иконке — ТОЛЬКО если не активна */
+.heartIconContainer:not(.active):hover { color: #ffae91; }
+
+/* активное состояние: ярко-оранжевый и цвет не меняется на hover */
+.heartIconContainer.active { color: #f6652f; opacity: 1; }
+.heartIconContainer.active:hover { color: #f6652f; }
+
+/* лёгкий «клик» эффект */
+.heartIconContainer:active { transform: translateY(1px); }
+
+/* чтобы svg красился текущим цветом */
+.heartIcon,
+.heartIcon * {
+  fill: currentColor;
+  stroke: currentColor; /* на случай иконки со stroke */
+}
+
+
+.active {
+  opacity: 1;       
+  color: #f6652f;    
+}
+
+.heartIcon {
+    width: 30px;
+    height: 30px;
+}
+.carSpecsBlock {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+
+    display: flex;
+    justify-content: center; // центрирует контент по горизонтали
+    align-items: center;
+    flex-wrap: wrap;
+
+    padding: 10px;
+    // background: rgba(255, 255, 255, 0.9); // светлая подложка
+    z-index: 100;
+
+    .specItem {
+        margin: 0 6px;
+        background: #e4e4e4;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: 500;
+        font-size: 13px;
+        color: #444;
+    }
+}
