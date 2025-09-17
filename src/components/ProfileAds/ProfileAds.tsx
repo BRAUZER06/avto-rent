@@ -122,7 +122,7 @@ const ProfileAds = () => {
                                         onDeleted={id =>
                                             setAds(prev => prev.filter(a => a.id !== id))
                                         }
-                                        isOwner={true}
+                                        // isOwner={true}
                                         ads={item}
                                     />
                                 ) : (
@@ -131,7 +131,7 @@ const ProfileAds = () => {
                                             setAds(prev => prev.filter(a => a.id !== id))
                                         }
                                         ads={item}
-                                        isOwner={true}
+                                        // isOwner={true}
                                         isReact
                                     />
                                 )}

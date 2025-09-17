@@ -154,8 +154,9 @@ export const ProfileCreateAuto = () => {
             const formData = new FormData();
 
             // Основные поля с encodeURIComponent
-            formData.append("title", encodeURIComponent(title));
-            formData.append("location", encodeURIComponent(location));
+            formData.append("title", title);
+            formData.append("location", location);
+
             formData.append("price", pricePerDay);
             formData.append("category", category);
             formData.append("fuel_type", fuel);
