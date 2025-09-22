@@ -13,7 +13,7 @@ const tariffs = [
 const categoryLegend = {
     mid: "авто среднего класса",
     russian: "отечественные авто",
-    jeep: "внедорожники",
+    suv: "внедорожники",
     cabrio: "кабриолеты",
     sport: "спорткары",
     premium: "авто премиум-класса",

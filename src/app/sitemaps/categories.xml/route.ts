@@ -11,7 +11,7 @@ const CATEGORIES = [
     { slug: "all", name: "Все автомобили", priority: 0.8 },
     { slug: "mid", name: "Средний класс", priority: 0.7 },
     { slug: "russian", name: "Российские авто", priority: 0.7 },
-    { slug: "jeep", name: "Внедорожники", priority: 0.8 },
+    { slug: "suv", name: "Внедорожники", priority: 0.8 },
     { slug: "cabrio", name: "Кабриолеты", priority: 0.7 },
     { slug: "sport", name: "Спортивные авто", priority: 0.7 },
     { slug: "premium", name: "Премиум класс", priority: 0.8 },

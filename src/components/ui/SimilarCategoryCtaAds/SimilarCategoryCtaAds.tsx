@@ -22,7 +22,7 @@ const CATEGORY_LABEL: Record<string, string> = {
     all: "всех категорий",
     mid: "среднего класса",
     russian: "отечественного сегмента",
-    jeep: "внедорожников",
+    suv: "внедорожников",
     cabrio: "кабриолетов",
     sport: "спорткаров",
     premium: "премиум-сегмента",

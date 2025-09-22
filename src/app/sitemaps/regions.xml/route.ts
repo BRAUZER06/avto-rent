@@ -19,7 +19,7 @@ const CATEGORIES = [
     "all",
     "mid",
     "russian",
-    "jeep",
+    "suv",
     "cabrio",
     "sport",
     "premium",

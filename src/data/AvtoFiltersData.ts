@@ -1,5 +1,3 @@
-
-
 const carTypeTypes = [
     {
         id: "1",
@@ -223,7 +221,7 @@ const brandCheckboxTypes = [
     { id: 329248, title: "JAC", checked: false },
     { id: 18707047, title: "JAECOO", checked: false },
     { id: 329249, title: "Jaguar", checked: false },
-    { id: 329250, title: "Jeep", checked: false },
+    { id: 329250, title: "suv", checked: false },
     { id: 478251, title: "Jensen", checked: false },
     { id: 18045024, title: "Jetour", checked: false },
     { id: 18373730, title: "Jetta", checked: false },
@@ -783,9 +781,7 @@ const plotPurposeTypes = [
     { id: 3, title: "Промназначения", checked: false },
 ];
 
-
 export {
-    
     carTypeTypes,
     availabilityTypes,
     steeringTypes,
@@ -799,7 +795,7 @@ export {
     driveTypeTypes,
     engineTypeTypes,
     colorDataTypes,
-    
+
     //недвижка
     transactionType,
     documentsAvailableTypes,
