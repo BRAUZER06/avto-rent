@@ -63,6 +63,27 @@ export default function StandardPageAllPosts({
 
     const prevQueryRef = useRef(qFromUrl);
 
+    const [ads, setAds] = useState<Car[]>(initial?.cars ?? []);
+    const [page, setPage] = useState<number>(initial?.meta?.page ?? 1);
+    const [perPage] = useState<number>(initial?.meta?.per_page ?? 12);
+    const [totalPages, setTotalPages] = useState<number>(initial?.meta?.pages ?? 0);
+    const [totalAds, setTotalAds] = useState<number>(initial?.meta?.total ?? 0);
+
+    const [isInitialLoading, setIsInitialLoading] = useState<boolean>(!initial);
+    const [isAppending, setIsAppending] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const [reachedEnd, setReachedEnd] = useState<boolean>(
+        initial ? initial.meta.page >= (initial.meta.pages ?? 1) : false
+    );
+
+    const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+    // актуальная страница для колбэка IntersectionObserver
+    const pageRef = useRef(page);
+    useEffect(() => {
+        pageRef.current = page;
+    }, [page]);
+
     useEffect(() => {
         const nextQ = (searchParams.get("search") ?? "").trim();
 
@@ -89,26 +110,10 @@ export default function StandardPageAllPosts({
         const sp = new URLSearchParams(searchParams.toString());
         if (trimmed) sp.set("search", trimmed);
         else sp.delete("search");
-        // страницу в URL не ведём — внутри управляем стейтом
         const qs = sp.toString();
         const nextUrl = qs ? `${pathname}?${qs}` : pathname;
         router.replace(nextUrl, { scroll: false });
     }, [inputSearch, pathname, router, searchParams]);
-
-    const [ads, setAds] = useState<Car[]>(initial?.cars ?? []);
-    const [page, setPage] = useState<number>(initial?.meta?.page ?? 1);
-    const [perPage] = useState<number>(initial?.meta?.per_page ?? 12);
-    const [totalPages, setTotalPages] = useState<number>(initial?.meta?.pages ?? 0);
-    const [totalAds, setTotalAds] = useState<number>(initial?.meta?.total ?? 0);
-
-    const [isInitialLoading, setIsInitialLoading] = useState<boolean>(!initial);
-    const [isAppending, setIsAppending] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
-    const [reachedEnd, setReachedEnd] = useState<boolean>(
-        initial ? initial.meta.page >= (initial.meta.pages ?? 1) : false
-    );
-
-    const sentinelRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         if (initial) {
@@ -154,10 +159,13 @@ export default function StandardPageAllPosts({
                 };
 
                 setAds(prev => (append ? [...prev, ...cars] : cars));
-                setPage(meta.page);
-                setTotalPages(meta.pages ?? 1);
+                // если API вдруг вернул meta.page=1 — всё равно считаем по targetPage
+                setPage(meta.page ?? targetPage);
+                setTotalPages(
+                    meta.pages ?? Math.max(1, Math.ceil((meta.total ?? 0) / perPage))
+                );
                 setTotalAds(meta.total ?? 0);
-                if (meta.page >= (meta.pages ?? 1)) setReachedEnd(true);
+                if ((meta.page ?? targetPage) >= (meta.pages ?? 1)) setReachedEnd(true);
             } catch {
                 setError("Не удалось загрузить данные");
             } finally {
@@ -168,18 +176,36 @@ export default function StandardPageAllPosts({
     );
 
     const canShowMore = useMemo(
-        () => page < totalPages && !reachedEnd && !isAppending && !isInitialLoading,
-        [page, totalPages, reachedEnd, isAppending, isInitialLoading]
+        () => page < totalPages && !reachedEnd,
+        [page, totalPages, reachedEnd]
     );
+
+    const buttonDisabled = isAppending || isInitialLoading || !canShowMore;
 
     const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setInputSearch(e.target.value);
     }, []);
 
-    const nextHref = useMemo(() => {
-        if (!canShowMore) return null;
-        return "#"; // SEO можно оставить старую логику, если нужно — но без изменения URL по клику
-    }, [canShowMore]);
+    // IntersectionObserver для бесконечной прокрутки
+    useEffect(() => {
+        const el = sentinelRef.current;
+        if (!el) return;
+
+        const io = new IntersectionObserver(
+            entries => {
+                const [entry] = entries;
+                if (!entry.isIntersecting) return;
+                if (isAppending || isInitialLoading || !canShowMore) return;
+
+                const next = pageRef.current + 1;
+                fetchPage(next, true);
+            },
+            { root: null, rootMargin: "600px 0px 600px 0px", threshold: 0 }
+        );
+
+        io.observe(el);
+        return () => io.disconnect();
+    }, [canShowMore, isAppending, isInitialLoading, fetchPage]);
 
     return (
         <>
@@ -224,22 +250,24 @@ export default function StandardPageAllPosts({
                         <div className={style.loadingMore}>Загружаем ещё…</div>
                     )}
                     {isInitialLoading && ads.length === 0 && <div>Загрузка…</div>}
-                    {reachedEnd && ads.length > 0 && (
-                        <div className={style.endText}>Больше объявлений нет</div>
-                    )}
 
-                    {canShowMore && (
-                        <a
-                            href={nextHref || "#"}
-                            className={style.loadMoreBtn}
-                            onClick={e => {
-                                e.preventDefault();
-                                fetchPage(page + 1, true);
-                            }}
-                        >
-                            Показать ещё
-                        </a>
-                    )}
+                    {/* Всегда видимая кнопка как фоллбэк */}
+                    <button
+                        type="button"
+                        className={style.loadMoreBtn}
+                        disabled={buttonDisabled}
+                        onClick={e => {
+                            e.preventDefault();
+                            if (buttonDisabled) return;
+                            fetchPage(page + 1, true);
+                        }}
+                    >
+                        {isAppending
+                            ? "Загружаем…"
+                            : !canShowMore
+                              ? "Больше объявлений нет"
+                              : "Показать ещё"}
+                    </button>
 
                     <div ref={sentinelRef} style={{ height: 1 }} />
                 </div>

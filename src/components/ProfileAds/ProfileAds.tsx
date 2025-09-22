@@ -122,8 +122,9 @@ const ProfileAds = () => {
                                         onDeleted={id =>
                                             setAds(prev => prev.filter(a => a.id !== id))
                                         }
-                                        // isOwner={true}
+                                        isOwner={true}
                                         ads={item}
+                                        // isReact
                                     />
                                 ) : (
                                     <Ad
@@ -131,8 +132,8 @@ const ProfileAds = () => {
                                             setAds(prev => prev.filter(a => a.id !== id))
                                         }
                                         ads={item}
-                                        // isOwner={true}
-                                        isReact
+                                        isOwner={true}
+                                        // isReact
                                     />
                                 )}
                             </div>

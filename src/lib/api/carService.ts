@@ -1,7 +1,6 @@
 // @src/lib/api/carService.ts
 import { fetchWithAuth } from "@src/utils/fetchWithAuth";
 import { apiUrlHelper } from "../helpers/getApiUrl";
-import { getAccessToken } from "./tokenService";
 
 const baseUrl = apiUrlHelper();
 
@@ -9,28 +8,26 @@ type ListParams = { page?: number; per_page?: number; search?: string; region?: 
 
 const qs = (params?: ListParams) => {
     const sp = new URLSearchParams();
-    if (params?.page) sp.set("page", String(params.page));
-    if (params?.per_page) sp.set("per_page", String(params.per_page));
-    if (params?.search) sp.set("search", params.search); // поиск
-    if (params?.region) sp.set("region", params.region); // 👈 добавляем регион
+    if (params?.page != null) sp.set("page", String(params.page));
+    if (params?.per_page != null) sp.set("per_page", String(params.per_page));
+    if (params?.search) sp.set("search", params.search);
+    if (params?.region) sp.set("region", params.region);
     const s = sp.toString();
     return s ? `?${s}` : "";
 };
 
-// 🔹 GET /cars — все машины
 export const getAllCars = async (params?: ListParams) => {
-    const response = await fetchWithAuth(`${baseUrl}/cars${qs(params)}`);
+    const url = `${baseUrl}/cars${qs(params)}`;
+    const response = await fetchWithAuth(url, { cache: "no-store" }); // 👈 тут
     if (!response.ok) throw new Error("Не удалось загрузить список машин");
-
-    return response.json(); // { cars: [...], meta: { page, per_page, total, pages } }
+    return response.json();
 };
 
-// 🔹 GET /cars?category=...
 export const getCarsCategory = async (categoryCar: string, params?: ListParams) => {
     const url = `${baseUrl}/cars?category=${encodeURIComponent(categoryCar)}${qs(params).replace("?", "&")}`;
-    const response = await fetchWithAuth(url);
+    const response = await fetchWithAuth(url, { cache: "no-store" }); // 👈 и тут
     if (!response.ok) throw new Error("Не удалось загрузить список машин");
-    return response.json(); // { cars, meta }
+    return response.json();
 };
 
 // 🔹 GET /cars/my — мои машины

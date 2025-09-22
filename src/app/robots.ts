@@ -1,7 +1,10 @@
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 
-const SITE =
-    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") || "https://rentavtokavkaz.ru";
+const SITE = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://rentavtokavkaz.ru").replace(
+    /\/+$/,
+    ""
+);
+const HOST = new URL(SITE).host;
 
 export default function robots(): MetadataRoute.Robots {
     return {
@@ -20,6 +23,6 @@ export default function robots(): MetadataRoute.Robots {
             },
         ],
         sitemap: `${SITE}/sitemap.xml`,
-        host: SITE,
+        host: HOST,
     };
 }

@@ -63,15 +63,13 @@ export async function generateMetadata({
         : `Аренда ${catText} — фото и цены`;
 
     const description = regionRu
-        ? `Список предложений по аренде: ${catText} в ${regionRu}.[region] Реальные фото, актуальные цены, контакты.`
-        : `Список предложений по аренде: ${catText}. Реальные фото,[no region] актуальные цены, контакты.`;
+        ? `Список предложений по аренде: ${catText} в ${regionRu}. Реальные фото, актуальные цены, контакты.`
+        : `Список предложений по аренде: ${catText}. Реальные фото, актуальные цены, контакты.`;
 
     return {
         title,
         description,
-        alternates: {
-            canonical: `${baseUrl}${path}`, // canonical без search
-        },
+        alternates: { canonical: `${baseUrl}${path}` },
         robots: hasSearch ? { index: false, follow: true } : undefined,
         openGraph: {
             title,
@@ -96,12 +94,10 @@ async function fetchPageOnServer({
     search?: string;
 }): Promise<ServerPayload> {
     const base = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL;
-
     const qs = new URLSearchParams({
         page: String(page),
         per_page: String(perPage),
     });
-
     if (region) qs.set("region", region);
     if (search && search.trim()) qs.set("search", search.trim());
 
