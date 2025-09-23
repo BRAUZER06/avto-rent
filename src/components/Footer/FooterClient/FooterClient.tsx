@@ -31,7 +31,7 @@ export const FooterClient = () => {
                     </Link>
 
                     <div className={style.nav}>
-                        <div className={style.navLinks}>
+                        {/* <div className={style.navLinks}>
                             {FOOTER_ITEMS_CLIENT?.map((item: any) => (
                                 <Link
                                     key={item.path || item.name} // ✅ добавил key
@@ -41,8 +41,8 @@ export const FooterClient = () => {
                                     {item.name}
                                 </Link>
                             ))}
-                        </div>
-                        {/* <FooterSearch /> */}
+                        </div> */}
+                       
                     </div>
                 </div>
 

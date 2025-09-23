@@ -60,7 +60,7 @@ export default function RootLayout({
 
             {/* Футер на всю ширину */}
             <FooterClient />
-            <FloatingMenuClient />
+            {/* <FloatingMenuClient /> */}
             {/* <Cookie /> */}
         </div>
     );

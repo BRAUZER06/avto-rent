@@ -130,6 +130,7 @@
 
 .logo {
     min-width: 128px;
+    max-width: 210px;
     cursor: pointer;
 
     @include vw-md {

@@ -219,13 +219,20 @@ export default function BrandsInfoCompany({ company }: Props) {
     return (
         <div className={styles.container}>
             <div className={styles.imageWrapper}>
-                <Image
+                {/* <Image
                     src={logoSrc}
                     alt={company?.company_name || "Company Logo"}
                     width={153}
                     height={102}
                     className={styles.companyLogo}
                     priority
+                /> */}
+                <img
+                    src={logoSrc}
+                    alt={company?.company_name || "Company Logo"}
+                    width={153}
+                    height={102}
+                    className={styles.companyLogo}
                 />
             </div>
 
