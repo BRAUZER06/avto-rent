@@ -79,10 +79,10 @@ export const HeaderDesktopClient = memo(() => {
                         path={getBrandPath("/")}
                     />
 
-                    <HeaderMultiSelect.Text
+                    {/* <HeaderMultiSelect.Text
                         text={"Условия"}
                         path={getBrandPath("/terms")}
-                    />
+                    /> */}
 
                     <HeaderMultiSelect.Text
                         text={"Контакты"}

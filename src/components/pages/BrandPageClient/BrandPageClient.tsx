@@ -65,6 +65,11 @@ export default function BrandPageClient({ name, initial }: Props) {
     const images = company?.logo_url?.map(p => formatImageUrl(p)).filter(Boolean) ?? [];
    
     
+   
+    if(!company){
+return <div>Загрузка...</div>
+    }
+    
 
     return (
         <div>
@@ -78,7 +83,10 @@ export default function BrandPageClient({ name, initial }: Props) {
                     <BrandsInfoCompanyClient company={company || undefined} />
 
                     <div className={style.containerInfo}>
-                        <ListAdsClient company={company?.company_name} cars={company?.cars ?? []} />
+                        <ListAdsClient
+                            company_name={company?.company_name}
+                            cars={company?.cars ?? []}
+                        />
                         <BrandsInfoClient company={company} />
                     </div>
                 </div>

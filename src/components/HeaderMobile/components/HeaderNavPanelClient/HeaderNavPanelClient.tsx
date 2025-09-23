@@ -150,11 +150,11 @@ export const HeaderNavPanelClient = ({
                     path={getBrandPath("/")}
                 />
 
-                <HeaderNavPanelItem.Text
+                {/* <HeaderNavPanelItem.Text
                     toggleNavPanel={toggleNavPanel}
                     text={"Условия"}
                     path={getBrandPath("/terms")}
-                />
+                /> */}
 
                 <HeaderNavPanelItem.Text
                     toggleNavPanel={toggleNavPanel}

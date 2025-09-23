@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { cookies, headers } from "next/headers";
 import StandardPageID from "@src/components/pages/StandardPage/StandardPageID/StandardPageID";
+import StandardPageIDClient from "@src/components/pages/StandardPage/StandardPageID/StandardPageIDClient/StandardPageIDClient";
 
 export const revalidate = 20;
 
@@ -237,7 +238,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(ldBreadcrumbs) }}
             />
-            <StandardPageID car={car} />
+            <StandardPageIDClient car={car} />
         </>
     );
 }

@@ -174,6 +174,8 @@ export const AdClient = memo(
             : "/images/default-car.jpg";
 
         const slug = generateSlug(adId, ads.title, ads.location);
+        console.log("company_name", company_name);
+        
 
         return (
             <div className={style.container}>

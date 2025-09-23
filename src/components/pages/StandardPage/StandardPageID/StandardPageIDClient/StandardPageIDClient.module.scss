@@ -1,0 +1,47 @@
+.container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+
+
+    @media screen and (max-width: 767px) {
+        gap: 0px;
+    }
+}
+
+.leftBlock {
+    width: 100%;
+    // width: 636px;
+    display: flex;
+    flex-direction: column;
+
+    @media screen and (max-width: 767px) {
+        width: 100%;
+    }
+}
+
+.rightBlock {
+    top: 0px;
+    position: sticky;
+    max-width: 360px;
+    min-width: 360px;
+    flex-basis: 360px;
+    padding-left: 26px;
+
+    @media screen and (max-width: 1024px) {
+        display: none;
+    }
+}
+
+.margin {
+    margin-bottom: 30px;
+}
+
+
+
+.mobileOnly{
+  display: none;
+    @media screen and (max-width: 1024px) {
+        display: block;
+    }
+}

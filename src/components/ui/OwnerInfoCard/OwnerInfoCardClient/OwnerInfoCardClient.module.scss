@@ -1,0 +1,66 @@
+.ownerCard {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: transparent;
+  padding: 0px 3px;
+}
+
+.row { flex-direction: row; }
+.column { flex-direction: column; align-items: flex-start; }
+
+.texts {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sm .name { font-size: 14px; font-weight: 600; }
+.md .name { font-size: 16px; font-weight: 600; }
+
+.sm .address { font-size: 12px; color: #c7c7c7; }
+.md .address { font-size: 13px; color: #c7c7c7; }
+
+.sm .created { font-size: 12px; color: #a4a4a4; }
+.md .created { font-size: 13px; color: #a4a4a4; }
+
+.avatarWrap {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  font-weight: bold;
+  color: var(--white-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.fallback {
+    background-color: var(--grey-bg); // будет перекрыто инлайновым цветом
+  }
+}
+
+.sm .avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+}
+
+.md .avatar {
+  width: 56px;
+  height: 56px;
+  font-size: 16px;
+}
+
+.linkReset {
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+}
