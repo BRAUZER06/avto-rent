@@ -293,27 +293,9 @@ export default function RegisterPage() {
                     )}
                 </div>
 
-                {/* <button type="submit" className={styles.button} disabled={loading}>
+                <button type="submit" className={styles.button} disabled={loading}>
                     {loading ? "Загрузка…" : "Зарегистрироваться"}
-                </button> */}
-
-                <button className={styles.button} disabled={true}>
-                    Регистрация через WhatsApp
                 </button>
-                <p className={styles.descriptionBlue}>
-                    В связи с участившимися случаями несанкционированных входов и других
-                    подозрительных действий, мы временно отключили регистрацию через сайт.
-                </p>
-                <p className={styles.descriptionBlue}>
-                    Для создания аккаунта, пожалуйста, свяжитесь с нами по WhatsApp: &nbsp;
-                    <a
-                        href="https://wa.me/79280908527"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        +7&nbsp;928&nbsp;090&nbsp;8527
-                    </a>
-                </p>
 
                 <p className={styles.description}>
                     После регистрации ваша заявка пройдёт модерацию. Это помогает нам
