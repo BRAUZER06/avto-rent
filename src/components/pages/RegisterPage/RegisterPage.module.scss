@@ -100,6 +100,16 @@ height: 43px;
   color: var(--grey-text-new, #d4d4d8);
   margin-top: 1rem;
 }
+.descriptionBlue{
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color:  #1b7dc5;
+  margin-top: 1rem;
+  >a{
+    color: #fff;
+  }
+}
+
 
 .authRow {
   margin-top: -0.25rem;

@@ -61,49 +61,120 @@ export const ProfileNavigate = ({ rating = 4.3, reviews = 0, ads = 0 }) => {
                 </div> */}
             </div>
 
-            <div className={style.section}>
-                <ul>
-                    <li>
-                        <Link href="/profile/new_auto">Добавить Автомобиль</Link>
-                    </li>
-                    <li>
-                        <Link href="/profile/my_cars">Мои Автомобили</Link>
-                    </li>{" "}
-                    <hr className={style.hr} />
-                    <li>
-                        <Link href="/profile/details">
-                            Управление <br /> профилем
-                        </Link>
-                    </li>{" "}
-                    <hr className={style.hr} />{" "}
-                    <li>
-                        <Link href="/profile/tariffs">Тарифы</Link>
-                    </li>
-                    <li>
-                        <Link href="/profile/analytics">Графики</Link>
-                    </li>
-                    <li>
-                        <Link href="/profile/telematics">Телематика</Link>
-                    </li>{" "}
-                    {/* <li>
+            {profile?.is_partner_verified ? (
+                <div className={style.section}>
+                    <ul>
+                        <li>
+                            <Link href="/profile/new_auto">Добавить Автомобиль</Link>
+                        </li>
+                        <li>
+                            <Link href="/profile/my_cars">Мои Автомобили</Link>
+                        </li>{" "}
+                        <hr className={style.hr} />
+                        <li>
+                            <Link href="/profile/details">
+                                Управление <br /> профилем
+                            </Link>
+                        </li>{" "}
+                        <hr className={style.hr} />{" "}
+                        <li>
+                            <Link href="/profile/tariffs">Тарифы</Link>
+                        </li>
+                        <li>
+                            <Link href="/profile/analytics">Графики</Link>
+                        </li>
+                        <li>
+                            <Link href="/profile/telematics">Телематика</Link>
+                        </li>{" "}
+                        <li className={style.red}>
+                            <Link href="/profile/blacklist">Черный список</Link>
+                        </li>{" "}
+                        {/* <li>
                         <Link href="/profile/favorites">Избранное</Link>
                     </li> */}
-                    {/* <hr className={style.hr} />
+                        {/* <hr className={style.hr} />
                     <li>
                         <Link href="/profile/messages">Сообщения</Link>
                     </li>
                     <li>
                         <Link href="/profile/notifications">Уведомления</Link>
                     </li> */}
-                    <hr className={style.hr} />{" "}
-                    <li>
-                        <Link href="/profile/reviews">Мои отзывы</Link>
-                    </li>
-                    {/* <li>
+                        <hr className={style.hr} />{" "}
+                        <li>
+                            <Link href="/profile/reviews">Мои отзывы</Link>
+                        </li>
+                        {/* <li>
                         <Link href="/profile/settings">Настройки</Link>
                     </li> */}
-                </ul>
-            </div>
+                    </ul>
+                </div>
+            ) : (
+                <div className={`${style.section} ${style.sectionDisable}`}>
+                    <ul>
+                        <li className={`${style.disable} ${style.tooltipParent}`}>
+                            <Link href="/profile/details">Добавить Автомобиль</Link>
+                            <span className={style.tooltip}>Ждите подтверждения </span>
+                        </li>
+                        <li className={`${style.disable} ${style.tooltipParent}`}>
+                            <Link href="/profile/details">Мои Автомобили</Link>
+                            <span className={style.tooltip}>Ждите подтверждения </span>
+                        </li>{" "}
+                        <hr className={style.hr} />
+                        <li>
+                            <Link href="/profile/details">
+                                Управление <br /> профилем
+                            </Link>
+                        </li>{" "}
+                        <hr className={style.hr} />{" "}
+                        <li className={`${style.disable} ${style.tooltipParent}`}>
+                            <Link href="/profile/details">Тарифы</Link>
+                            <span className={style.tooltip}>Ждите подтверждения </span>
+                        </li>
+                        <li className={`${style.disable} ${style.tooltipParent}`}>
+                            <Link href="/profile/details">Графики</Link>
+                            <span className={style.tooltip}>Ждите подтверждения </span>
+                        </li>
+                        <li className={`${style.disable} ${style.tooltipParent}`}>
+                            <Link href="/profile/details">Телематика</Link>
+                            <span className={style.tooltip}>Ждите подтверждения </span>
+                        </li>{" "}
+                        <li className={`${style.disable} ${style.tooltipParent}`}>
+                            <Link href="/profile/details">Черный список</Link>
+                            <span className={style.tooltip}>Ждите подтверждения </span>
+                        </li>{" "}
+                        {/* <li>
+                        <Link href="/profile/favorites">Избранное</Link>
+                        <span className={style.tooltip}>
+Ждите подтверждения 
+            </span>
+                    </li> */}
+                        {/* <hr className={style.hr} />
+                    <li>
+                        <Link href="/profile/messages">Сообщения</Link>
+                        <span className={style.tooltip}>
+Ждите подтверждения 
+            </span>
+                    </li>
+                    <li>
+                        <Link href="/profile/notifications">Уведомления</Link>
+                        <span className={style.tooltip}>
+Ждите подтверждения 
+            </span>
+                    </li> */}
+                        <hr className={style.hr} />{" "}
+                        <li className={`${style.disable} ${style.tooltipParent}`}>
+                            <Link href="/profile/details">Мои отзывы</Link>
+                            <span className={style.tooltip}>Ждите подтверждения </span>
+                        </li>
+                        {/* <li>
+                        <Link href="/profile/settings">Настройки</Link>
+                        <span className={style.tooltip}>
+Ждите подтверждения 
+            </span>
+                    </li> */}
+                    </ul>
+                </div>
+            )}
         </div>
     );
 };

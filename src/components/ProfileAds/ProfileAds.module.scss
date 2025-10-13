@@ -2,7 +2,9 @@
   width: 100%;
   padding: 20px;
   background-color: var(--background-black);
-  border-radius: 10px;
+  border-radius: 10px ;
+  border-bottom-left-radius: 0px;
+  
  overflow: hidden;
   @media screen and (max-width: 550px) {
     padding: 0;

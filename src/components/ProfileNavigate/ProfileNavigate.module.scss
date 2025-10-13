@@ -57,7 +57,7 @@
     }
 }
 .avatar {
-    z-index: 6134;
+    z-index: 199;
     width: 150px;
     height: 150px;
     border-radius: 50%;
@@ -151,7 +151,7 @@
     width: 100%;
     margin-bottom: 20px;
     color: var(--grey-ligter);
-    
+
     padding: 10px 10px;
     border-radius: 12px;
     border: 1px solid gray;
@@ -196,6 +196,16 @@
 }
 
 .section {
+    width: 100%;
+    padding: 12px 0;
+    border-bottom: 2px solid gray;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.sectionDisable {
     width: 100%;
     padding: 12px 0;
     border-bottom: 2px solid gray;
@@ -265,4 +275,51 @@
 .section li:hover {
     color: var(--red-text--link);
     cursor: pointer;
+}
+
+.red {
+    color: var(--red-text--link) !important;
+}
+
+.disable {
+    color: #fe6264 !important;
+    cursor: help !important;
+    > a {
+        cursor: help !important;
+    }
+}
+
+
+.tooltipParent {
+  position: relative;
+
+  .tooltip {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    left: 0%;
+    top: -20%;
+    transform: translateY(-50%);
+    background: #333;
+    color: #fff;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    white-space: nowrap;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    z-index: 10;
+    margin-left: 8px;
+    background-color: var(--red-text--link);
+
+    a {
+      color: #4fc3f7;
+      text-decoration: underline;
+    }
+  }
+
+  &:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
 }

@@ -6,6 +6,7 @@ import { Ad } from "../Ad/Ad";
 import { AdsCardScroll } from "../AdsCardScroll/AdsCardScroll";
 import { getMyCars } from "@src/lib/api/carService";
 import useWindowWidth from "@src/utils/api/hooks/useWindowWidth";
+import { useAuthStore } from "@src/store/useAuthStore";
 
 type Car = {
     id: number;
@@ -25,6 +26,7 @@ const ProfileAds = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState("all");
+    const { profile } = useAuthStore();
 
     const width = useWindowWidth();
     const isMobile = width <= 768; // ← брейкпоинт: мобилка = AdsCardScroll, десктоп = Ad
@@ -105,10 +107,19 @@ const ProfileAds = () => {
 
             <div className={styles.adsContainer}>
                 {filteredAds.length === 0 ? (
-                    <div className={styles.empty}>
-                        Пока нет объявлений. Добавьте первое в&nbsp;
-                        <a href="/profile/new_auto">профиле</a>.
-                    </div>
+                    <>
+                        {profile?.is_partner_verified ? (
+                            <div className={styles.empty}>
+                                Пока нет объявлений. Добавьте первое в&nbsp;
+                                <a href="/profile/new_auto">профиле</a>.
+                            </div>
+                        ) : (
+                            <div className={styles.empty}>
+                                Для получения всех возможностей дождитесь подтверждения
+                                администрацией.
+                            </div>
+                        )}
+                    </>
                 ) : (
                     <div
                         className={`${styles.itemsList} ${

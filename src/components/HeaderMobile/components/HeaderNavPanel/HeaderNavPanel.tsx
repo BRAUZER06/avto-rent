@@ -138,13 +138,24 @@ export const HeaderNavPanel = ({ isOpen, toggleNavPanel }: HeaderNavPanelProps) 
                             path="/profile/details"
                             icon="/images/headerImg/user.svg"
                         />
-                        <HeaderNavPanelItem.Text
-                            toggleNavPanel={toggleNavPanel}
-                            text="Добавить автомобиль"
-                            path="/profile/new_auto"
-                            icon="/images/headerImg/plus.svg"
-                            styleProps={{ background: "var(--blue-text)" }}
-                        />
+
+                        {profile?.is_partner_verified ? (
+                            <HeaderNavPanelItem.Text
+                                toggleNavPanel={toggleNavPanel}
+                                text="Добавить автомобиль"
+                                path="/profile/new_auto"
+                                icon="/images/headerImg/plus.svg"
+                                styleProps={{ background: "var(--blue-text)" }}
+                            />
+                        ) : (
+                            <HeaderNavPanelItem.Text
+                                toggleNavPanel={toggleNavPanel}
+                                text="Добавить автомобиль"
+                                path="/profile/details"
+                                icon="/images/headerImg/plus.svg"
+                                styleProps={{ background: "var(--blue-text)" }}
+                            />
+                        )}
                     </>
                 ) : (
                     <HeaderNavPanelItem.Text

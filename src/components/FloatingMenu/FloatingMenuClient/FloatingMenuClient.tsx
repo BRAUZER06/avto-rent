@@ -39,7 +39,7 @@ const FloatingMenuClient = () => {
             </div>
 
             {/* Разместить (только если авторизован) */}
-            {isAuthenticated && (
+            {isAuthenticated && profile?.is_partner_verified && (
                 <div
                     className={styles.menuIcon}
                     onClick={() => router.push("/profile/new_auto")}

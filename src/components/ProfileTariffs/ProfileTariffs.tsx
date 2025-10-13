@@ -85,7 +85,7 @@ const ProfileTariffs = () => {
                                 <h3 className={styles.tariffTitle}>Партнёрка</h3>
                                 <p className={styles.tariffMeta}>Доступна всегда</p>
                                 <div className={styles.priceRow}>
-                                    <span className={styles.oldPrice}>15% комиссия</span>
+                                    <span className={styles.oldPrice}>4% комиссия</span>
                                     <span className={styles.newPrice}>0 ₽</span>
                                     {/* <span className={styles.freeNote}>
                                         сейчас бесплатно

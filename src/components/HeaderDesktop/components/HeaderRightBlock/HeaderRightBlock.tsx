@@ -77,8 +77,18 @@ export const HeaderRightBlock = () => {
                             />
                         </Link>
 
-                        {showAddAutoButton && (
+                        {profile?.is_partner_verified ? (
                             <Link href="/profile/new_auto" className={style.createAds}>
+                                <Image
+                                    width={20}
+                                    height={20}
+                                    src="/images/headerImg/plus.svg"
+                                    alt="plus"
+                                />
+                                Добавить Атомобиль
+                            </Link>
+                        ) : (
+                            <Link href="/profile/details" className={style.createAds}>
                                 <Image
                                     width={20}
                                     height={20}
