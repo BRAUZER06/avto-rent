@@ -162,6 +162,7 @@ export const HeaderNavPanelClient = ({
                     path={getBrandPath("/contact")}
                 />
 
+               
                 <HeaderNavPanelItem.Text
                     toggleNavPanel={toggleNavPanel}
                     text={"О нас"}

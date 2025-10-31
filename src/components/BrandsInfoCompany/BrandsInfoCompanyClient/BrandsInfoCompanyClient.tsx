@@ -36,7 +36,7 @@ type CompanyDTO = {
     region?: string | null;
     logo_urls?: LogoObj[];
     cars?: any[];
-    is_verified?: boolean;
+    is_partner_verified?: boolean;
     is_phone_verified?: boolean;
 };
 
@@ -296,15 +296,15 @@ export default function BrandsInfoCompanyClient({ company }: Props) {
             <div className={styles.verification}>
                 <div
                     className={`${styles.statusBlock} ${
-                        company?.is_verified ? styles.true : styles.false
+                        company?.is_partner_verified ? styles.true : styles.false
                     }`}
                     title={
-                        company?.is_verified
+                        company?.is_partner_verified
                             ? "Компания проверена и одобрена администрацией сайта"
                             : "Администрацией сайта не проверен этот партнёр"
                     }
                 >
-                    {company?.is_verified ? "Проверенный партнёр" : "Не проверен"}
+                    {company?.is_partner_verified ? "Проверенный партнёр" : "Не проверен"}
                 </div>
 
                 <div

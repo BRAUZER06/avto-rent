@@ -17,7 +17,7 @@ export const FooterClient = () => {
         <div className={style.detailSharing}>...</div> */}
 
                 <div className={style.footerContent}>
-                    <Link className={style.logoContainer} href="/">
+                    <div className={style.logoContainer}>
                         {/* <Image
                             className={style.logo}
                             src="/assets/header/logoCarText.png"
@@ -28,7 +28,7 @@ export const FooterClient = () => {
                             priority
                         /> */}
                         <Icon2 className={style.logo} />
-                    </Link>
+                    </div>
 
                     <div className={style.nav}>
                         {/* <div className={style.navLinks}>

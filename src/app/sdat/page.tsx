@@ -1,13 +1,13 @@
 // app/[[region]]/sdat/page.tsx
 import Link from "next/link";
 import Script from "next/script";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { regionsFull } from "@src/data/regions";
 
 // --- Настройки ISR (обновление метаданных/OG раз в N сек) ---
 export const revalidate = 20;
 
-// Валидные регионы из твоего справочника
+// Валидные регионы из справочника
 const VALID_REGIONS = new Set(
     regionsFull.filter(r => r.name && r.name.trim() !== "").map(r => r.name)
 );
@@ -86,9 +86,8 @@ export async function generateMetadata({
     return {
         title,
         description,
-        // Метатег keywords можно оставить, но SEO-ценности почти нет
         keywords:
-            "сдать машину в аренду, сдать авто в аренду, сдача авто частнику, пассивный доход, аренда авто платформа",
+            "сдать машину в аренду, сдать авто в аренду, сдача авто частнику, пассивный доход, аренда авто платформа, чёрный список арендаторов",
         alternates: { canonical: path },
         robots: hasSearch ? { index: false, follow: true } : undefined,
         openGraph: {
@@ -97,8 +96,6 @@ export async function generateMetadata({
             url: path,
             type: "website",
             locale: "ru_RU",
-            // при желании добавь image
-            // images: [{ url: "/og/sdat.jpg", width: 1200, height: 630, alt: title }],
         },
         twitter: {
             card: "summary_large_image",
@@ -123,7 +120,7 @@ function SeoJsonLd({ region }: { region?: string }) {
         areaServed: rNom ? [{ "@type": "AdministrativeArea", name: rNom }] : undefined,
         provider: {
             "@type": "Organization",
-            name: "RentAvtoKavkaz", // при желании подставь реальное название
+            name: "RentAvtoKavkaz",
             url: "/",
         },
         offers: {
@@ -167,6 +164,15 @@ function SeoJsonLd({ region }: { region?: string }) {
                 acceptedAnswer: {
                     "@type": "Answer",
                     text: "Вы сами определяете тарифы, депозит, пробег, условия передачи и возврата, а также можете отклонять заявки.",
+                },
+            },
+            // ✚ Вопрос про чёрный список
+            {
+                "@type": "Question",
+                name: "Есть ли у вас чёрный список арендаторов?",
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Да. Проверка по чёрному списку бесплатна. Просмотр и добавление доступно только авторизованным и верифицированным аккаунтам. Подробнее — на странице /blacklist.",
                 },
             },
         ],
@@ -235,16 +241,50 @@ export default function CarRentalPage({ params }: { params: { region?: string } 
                 <p className="text-2xl text-blue-300 font-semibold mb-6">
                     и зарабатывайте от <span className="text-3xl">35 000 ₽/мес.</span>
                 </p>
-                <p className="text-gray-300">
+                <p className="text-gray-300 mb-6">
                     Занимайтесь личными делами, пока{" "}
                     <span className="font-semibold">
                         ваш автомобиль зарабатывает деньги
                     </span>
                 </p>
+
+                <div className="flex items-center justify-center gap-3 flex-wrap">
+                    {/* ЯВНЫЙ CTA → /profile */}
+                    <Link href="/profile" aria-label="Сдать свой автомобиль">
+                        <button
+                            className="px-6 py-3 bg-blue-600 hover:bg-blue-500 transition rounded-full text-lg font-semibold shadow-md shadow-blue-900/30"
+                            title="Перейти в профиль, чтобы сдать авто"
+                        >
+                            Сдать свой автомобиль
+                        </button>
+                    </Link>
+
+                    {/* Вторичный CTA → к доходам */}
+                    <a
+                        href="#earnings"
+                        className="px-6 py-3 rounded-full border border-gray-600 hover:bg-blue-800/30 transition text-lg"
+                    >
+                        Узнать про доход
+                    </a>
+                </div>
+
+                {/* ✚ Короткий блок про чёрный список */}
+                {/* <div className="mt-6 flex items-center justify-center gap-3 text-sm">
+                    <span className="text-emerald-300">
+                        Проверка арендаторов — бесплатно.
+                    </span>
+                    <Link href="/cherny-spisok" className="text-blue-300 underline">
+                        Что такое чёрный список?
+                    </Link>
+                    <span className="text-zinc-500">•</span>
+                    <Link href="/profile/blacklist" className="text-blue-300 underline">
+                        Запросить верификацию для доступа
+                    </Link>
+                </div> */}
             </section>
 
             {/* Earnings Section */}
-            <section className="py-16 px-4 text-center">
+            <section id="earnings" className="py-16 px-4 text-center">
                 <h2 className="text-3xl font-bold mb-12">
                     Сколько вы заработаете {rPrep ? `в ${rPrep}` : ""}?
                 </h2>
@@ -300,9 +340,9 @@ export default function CarRentalPage({ params }: { params: { region?: string } 
                     />
                     <CardEarning
                         model="Lada Priora"
-                        year="2023"
-                        month="38 000 ₽"
-                        yearTotal="456 000 ₽"
+                        year="2018"
+                        month="32 000 ₽"
+                        yearTotal="384 000 ₽"
                     />
                 </div>
 
@@ -333,6 +373,68 @@ export default function CarRentalPage({ params }: { params: { region?: string } 
                     Доход зависит от состояния автомобиля, пробега и спроса{" "}
                     {rPrep ? `в ${rPrep}` : "в регионе"}.
                 </p>
+            </section>
+
+            {/* CTA Banner */}
+            <section className="px-4 mb-4">
+                <div className="max-w-5xl mx-auto bg-[#1a1f2e] border border-blue-900/50 rounded-2xl p-6 text-center">
+                    <h3 className="text-2xl font-bold">
+                        Готовы сдавать авто и получать доход?
+                    </h3>
+                    <p className="text-zinc-300 mt-2">
+                        Оформите профиль, добавьте автомобиль и начните принимать заявки
+                        уже сегодня.
+                    </p>
+                    <div className="mt-4">
+                        <Link
+                            href="/profile"
+                            aria-label="Перейти в профиль для сдачи авто"
+                        >
+                            <button className="px-6 py-3 bg-blue-600 hover:bg-blue-500 transition rounded-full text-lg font-semibold shadow-md shadow-blue-900/30">
+                                Сдать автомобиль через профиль
+                            </button>
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
+            {/* ✚ Блок «Чёрный список — ваша защита» */}
+            <section className="px-4 py-10 bg-[#202020]">
+                <div className="max-w-5xl mx-auto rounded-2xl border border-zinc-700 bg-[#1c1c1c] p-6">
+                    <h3 className="text-2xl font-bold">
+                        Чёрный список — ваша защита при сдаче авто
+                    </h3>
+                    <p className="text-zinc-300 mt-2">
+                        Перед выдачей автомобиля проверьте потенциального арендатора:
+                        поиск по чёрному списку бесплатный. Просмотр записей и добавление
+                        нарушителей доступны только
+                        <b>авторизованным и верифицированным</b> аккаунтам.
+                    </p>
+                    <ul className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3 text-zinc-200">
+                        <li className="border border-zinc-700 rounded-lg p-3 bg-[#222]">
+                            🔎 Проверка по ФИО, году рождения или номеру ВУ
+                        </li>
+                        <li className="border border-zinc-700 rounded-lg p-3 bg-[#222]">
+                            🛑 Добавление нарушителей — чтобы им не сдавали авто по всему
+                            СКФО и дальше
+                        </li>
+                        <li className="border border-zinc-700 rounded-lg p-3 bg-[#222]">
+                            ✅ Бесплатно. Доступ по верификации
+                        </li>
+                    </ul>
+                    <div className="mt-5 flex flex-wrap gap-3">
+                        <Link href="/cherny-spisok">
+                            <button className="px-5 py-2.5 rounded-lg border border-zinc-700 hover:border-zinc-500">
+                                Подробнее о чёрном списке
+                            </button>
+                        </Link>
+                        <Link href="/profile/blacklist">
+                            <button className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-lg font-semibold">
+                                Запросить верификацию
+                            </button>
+                        </Link>
+                    </div>
+                </div>
             </section>
 
             {/* How it works */}
@@ -368,9 +470,9 @@ export default function CarRentalPage({ params }: { params: { region?: string } 
                         </div>
                     ))}
                 </div>
-                <Link href="/auth">
+                <Link href="/profile">
                     <button className="mt-10 px-6 py-3 bg-blue-600 text-white rounded-full text-lg font-semibold">
-                        Зарегистрироваться
+                        Сдать автомобиль
                     </button>
                 </Link>
             </section>
@@ -486,11 +588,11 @@ export default function CarRentalPage({ params }: { params: { region?: string } 
                 </div>
             </section>
 
-            {/* Внутренняя перелинковка для релевантности */}
+            {/* Внутренняя перелинковка */}
             <section className="pb-16 px-4 text-center">
                 <div className="text-sm text-gray-400">
                     Посмотрите также:{" "}
-                    <Link href="/avto" className="text-blue-400 underline">
+                    <Link href="/avto/all" className="text-blue-400 underline">
                         аренда авто
                     </Link>
                     {region && (

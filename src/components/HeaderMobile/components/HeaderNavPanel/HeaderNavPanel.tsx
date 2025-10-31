@@ -122,6 +122,11 @@ export const HeaderNavPanel = ({ isOpen, toggleNavPanel }: HeaderNavPanelProps) 
                     text={HEADER_RENT.name}
                     path={HEADER_RENT.path}
                 />
+                <HeaderNavPanelItem.Text
+                    toggleNavPanel={toggleNavPanel}
+                    text={"Черный список"}
+                    path={"/cherny-spisok"}
+                />
 
                 <HeaderNavPanelItem.Text
                     toggleNavPanel={toggleNavPanel}

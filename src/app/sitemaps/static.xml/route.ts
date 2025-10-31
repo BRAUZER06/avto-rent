@@ -12,6 +12,7 @@ const STATIC_PATHS = [
     "/avto",
     "/about",
     "/sdat",
+    "cherny-spisok",
     // '/news'...
     // '/blog'...
 ];

@@ -7,6 +7,7 @@ const FOOTER_ITEMS = [
     // { name: "Платежи", path: "/payments", class: "payments" },
     { name: "Новости", path: "/news", class: "news" },
     { name: "Блог", path: "/blog", class: "blog" },
+    { name: "Черный список", path: "/cherny-spisok", class: "cherny-spisok" },
 ];
 
 const FOOTER_ITEMS_CLIENT = [

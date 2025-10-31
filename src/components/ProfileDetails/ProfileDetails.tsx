@@ -39,6 +39,8 @@ const ProfileDetails = () => {
     const { notification, showNotification } = useNotification();
     const clearProfile = useAuthStore(s => s.clearProfile);
     const router = useRouter();
+        const { profile } = useAuthStore();
+
 
     const [type, setType] = useState([
         {
@@ -261,6 +263,7 @@ const ProfileDetails = () => {
             ]);
         }
     };
+console.log("profile", profile);
 
     const handleSocialLinkChange = (id, url) => {
         setSocialLinks(prev =>
@@ -808,14 +811,16 @@ const ProfileDetails = () => {
             )}
             <Notification notification={notification} />
 
-            <div className={styles.pendingNotice}>
-                <h3>Ваш аккаунт ожидает одобрения</h3>
-                <p>
-                    Спасибо за регистрацию! Ваша заявка отправлена на проверку. Процесс
-                    одобрения администрацией занимает некоторое время. Мы уведомим вас,
-                    как только доступ будет подтверждён.
-                </p>
-            </div>
+            {!profile?.is_partner_verified && (
+                <div className={styles.pendingNotice}>
+                    <h3>Ваш аккаунт ожидает одобрения</h3>
+                    <p>
+                        Спасибо за регистрацию! Ваша заявка отправлена на проверку.
+                        Процесс одобрения администрацией занимает некоторое время. Мы
+                        уведомим вас, как только доступ будет подтверждён.
+                    </p>
+                </div>
+            )}
         </div>
     );
 };
