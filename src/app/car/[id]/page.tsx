@@ -6,11 +6,12 @@ import StandardPageID from "@src/components/pages/StandardPage/StandardPageID/St
 
 export const revalidate = 20;
 
+// Абсолютные URL сайта и API
 const SITE_URL =
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") || "https://rentavtokavkaz.ru";
 const API = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL;
 
-// -------------------- HELPERS --------------------
+/* -------------------- HELPERS -------------------- */
 function absMedia(url?: string | null): string | null {
     if (!url) return null;
     return /^https?:\/\//i.test(url) ? url : `${API}${url}`;
@@ -26,52 +27,64 @@ function extractImages(car: any): string[] {
                         (a?.position ?? Number.MAX_SAFE_INTEGER) -
                         (b?.position ?? Number.MAX_SAFE_INTEGER)
                 )
-                .map(i => absMedia(i?.url))
+                .map((i: any) => absMedia(i?.url))
                 .filter(Boolean)
         )
-    );
+    ) as string[];
+
     return images.length > 0 ? images.slice(0, 10) : [`${SITE_URL}/og/default.jpeg`];
 }
 
 function priceText(car: any): string | null {
+    // пытаемся найти в кастомных полях “аренда авто на день…”
     const cfVal = car?.custom_fields?.find((f: any) =>
         String(f?.key ?? "")
             .toLowerCase()
             .includes("аренда авто на день")
     )?.value;
+
     const src = cfVal ?? car?.price;
     if (!src) return null;
+
     const str = String(src);
     if (str.includes("₽")) return str;
+
     const num = Number(str.replace(/[^\d.,]/g, "").replace(",", "."));
     return Number.isFinite(num) ? `${num.toLocaleString("ru-RU")} ₽` : str;
 }
 
+function driverText(car: any): string {
+    return car?.driver_only ? "только с водителем" : "с водителем и без";
+}
+
 function buildTitle(car: any): string {
-    const city = car?.location ? ` — ${car.location}` : "";
-    return `${car?.title ?? "Авто"}${city} | Аренда авто Кавказ`;
+    // Пример: «Аренда Hyundai Solaris 2020 в Грозном — с водителем и без | RentAvtoKavkaz»
+    const name = car?.title ?? "Автомобиль";
+    const cityPart = car?.location ? ` в ${car.location}` : "";
+    return `Аренда ${name}${cityPart} — ${driverText(car)} | RentAvtoKavkaz`;
 }
 
 function buildDescription(car: any): string {
-    const price = priceText(car);
+    // Короткий информативный дескрипшн
     const bits = [
         car?.title,
         car?.location ? `Локация: ${car.location}` : null,
-        price ? `Цена от ${price}/сутки` : null,
-        car?.fuel_type ? `Топливо: ${car.fuel_type}` : null,
+        priceText(car) ? `Цена от ${priceText(car)}/сутки` : null,
         car?.transmission ? `КПП: ${car.transmission}` : null,
-        `Онлайн-бронирование, доставка авто по региону.`,
+        car?.fuel_type ? `Топливо: ${car.fuel_type}` : null,
+        `Условия: ${driverText(car)}. Онлайн-бронирование, доставка по региону.`,
     ].filter(Boolean);
-    return bits.join(". ") || "Аренда автомобиля на Кавказе.";
+
+    return bits.join(". ");
 }
 
-// извлекаем id из конца slug
+// если в URL прилетает slug с хвостом -12345 — вытащим id
 function extractIdFromSlug(slug: string): string | null {
     const match = slug.match(/-(\d+)$/); // цифры после последнего дефиса
-    return match ? match[1] : null;
+    return match ? match[1] : /^\d+$/.test(slug) ? slug : null;
 }
 
-// -------------------- API --------------------
+/* -------------------- API -------------------- */
 async function fetchCarById(id: string, opts: { redirectOn401?: boolean } = {}) {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("access_token")?.value;
@@ -97,7 +110,7 @@ async function fetchCarById(id: string, opts: { redirectOn401?: boolean } = {}) 
     return res.json();
 }
 
-// -------------------- METADATA --------------------
+/* -------------------- METADATA -------------------- */
 export async function generateMetadata({
     params,
 }: {
@@ -105,14 +118,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     if (!params?.id)
         return {
-            title: "Авто — Аренда авто Кавказ",
+            title: "Объявление — RentAvtoKavkaz",
             robots: { index: false, follow: false },
         };
 
     const id = extractIdFromSlug(params.id);
     if (!id)
         return {
-            title: "Объявление не найдено — Аренда авто Кавказ",
+            title: "Объявление не найдено — RentAvtoKavkaz",
             description: "Объявление не найдено.",
             robots: { index: false, follow: false },
         };
@@ -120,7 +133,7 @@ export async function generateMetadata({
     const car = await fetchCarById(id, { redirectOn401: false });
     if (!car)
         return {
-            title: "Объявление не найдено — Аренда авто Кавказ",
+            title: "Объявление не найдено — RentAvtoKavkaz",
             description: "Объявление не найдено.",
             robots: { index: false, follow: false },
         };
@@ -141,7 +154,7 @@ export async function generateMetadata({
             title,
             description,
             images: ogImages,
-            siteName: "Аренда авто Кавказ",
+            siteName: "RentAvtoKavkaz",
         },
         twitter: {
             card: "summary_large_image",
@@ -152,7 +165,7 @@ export async function generateMetadata({
     };
 }
 
-// -------------------- JSON-LD --------------------
+/* -------------------- JSON-LD -------------------- */
 function vehicleJsonLd(car: any) {
     const images = extractImages(car);
     const priceNum = Number(
@@ -160,6 +173,7 @@ function vehicleJsonLd(car: any) {
             .replace(/[^\d.,]/g, "")
             .replace(",", ".")
     );
+
     const sellerUrl = car?.owner?.company_name
         ? `${SITE_URL}/brands/${encodeURIComponent(String(car.owner.company_name))}`
         : undefined;
@@ -194,6 +208,17 @@ function vehicleJsonLd(car: any) {
                 address: car?.owner?.address,
             },
         }),
+        // Доп. признак: только с водителем
+        ...(car?.driver_only && {
+            additionalProperty: [
+                {
+                    "@type": "PropertyValue",
+                    name: "driver_only",
+                    value: "true",
+                    description: "Аренда доступна только с водителем",
+                },
+            ],
+        }),
     };
 }
 
@@ -214,7 +239,7 @@ function breadcrumbsJsonLd(car: any) {
     };
 }
 
-// -------------------- PAGE --------------------
+/* -------------------- PAGE -------------------- */
 export default async function Page({ params }: { params: { id: string } }) {
     if (!params?.id) return notFound();
 

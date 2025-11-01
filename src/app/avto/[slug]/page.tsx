@@ -4,27 +4,28 @@ import { categoriesAuto } from "@src/data/categoriesAuto";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 
-export const revalidate = 20; // ISR: обновлять каждые 20 секунд
+export const revalidate = 20; // ISR
 
 type ServerPayload = {
     cars: any[];
     meta: { page: number; per_page: number; total: number; pages: number };
 };
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://rentavtokavkaz.ru";
-
 const CAT_RU: Record<string, string> = {
-    all: "автомобили",
-    mid: "авто среднего класса",
-    russian: "отечественные авто",
-    suv: "внедорожники",
-    cabrio: "кабриолеты",
-    sport: "спорткары",
-    premium: "авто премиум-класса",
-    electric: "электрокары",
-    minivan: "минивэны",
-    bike: "мотоциклы",
+    all: "аренда авто",
+    mid: "аренда авто среднего класса",
+    russian: "аренда отечественных авто",
+    suv: "аренда внедорожников",
+    cabrio: "аренда кабриолетов",
+    sport: "аренда спорткаров",
+    premium: "аренда авто премиум-класса",
+    electric: "аренда электрокаров",
+    minivan: "аренда минивэнов",
+    bike: "аренда мотоциклов",
 };
+
+// Баннеры OG на категорию: /public/og/categories/<slug>.svg (+ default.svg)
+const ogByCategory = (slug: string) => `/og/categories/${slug}.svg`;
 
 export async function generateMetadata({
     params,
@@ -37,23 +38,57 @@ export async function generateMetadata({
     const category = categoriesAuto.find(c => c.slug === slug);
     if (!category) return {};
 
-    const catText = CAT_RU[slug] ?? "автомобили";
+    const catRu = CAT_RU[slug] ?? "аренда авто";
     const path = `/avto/${slug}`;
     const hasSearch = Boolean(searchParams?.search);
 
-    const title = `Аренда ${catText} — фото и цены`;
-    const description = `Список предложений по аренде: ${catText}. Реальные фото, актуальные цены, контакты.`;
+    // ✅ Бренд в начале и только русский текст категории
+    const title = `Rent Avto Kavkaz — ${catRu} | с водителем и без`;
+    const description =
+        "Все аренды в одном месте: с водителем и без, посуточно, под такси и с выкупом. Эконом, комфорт, премиум — удобно и без посредников.";
+
+    const images = [
+        { url: ogByCategory(slug), width: 1200, height: 630, alt: title },
+        {
+            url: "/og/categories/default.png",
+            width: 1200,
+            height: 630,
+            alt: "Rent Avto Kavkaz",
+        },
+    ];
 
     return {
         title,
         description,
-        alternates: { canonical: `${baseUrl}${path}` },
+        keywords: [
+            "аренда авто",
+            "аренда авто без водителя",
+            "аренда авто с водителем",
+            "аренда авто посуточно",
+            "аренда авто под такси",
+            "аренда авто с выкупом",
+            "взять авто в аренду",
+            "сдать авто в аренду",
+            catRu,
+            "Rent Avto Kavkaz",
+            "RentAvtoKavkaz",
+            "РентАвтоКавказ",
+        ],
+        alternates: { canonical: path },
         robots: hasSearch ? { index: false, follow: true } : undefined,
         openGraph: {
             title,
             description,
-            url: `${baseUrl}${path}`,
+            url: path,
             type: "website",
+            locale: "ru_RU",
+            images,
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            images: images.map(i => i.url),
         },
     };
 }
@@ -75,7 +110,6 @@ async function fetchPageOnServer({
         page: String(page),
         per_page: String(perPage),
     });
-
     if (search && search.trim()) qs.set("search", search.trim());
 
     const url =
@@ -90,13 +124,15 @@ async function fetchPageOnServer({
 
 function ItemListJsonLd({ initial }: { initial: ServerPayload | null }) {
     if (!initial?.cars?.length) return null;
+
     const items = initial.cars.slice(0, 10).map((car, idx) => ({
         "@type": "ListItem",
         position: idx + 1,
-        url: `${baseUrl}/avto/car/${car.id}`,
+        url: `/avto/car/${car.id}`,
         name: car.title,
         image: car?.car_images?.[0]?.url || undefined,
     }));
+
     const data = {
         "@context": "https://schema.org",
         "@type": "ItemList",
@@ -106,6 +142,31 @@ function ItemListJsonLd({ initial }: { initial: ServerPayload | null }) {
     return (
         <Script
             id="ld-itemlist"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+        />
+    );
+}
+
+function BreadcrumbsJsonLd({ slug }: { slug: string }) {
+    const data = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Главная", item: "/" },
+            { "@type": "ListItem", position: 2, name: "Аренда авто", item: "/avto" },
+            {
+                "@type": "ListItem",
+                position: 3,
+                name: "Категория",
+                item: `/avto/${slug}`,
+            },
+        ],
+    };
+
+    return (
+        <Script
+            id="ld-breadcrumbs"
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
         />
@@ -141,9 +202,27 @@ export default async function CategoryPage({
         initial = null;
     }
 
+    
+    // H1 — по-русски
+   function capitalize(str: string) {
+       return str.charAt(0).toUpperCase() + str.slice(1);
+   }
+
+   const h1Ru = "аренда авто";
+   const h1 = `${capitalize(h1Ru)}. С водителем и без. Все аренды в одном месте.`;
+
+
     return (
         <>
+            <BreadcrumbsJsonLd slug={slug} />
             <ItemListJsonLd initial={initial} />
+
+            <div className="max-w-6xl mx-auto px-4 pt-6">
+                <h1 className=" text-2xl md:text-2xl font-bold mb-4">
+                    {h1}
+                </h1>
+            </div>
+
             <StandardPageAllPosts
                 category={category.slug}
                 initial={initial ?? undefined}

@@ -4,6 +4,7 @@ import { categoriesAuto } from "@src/data/categoriesAuto";
 import { regionsFull } from "@src/data/regions";
 import { notFound, redirect } from "next/navigation";
 import Script from "next/script";
+import { buildSeoBundle, resolveRegion } from "@src/lib/seo/generators";
 
 export const revalidate = 20;
 
@@ -18,28 +19,27 @@ const VALID_REGIONS = new Set(
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://rentavtokavkaz.ru";
 
-const REGION_RU: Record<string, string> = {
-    ingushetia: "Ингушетия",
-    chechnya: "Чечня",
-    dagestan: "Дагестан",
-    "north-ossetia": "Северная Осетия",
-    "kabardino-balkaria": "Кабардино-Балкария",
-    "karachay-cherkessia": "Карачаево-Черкесия",
-    stavropol: "Ставрополь",
+// Баннер OG для категории
+const ogByCategory = (slug: string) => `/og/categories/${slug}.svg`;
+
+// Русские названия категорий
+const CAT_RU: Record<string, string> = {
+    all: "аренда авто",
+    mid: "аренда авто среднего класса",
+    russian: "аренда отечественных авто",
+    suv: "аренда внедорожников",
+    cabrio: "аренда кабриолетов",
+    sport: "аренда спорткаров",
+    premium: "аренда авто премиум-класса",
+    electric: "аренда электрокаров",
+    minivan: "аренда минивэнов",
+    bike: "аренда мотоциклов",
 };
 
-const CAT_RU: Record<string, string> = {
-    all: "автомобили",
-    mid: "авто среднего класса",
-    russian: "отечественные авто",
-    suv: "внедорожники",
-    cabrio: "кабриолеты",
-    sport: "спорткары",
-    premium: "авто премиум-класса",
-    electric: "электрокары",
-    minivan: "минивэны",
-    bike: "мотоциклы",
-};
+// функция для капитализации первой буквы
+function capitalize(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 export async function generateMetadata({
     params,
@@ -52,30 +52,47 @@ export async function generateMetadata({
     const category = categoriesAuto.find(c => c.slug === slug);
     if (!category) return {};
 
-    const catText = CAT_RU[slug] ?? "автомобили";
-    const regionRu = region ? REGION_RU[region] ?? region : null;
+    const r = resolveRegion(region);
+    const catRu = CAT_RU[slug] ?? "аренда авто";
 
+    // ✅ бренд в начале, основной русский текст
+    const title = r.ruNom
+        ? `Rent Avto Kavkaz — ${capitalize(catRu)} в ${r.ruNom} | с водителем и без`
+        : `Rent Avto Kavkaz — ${capitalize(catRu)} | с водителем и без`;
+
+    const seo = buildSeoBundle({ slug, region });
     const path = region ? `/${region}/avto/${slug}` : `/avto/${slug}`;
     const hasSearch = Boolean(searchParams?.search);
 
-    const title = regionRu
-        ? `Аренда ${catText} в ${regionRu} — фото и цены`
-        : `Аренда ${catText} — фото и цены`;
-
-    const description = regionRu
-        ? `Список предложений по аренде: ${catText} в ${regionRu}. Реальные фото, актуальные цены, контакты.`
-        : `Список предложений по аренде: ${catText}. Реальные фото, актуальные цены, контакты.`;
+    const images = [
+        { url: ogByCategory(slug), width: 1200, height: 630, alt: title },
+        {
+            url: "/og/categories/default.png",
+            width: 1200,
+            height: 630,
+            alt: "RentAvtoKavkaz",
+        },
+    ];
 
     return {
         title,
-        description,
-        alternates: { canonical: `${baseUrl}${path}` },
+        description: seo.description,
+        keywords: seo.keywords,
+        alternates: { canonical: path },
         robots: hasSearch ? { index: false, follow: true } : undefined,
         openGraph: {
             title,
-            description,
-            url: `${baseUrl}${path}`,
+            description: seo.description,
+            url: path,
             type: "website",
+            locale: "ru_RU",
+            images,
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description: seo.description,
+            images: images.map(i => i.url),
         },
     };
 }
@@ -152,18 +169,19 @@ function BreadcrumbsJsonLd({ region, slug }: { region?: string; slug: string }) 
         },
     ];
 
+    const r = resolveRegion(region);
     const regionPart = region
         ? [
               {
                   "@type": "ListItem",
                   position: 3,
-                  name: REGION_RU[region] ?? region,
+                  name: r.ruNom || region,
                   item: `${baseUrl}/${region}/avto`,
               },
               {
                   "@type": "ListItem",
                   position: 4,
-                  name: CAT_RU[slug] ?? slug,
+                  name: "Категория",
                   item: `${baseUrl}/${region}/avto/${slug}`,
               },
           ]
@@ -171,7 +189,7 @@ function BreadcrumbsJsonLd({ region, slug }: { region?: string; slug: string }) 
               {
                   "@type": "ListItem",
                   position: 3,
-                  name: CAT_RU[slug] ?? slug,
+                  name: "Категория",
                   item: `${baseUrl}/avto/${slug}`,
               },
           ];
@@ -225,10 +243,23 @@ export default async function CategoryPage({
         initial = null;
     }
 
+    // ✅ H1 по-русски с большой буквы (регион в предложном)
+    const r = resolveRegion(region);
+    const catRu = CAT_RU[slug] ?? "аренда авто";
+    const baseH1 = r.ruPrep
+        ? `${catRu} в ${r.ruPrep}. С водителем и без. Все аренды региона в одном месте.`
+        : `${catRu}. С водителем и без. Все аренды в одном месте.`;
+    const h1 = capitalize(baseH1);
+
     return (
         <>
             <BreadcrumbsJsonLd region={region} slug={slug} />
             <ItemListJsonLd initial={initial} region={region} />
+
+            <div className="max-w-6xl mx-auto px-4 pt-6">
+                <h1 className="text-2xl md:text-2xl font-bold mb-4">{h1}</h1>
+            </div>
+
             <StandardPageAllPosts
                 category={category.slug}
                 region={region}
