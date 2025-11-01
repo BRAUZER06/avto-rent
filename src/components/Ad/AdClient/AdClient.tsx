@@ -16,7 +16,7 @@ const FAV_KEY = "favorite_car_ids";
 type CarImage = { id: number; url: string; position?: number | null };
 
 type Props = {
-    company_name:string
+    company_name: string;
     ads: any;
     /** режим владельца — показывать кнопки "Редактировать" и "Удалить" */
     isOwner?: boolean;
@@ -24,21 +24,26 @@ type Props = {
     onDeleted?: (id: number) => void;
     /** для обратной совместимости, если где-то уже использовался */
     isReact?: boolean;
+    mounted?:boolean
 };
 
 export const AdClient = memo(
-    ({ company_name, ads, isOwner = false, onDeleted, isReact = false }: Props) => {
+    ({
+        company_name,
+        ads,
+        isOwner = false,
+        onDeleted,
+        isReact = false,
+        mounted=false }: Props) => {
         const router = useRouter();
         const [currentIndex, setCurrentIndex] = useState(0);
         const containerRef = useRef<HTMLDivElement | null>(null);
-        const [mounted, setMounted] = useState(false);
+       
         const images: CarImage[] = Array.isArray(ads?.car_images)
             ? [...ads.car_images].filter(Boolean)
             : [];
         const adId = Number(ads?.id);
         if (!ads) return null;
-
-        
 
         // ----- Избранное -----
         const [isFav, setIsFav] = useState<boolean>(() => {
@@ -94,9 +99,7 @@ export const AdClient = memo(
             [adId, isFav]
         );
 
-        useEffect(() => {
-            setMounted(true);
-        }, []);
+       
 
         useEffect(() => {
             const sync = () => {
@@ -175,7 +178,6 @@ export const AdClient = memo(
 
         const slug = generateSlug(adId, ads.title, ads.location);
         console.log("company_name", company_name);
-        
 
         return (
             <div className={style.container}>

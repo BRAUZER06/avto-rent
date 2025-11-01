@@ -10,7 +10,7 @@ const base = process.env.NEXT_PUBLIC_SITE_URL;
 
 export default function DedicatedServerTariff({ promo }: DedicatedServerTariffProps) {
     const price = 899; // примерная фиксированная цена за месяц
-    let dedicatedLink = base + "/secret_key/brands";
+    let dedicatedLink = base + "/secret_key***/brands";
     const hasPromo = Boolean(promo);
 
     return (

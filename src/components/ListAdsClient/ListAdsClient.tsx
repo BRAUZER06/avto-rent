@@ -35,7 +35,7 @@ export const ListAdsClient = memo(function ListAdsClient({
                             key={`${item?.id ?? "noid"}-${i}`}
                             className={style.contentDesktop}
                         >
-                            <AdClient company_name={company_name} ads={item} />
+                            <AdClient company_name={company_name} ads={item} mounted={false}/>
                         </div>
                     ) : (
                         <div

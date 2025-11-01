@@ -81,6 +81,11 @@ return <div>Загрузка...</div>
             <MaxWidthWrapper>
                 <div className={style.container}>
                     <BrandsInfoCompanyClient company={company || undefined} />
+                    <div className="max-w-6xl mx-auto px-4 pt-6">
+                        <h1 className="text-2xl md:text-3xl font-bold mb-4">
+                            Автопарк {company.company_name} — аренда автомобилей
+                        </h1>
+                    </div>
 
                     <div className={style.containerInfo}>
                         <ListAdsClient
